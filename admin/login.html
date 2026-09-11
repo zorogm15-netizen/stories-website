@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>دخول الإدارة</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-client.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: #111827;
+      color: white;
+    }
+
+    .login-box {
+      width: 90%;
+      max-width: 400px;
+      background: #1f2937;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.3);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 15px;
+      border: 1px solid #374151;
+      border-radius: 8px;
+      background: #111827;
+      color: white;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 8px;
+      background: #d4af37;
+      color: #111;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .6;
+    }
+
+    #message {
+      text-align: center;
+      margin-top: 15px;
+      color: #f87171;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-box">
+    <h1>🔐 لوحة الإدارة</h1>
+
+    <form id="loginForm">
+      <input
+        type="email"
+        id="email"
+        placeholder="البريد الإلكتروني"
+        required
+      >
+
+      <input
+        type="password"
+        id="password"
+        placeholder="كلمة المرور"
+        required
+      >
+
+      <button type="submit" id="loginButton">
+        تسجيل الدخول
+      </button>
+    </form>
+
+    <div id="message"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    const message = document.getElementById("message");
+    const button = document.getElementById("loginButton");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      message.textContent = "";
+      button.disabled = true;
+      button.textContent = "جاري الدخول...";
+
+      try {
+        const result = await signIn(email, password);
+
+        if (!result.success) {
+          throw new Error(result.error || "فشل تسجيل الدخول");
+        }
+
+        const user = await getCurrentUser();
+
+        if (!user) {
+          throw new Error("تعذر الحصول على بيانات المستخدم");
+        }
+
+        const isAdmin = await isUserAdmin(user.id);
+
+        if (!isAdmin) {
+          await signOut();
+          throw new Error("هذا الحساب ليس حساب مدير");
+        }
+
+        window.location.href = "dashboard.html";
+
+      } catch (error) {
+        message.textContent = error.message;
+        button.disabled = false;
+        button.textContent = "تسجيل الدخول";
+      }
+    });
+  </script>
+
+</body>
+</html>
