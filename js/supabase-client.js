@@ -86,7 +86,7 @@ async function isUserAdmin(userId) {
             .single();
         
         if (error) throw error;
-        return data && (data.role === 'admin' || data.role === 'super_admin');
+        alert('ROLE: ' + (data ? data.role : 'NO DATA')); alert('ROLE: ' + (data ? data.role : 'NO DATA')); return data && (data.role === 'admin' || data.role === 'super_admin');
     } catch (error) {
         console.error('Admin check error:', error); alert('ADMIN ERROR: ' + error.message); alert('ADMIN ERROR: ' + error.message);
         return false;
