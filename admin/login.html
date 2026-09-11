@@ -129,7 +129,7 @@
           throw new Error("تعذر الحصول على بيانات المستخدم");
         }
 
-        const isAdmin = await isUserAdmin(user.id);
+        alert('USER ID: ' + user.id); const isAdmin = await isUserAdmin(user.id);
 
         if (!isAdmin) {
           await signOut();
