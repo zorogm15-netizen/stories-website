@@ -3,302 +3,1033 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عالم الروايات</title>
+    <title>رِواق | RIWAQ - منصة الروايات المترجمة</title>
+    <meta name="description" content="رِواق - منصة حديثة لقراءة الروايات المترجمة. حيث تبدأ الحكاية.">
+    <meta name="theme-color" content="#0f1419">
+    <meta property="og:title" content="رِواق | RIWAQ - منصة الروايات">
+    <meta property="og:description" content="اكتشف عالماً جديداً بين صفحات الروايات">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-dark: #0f1419;
+            --bg-card: #1a1f2e;
+            --bg-hover: #242d3d;
+            --primary-gold: #d4af37;
+            --primary-gold-light: #e6c547;
+            --text-primary: #f5f1e8;
+            --text-secondary: #b8b4a8;
+            --text-muted: #7a7a7a;
+            --border-color: #2a3344;
+            --accent-purple: #6b5b95;
+            --accent-blue: #1e3c72;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-            line-height: 1.6;
+            font-family: 'Lora', serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.8;
         }
 
+        /* ==================== Header & Navigation ==================== */
         header {
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 2rem 0;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            background: rgba(15, 20, 25, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        header h1 {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        header p {
-            font-size: 1.2rem;
-            color: #ddd;
-        }
-
-        nav {
-            background: #333;
-            padding: 1rem;
-            text-align: center;
-        }
-
-        nav a {
-            color: white;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             text-decoration: none;
-            margin: 0 1.5rem;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            color: var(--primary-gold);
+        }
+
+        .logo-text h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--primary-gold);
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            letter-spacing: 3px;
+            margin-top: -0.2rem;
+        }
+
+        .logo:hover .logo-icon {
+            color: var(--primary-gold-light);
+            transform: scale(1.1);
+        }
+
+        nav.desktop-nav {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        nav.desktop-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav.desktop-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gold);
+            transition: width 0.3s ease;
+        }
+
+        nav.desktop-nav a:hover {
+            color: var(--primary-gold);
+        }
+
+        nav.desktop-nav a:hover::after {
+            width: 100%;
+        }
+
+        .search-icon {
+            color: var(--text-secondary);
+            cursor: pointer;
             font-size: 1.1rem;
-            transition: color 0.3s;
+            transition: all 0.3s ease;
         }
 
-        nav a:hover {
-            color: #667eea;
+        .search-icon:hover {
+            color: var(--primary-gold);
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
         }
 
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: var(--primary-gold);
+            transition: all 0.3s ease;
+        }
+
+        /* ==================== Mobile Menu ==================== */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 999;
+            padding-top: 5rem;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-menu a {
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu a:hover {
+            color: var(--primary-gold);
+            background: var(--bg-card);
+        }
+
+        /* ==================== Hero Section ==================== */
         .hero {
-            background: white;
-            padding: 3rem;
-            border-radius: 10px;
+            min-height: 600px;
+            background: linear-gradient(135deg, rgba(15, 20, 25, 0.95) 0%, rgba(107, 91, 149, 0.3) 50%, rgba(30, 60, 114, 0.3) 100%);
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(107, 91, 149, 0.15) 0%, transparent 50%),
+                linear-gradient(135deg, rgba(15, 20, 25, 0.95) 0%, rgba(107, 91, 149, 0.3) 50%, rgba(30, 60, 114, 0.3) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(212,175,55,0.05)" stroke-width="0.5"/></pattern></defs><rect width="1200" height="600" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 2rem;
+            animation: fadeInUp 1s ease-out;
         }
 
         .hero h2 {
-            color: #667eea;
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary-gold);
+            color: var(--bg-dark);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-gold);
+            border: 2px solid var(--primary-gold);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* ==================== Featured Stories Section ==================== */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            color: var(--primary-gold);
             margin-bottom: 1rem;
-            font-size: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--primary-gold);
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-top: 2rem;
         }
 
         .stories-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 2rem;
-            margin: 2rem 0;
         }
 
         .story-card {
-            background: white;
-            border-radius: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .story-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transform: translateY(-8px);
+            border-color: var(--primary-gold);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.2);
         }
 
-        .story-image {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 200px;
+        .story-cover {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 3rem;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-cover::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 280"><defs><pattern id="books" width="60" height="60" patternUnits="userSpaceOnUse"><rect x="10" y="10" width="40" height="40" stroke="rgba(255,255,255,0.1)" fill="none"/></pattern></defs><rect fill="url(%23books)" width="240" height="280"/></svg>');
+            opacity: 0.3;
         }
 
         .story-content {
             padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
-        .story-content h3 {
-            color: #333;
+        .story-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
-            font-size: 1.5rem;
+            line-height: 1.4;
         }
 
-        .story-content p {
-            color: #666;
+        .story-author {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
             margin-bottom: 1rem;
-            font-size: 0.95rem;
         }
 
         .story-meta {
             display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+        }
+
+        .meta-badge {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--primary-gold);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .story-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            flex: 1;
+            line-height: 1.6;
+        }
+
+        .story-footer {
+            display: flex;
             justify-content: space-between;
             align-items: center;
             padding-top: 1rem;
-            border-top: 1px solid #eee;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .story-rating {
+            color: var(--primary-gold);
             font-size: 0.9rem;
-            color: #999;
         }
 
         .read-btn {
-            background: #667eea;
-            color: white;
-            padding: 0.7rem 1.5rem;
+            background: var(--primary-gold);
+            color: var(--bg-dark);
             border: none;
-            border-radius: 5px;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
             cursor: pointer;
-            transition: background 0.3s;
-            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
         }
 
         .read-btn:hover {
-            background: #764ba2;
+            background: var(--primary-gold-light);
+            transform: scale(1.05);
         }
 
-        footer {
-            background: #333;
-            color: white;
-            text-align: center;
-            padding: 2rem;
+        /* ==================== Levels Section ==================== */
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
             margin-top: 3rem;
         }
 
-        footer p {
+        .level-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-gold), transparent);
+        }
+
+        .level-card:nth-child(1) { --level-color: #ffd700; }
+        .level-card:nth-child(2) { --level-color: #c0c0c0; }
+        .level-card:nth-child(3) { --level-color: #cd7f32; }
+        .level-card:nth-child(4) { --level-color: #9932cc; }
+        .level-card:nth-child(5) { --level-color: #20b2aa; }
+        .level-card:nth-child(6) { --level-color: #ff69b4; }
+        .level-card:nth-child(7) { --level-color: #00ced1; }
+        .level-card:nth-child(8) { --level-color: #ff6347; }
+        .level-card:nth-child(9) { --level-color: #3cb371; }
+        .level-card:nth-child(10) { --level-color: #ff4500; }
+
+        .level-card::before {
+            background: var(--level-color);
+        }
+
+        .level-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--level-color);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .level-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .level-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
         }
 
-        .social-links {
-            margin-top: 1rem;
+        .level-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
         }
 
-        .social-links a {
-            color: #667eea;
+        .level-count {
+            font-size: 1.3rem;
+            color: var(--level-color);
+            font-weight: bold;
+        }
+
+        /* ==================== Footer ==================== */
+        footer {
+            background: rgba(15, 20, 25, 0.95);
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 0 1rem;
+            margin-top: 5rem;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--primary-gold);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .footer-section a {
+            display: block;
+            color: var(--text-secondary);
             text-decoration: none;
-            margin: 0 1rem;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
         }
 
+        .footer-section a:hover {
+            color: var(--primary-gold);
+            padding-right: 0.5rem;
+        }
+
+        .footer-tagline {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-tagline p:first-child {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--primary-gold);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ==================== Animations ==================== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .story-card {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .story-card:nth-child(2) { animation-delay: 0.1s; }
+        .story-card:nth-child(3) { animation-delay: 0.2s; }
+        .story-card:nth-child(4) { animation-delay: 0.3s; }
+        .story-card:nth-child(5) { animation-delay: 0.4s; }
+        .story-card:nth-child(6) { animation-delay: 0.5s; }
+
+        /* ==================== Responsive ==================== */
         @media (max-width: 768px) {
-            header h1 {
+            .header-container {
+                padding: 0 1rem;
+            }
+
+            .desktop-nav {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+            }
+
+            .section-header h2 {
                 font-size: 2rem;
             }
 
-            .hero {
-                padding: 1.5rem;
+            .stories-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1.5rem;
             }
 
-            nav a {
-                display: block;
-                margin: 0.5rem 0;
+            .levels-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 3rem 0;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-text h1 {
+                font-size: 1.3rem;
+            }
+
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 0.95rem;
+            }
+
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header h2 {
+                font-size: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Header & Navigation -->
     <header>
-        <h1>📚 عالم الروايات</h1>
-        <p>أفضل منصة للقراءة والاستمتاع بالروايات</p>
+        <div class="header-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">📖</div>
+                <div class="logo-text">
+                    <h1>رِواق</h1>
+                    <p>RIWAQ</p>
+                </div>
+            </a>
+            <nav class="desktop-nav">
+                <a href="#home">الرئيسية</a>
+                <a href="#stories">الروايات</a>
+                <a href="#categories">التصنيفات</a>
+                <a href="#levels">المستويات</a>
+                <a href="#about">عن الموقع</a>
+                <i class="fas fa-search search-icon"></i>
+            </nav>
+            <button class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
     </header>
 
-    <nav>
-        <a href="#home">الرئيسية</a>
-        <a href="#stories">الروايات</a>
-        <a href="#about">عن الموقع</a>
-        <a href="#contact">تواصل معنا</a>
+    <!-- Mobile Menu -->
+    <nav class="mobile-menu" id="mobileMenu">
+        <a href="#home" onclick="toggleMenu()">الرئيسية</a>
+        <a href="#stories" onclick="toggleMenu()">الروايات</a>
+        <a href="#categories" onclick="toggleMenu()">التصنيفات</a>
+        <a href="#levels" onclick="toggleMenu()">المستويات</a>
+        <a href="#about" onclick="toggleMenu()">عن الموقع</a>
+        <a href="#contact" onclick="toggleMenu()">تواصل معنا</a>
     </nav>
 
-    <div class="container">
-        <section class="hero" id="home">
-            <h2>مرحباً بك في عالم الروايات الساحر</h2>
-            <p>اكتشف أفضل الروايات والقصص الشيقة. اغمر نفسك في عوالم خيالية مليئة بالمغامرة والإثارة.</p>
-        </section>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h2>اكتشف عالماً جديداً بين صفحات الروايات</h2>
+            <p>اقرأ، اكتشف، وواصل مغامرتك في عالم من القصص الخيالية والروايات المترجمة</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="scrollToSection('stories')">ابدأ القراءة</button>
+                <button class="btn-secondary" onclick="scrollToSection('stories')">استكشف الروايات</button>
+            </div>
+        </div>
+    </section>
 
-        <section id="stories">
-            <h2 style="text-align: center; color: white; margin-bottom: 2rem; font-size: 2rem;">أفضل الروايات</h2>
+    <!-- Featured Stories Section -->
+    <section class="section" id="stories">
+        <div class="container">
+            <div class="section-header">
+                <h2>🌟 الروايات المميزة</h2>
+                <p>اختر من أفضل الروايات المترجمة بعناية</p>
+            </div>
+
             <div class="stories-grid">
                 <div class="story-card">
-                    <div class="story-image">📖</div>
+                    <div class="story-cover">📖</div>
                     <div class="story-content">
-                        <h3>رحلة الأحلام</h3>
-                        <p>رواية مشوقة تتحدث عن فتاة تسعى لتحقيق أحلامها في عالم مليء بالتحديات.</p>
+                        <h3 class="story-title">رحلة الأحلام</h3>
+                        <p class="story-author">أحمد محمد</p>
                         <div class="story-meta">
-                            <span>الكاتب: أحمد محمد</span>
+                            <span class="meta-badge">Fantasy</span>
+                            <span class="meta-badge">مترجمة</span>
+                        </div>
+                        <p class="story-description">رواية مشوقة تتحدث عن فتاة تسعى لتحقيق أحلامها في عالم مليء بالتحديات والسحر.</p>
+                        <div class="story-footer">
+                            <span class="story-rating">⭐⭐⭐⭐⭐</span>
                             <button class="read-btn">اقرأ الآن</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="story-card">
-                    <div class="story-image">💫</div>
+                    <div class="story-cover">💫</div>
                     <div class="story-content">
-                        <h3>نجوم الليل</h3>
-                        <p>قصة رومانسية جميلة عن حب حقيقي يتغلب على جميع العقبات والمشاكل.</p>
+                        <h3 class="story-title">نجوم الليل</h3>
+                        <p class="story-author">فاطمة علي</p>
                         <div class="story-meta">
-                            <span>الكاتبة: فاطمة علي</span>
+                            <span class="meta-badge">Romance</span>
+                            <span class="meta-badge">مستمرة</span>
+                        </div>
+                        <p class="story-description">قصة رومانسية جميلة عن حب حقيقي يتغلب على جميع العقبات والمشاكل.</p>
+                        <div class="story-footer">
+                            <span class="story-rating">⭐⭐⭐⭐⭐</span>
                             <button class="read-btn">اقرأ الآن</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="story-card">
-                    <div class="story-image">⚔️</div>
+                    <div class="story-cover">⚔️</div>
                     <div class="story-content">
-                        <h3>حارس الممالك</h3>
-                        <p>رواية خيال علمي مليئة بالمغامرات والأكشن والتشويق في عوالم خيالية.</p>
+                        <h3 class="story-title">حارس الممالك</h3>
+                        <p class="story-author">محمود حسن</p>
                         <div class="story-meta">
-                            <span>الكاتب: محمود حسن</span>
+                            <span class="meta-badge">Action</span>
+                            <span class="meta-badge">مكتملة</span>
+                        </div>
+                        <p class="story-description">رواية خيال علمي مليئة بالمغامرات والأكشن والتشويق في عوالم خيالية.</p>
+                        <div class="story-footer">
+                            <span class="story-rating">⭐⭐⭐⭐⭐</span>
                             <button class="read-btn">اقرأ الآن</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="story-card">
-                    <div class="story-image">🌹</div>
+                    <div class="story-cover">🌹</div>
                     <div class="story-content">
-                        <h3>وردة الصحراء</h3>
-                        <p>قصة درامية تروي حكاية حب وصراع عبر الأجيال في صحراء العربية.</p>
+                        <h3 class="story-title">وردة الصحراء</h3>
+                        <p class="story-author">ليلى محمود</p>
                         <div class="story-meta">
-                            <span>الكاتبة: ليلى محمود</span>
+                            <span class="meta-badge">Drama</span>
+                            <span class="meta-badge">مستمرة</span>
+                        </div>
+                        <p class="story-description">قصة درامية تروي حكاية حب وصراع عبر الأجيال في صحراء العربية.</p>
+                        <div class="story-footer">
+                            <span class="story-rating">⭐⭐⭐⭐</span>
                             <button class="read-btn">اقرأ الآن</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="story-card">
-                    <div class="story-image">🔮</div>
+                    <div class="story-cover">🔮</div>
                     <div class="story-content">
-                        <h3>السر المخفي</h3>
-                        <p>رواية غموض وإثارة تكشف عن سرار غريبة وحقائق مصدومة.</p>
+                        <h3 class="story-title">السر المخفي</h3>
+                        <p class="story-author">سالم يوسف</p>
                         <div class="story-meta">
-                            <span>الكاتب: سالم يوسف</span>
+                            <span class="meta-badge">Mystery</span>
+                            <span class="meta-badge">مستمرة</span>
+                        </div>
+                        <p class="story-description">رواية غموض وإثارة تكشف عن أسرار غريبة وحقائق مصدومة بكل فصل.</p>
+                        <div class="story-footer">
+                            <span class="story-rating">⭐⭐⭐⭐⭐</span>
                             <button class="read-btn">اقرأ الآن</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="story-card">
-                    <div class="story-image">🎭</div>
+                    <div class="story-cover">🎭</div>
                     <div class="story-content">
-                        <h3>حياة مزدوجة</h3>
-                        <p>قصة عن شخص يعيش حياتين مختلفتين تماماً ويحاول التوازن بينهما.</p>
+                        <h3 class="story-title">حياة مزدوجة</h3>
+                        <p class="story-author">علي إبراهيم</p>
                         <div class="story-meta">
-                            <span>الكاتب: علي إبراهيم</span>
+                            <span class="meta-badge">Thriller</span>
+                            <span class="meta-badge">مكتملة</span>
+                        </div>
+                        <p class="story-description">قصة عن شخص يعيش حياتين مختلفتين تماماً ويحاول التوازن بينهما.</p>
+                        <div class="story-footer">
+                            <span class="story-rating">⭐⭐⭐⭐</span>
                             <button class="read-btn">اقرأ الآن</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <section class="hero" id="about" style="margin-top: 3rem;">
-            <h2>عن الموقع</h2>
-            <p>منصة عالم الروايات تهدف إلى توفير أفضل الروايات والقصص العربية للقراء في جميع أنحاء العالم. نحن نؤمن بقوة القراءة وتأثيرها الإيجابي على حياتنا.</p>
-        </section>
-    </div>
-
-    <footer id="contact">
-        <h3>تواصل معنا</h3>
-        <p>البريد الإلكتروني: contact@stories.com</p>
-        <p>الهاتف: +966 50 123 4567</p>
-        <div class="social-links">
-            <a href="#">تويتر</a>
-            <a href="#">فيسبوك</a>
-            <a href="#">إنستغرام</a>
         </div>
-        <p style="margin-top: 1.5rem; border-top: 1px solid #555; padding-top: 1rem;">
-            &copy; 2024 عالم الروايات. جميع الحقوق محفوظة.
-        </p>
+    </section>
+
+    <!-- Levels/Ranks Section -->
+    <section class="section" id="levels">
+        <div class="container">
+            <div class="section-header">
+                <h2>🏆 مستويات الروايات</h2>
+                <p>اكتشف رحلتك من المستوى الأول إلى المستوى الأسطوري</p>
+            </div>
+
+            <div class="levels-grid">
+                <div class="level-card">
+                    <div class="level-icon">🥇</div>
+                    <div class="level-name">المبتدئ</div>
+                    <div class="level-description">أول خطواتك في عالم الروايات</div>
+                    <div class="level-count">156 رواية</div>
+                </div>
+
+                <div class="level-card">
+                    <div class="level-icon">🥈</div>
+                    <div class="level-name">الطالب</div>
+                    <div class="level-description">اكتشف أنواعاً جديدة</div>
+                    <div class="level-count">143 رواية</div>
+                </div>
+
+                <div class="level-card">
+                    <div class="level-icon">🥉</div>
+                    <div class="level-name">الباحث</div>
+                    <div class="level-description">المزيد من المعرفة</div>
+                    <div class="level-count">128 رواية</div>
+                </div>
+
+                <div class="level-card">
+                    <div class="level-icon">✨</div>
+                    <div class="level-name">المكتشف</div>
+                    <div class="level-description">وجدت الروايات المميزة</div>
+                    <div class="level-count">115 رواية</div>
+                </div>
+
+                <div class="level-card">
+                    <div class="level-icon">🌊</div>
+                    <div class="level-name">الغوّاص</div>
+                    <div class="level-description">غصت في أعماق الأدب</div>
+                    <div class="level-count">98 رواية</div>
+                </div>
+
+                <div class="level-card">
+                    <div class="level-icon">💖</div>
+                    <div class="level-name">العاشق</div>
+                    <div class="level-description">عشق الروايات وتفانى</div>
+                    <div class="level-count">87 رواية</div>
+                </div>
+
+                <div class="level-card">
+                    <div class="level-icon">🎪</div>
+                    <div class="level-name">المحترف</div>
+                    <div class="level-description">خبير في اختيار الروايات</div>
+                    <div class="level-count">72 رواية</div>
+                </div>
+
+                <div class="level-card">
+                    <div class="level-icon">🔥</div>
+                    <div class="level-name">الأسطورة</div>
+                    <div class="level-description">روايات الخيال تنحني لك</div>
+                    <div class="level-count">56 رواية</div>
+                </div>
+
+                <div class="level-card">
+                    <div class="level-icon">🌿</div>
+                    <div class="level-name">الحكيم</div>
+                    <div class="level-description">الحكمة في اختيارك</div>
+                    <div class="level-count">41 رواية</div>
+                </div>
+
+                <div class="level-card">
+                    <div class="level-icon">👑</div>
+                    <div class="level-name">الإمبراطور</div>
+                    <div class="level-description">ملك المكتبة الرقمية</div>
+                    <div class="level-count">28 رواية</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>💝 عن رِواق</h2>
+                <p>حيث تبدأ الحكاية</p>
+            </div>
+
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 2.5rem; color: var(--text-secondary); line-height: 1.9; font-size: 1.05rem; max-width: 900px; margin: 0 auto; text-align: center;">
+                <p style="margin-bottom: 1.5rem;">
+                    <strong style="color: var(--primary-gold);">رِواق</strong> هي منصة حديثة مخصصة لهواة الروايات المترجمة، حيث نوفر تجربة قراءة فاخرة وممتعة في بيئة هادئة وأنيقة.
+                </p>
+                <p style="margin-bottom: 1.5rem;">
+                    نعتقد أن القراءة هي أعظم رحلة يمكن للإنسان أن يخوضها، وكل رواية هي بابٌ يفتح إلى عوالم جديدة مليئة بالسحر والمغامرة.
+                </p>
+                <p>
+                    مهمتنا هي جعل عملية البحث عن الرواية المثالية سهلة وممتعة، مع الحفاظ على تجربة قراءة احترافية تليق بقيمة كل عمل أدبي.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section footer-tagline">
+                    <p>رِواق | RIWAQ</p>
+                    <p style="font-family: 'Playfair Display', serif; color: var(--text-secondary); font-size: 0.95rem;">حيث تبدأ الحكاية</p>
+                </div>
+
+                <div class="footer-section">
+                    <h3>الروابط الرئيسية</h3>
+                    <a href="#home">الرئيسية</a>
+                    <a href="#stories">الروايات</a>
+                    <a href="#categories">التصنيفات</a>
+                    <a href="#levels">المستويات</a>
+                </div>
+
+                <div class="footer-section">
+                    <h3>المزيد</h3>
+                    <a href="#about">عن الموقع</a>
+                    <a href="#contact">تواصل معنا</a>
+                    <a href="#">سياسة الخصوصية</a>
+                    <a href="#">شروط الاستخدام</a>
+                </div>
+
+                <div class="footer-section">
+                    <h3>تواصل معنا</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">
+                        <strong>البريد:</strong> contact@riwaq.com
+                    </p>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        <strong>الهاتف:</strong> +966 50 123 4567
+                    </p>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <a href="#" style="color: var(--primary-gold); font-size: 1.1rem;">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" style="color: var(--primary-gold); font-size: 1.1rem;">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" style="color: var(--primary-gold); font-size: 1.1rem;">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 رِواق - RIWAQ. جميع الحقوق محفوظة.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.85rem;">تصميم احترافي بكل عناية | منصة الروايات المترجمة</p>
+            </div>
+        </div>
     </footer>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+                const menu = document.getElementById('mobileMenu');
+                if (menu.classList.contains('active')) {
+                    toggleMenu();
+                }
+            }
+        }
+
+        // Close mobile menu on outside click
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
+                menu.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
