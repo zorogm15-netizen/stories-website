@@ -44,10 +44,10 @@
 
         /* ==================== Header & Navigation ==================== */
         header {
-            background: rgba(15, 20, 25, 0.95);
+            background: rgba(15, 20, 25, 0.97);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
-            padding: 1rem 0;
+            padding: 0.8rem 0;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -66,30 +66,30 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.8rem;
             text-decoration: none;
             color: var(--text-primary);
             transition: all 0.3s ease;
         }
 
         .logo-icon {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: var(--primary-gold);
         }
 
         .logo-text h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 900;
             letter-spacing: 2px;
             color: var(--primary-gold);
         }
 
         .logo-text p {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-secondary);
             letter-spacing: 3px;
-            margin-top: -0.2rem;
+            margin-top: -0.3rem;
         }
 
         .logo:hover .logo-icon {
@@ -99,14 +99,14 @@
 
         nav.desktop-nav {
             display: flex;
-            gap: 2.5rem;
+            gap: 2rem;
             align-items: center;
         }
 
         nav.desktop-nav a {
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
             position: relative;
         }
@@ -133,7 +133,7 @@
         .search-icon {
             color: var(--text-secondary);
             cursor: pointer;
-            font-size: 1.1rem;
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
 
@@ -151,7 +151,7 @@
         }
 
         .hamburger span {
-            width: 25px;
+            width: 22px;
             height: 2px;
             background: var(--primary-gold);
             transition: all 0.3s ease;
@@ -167,7 +167,8 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.95);
             z-index: 999;
-            padding-top: 5rem;
+            padding-top: 4rem;
+            overflow-y: auto;
         }
 
         .mobile-menu.active {
@@ -181,6 +182,7 @@
             padding: 1rem 2rem;
             border-bottom: 1px solid var(--border-color);
             transition: all 0.3s ease;
+            font-size: 1rem;
         }
 
         .mobile-menu a:hover {
@@ -190,12 +192,12 @@
 
         /* ==================== Hero Section ==================== */
         .hero {
-            min-height: 600px;
-            background: linear-gradient(135deg, rgba(15, 20, 25, 0.95) 0%, rgba(107, 91, 149, 0.3) 50%, rgba(30, 60, 114, 0.3) 100%);
+            min-height: 550px;
+            background: linear-gradient(135deg, rgba(15, 20, 25, 0.96) 0%, rgba(107, 91, 149, 0.25) 50%, rgba(30, 60, 114, 0.25) 100%);
             background-image: 
-                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(107, 91, 149, 0.15) 0%, transparent 50%),
-                linear-gradient(135deg, rgba(15, 20, 25, 0.95) 0%, rgba(107, 91, 149, 0.3) 50%, rgba(30, 60, 114, 0.3) 100%);
+                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(107, 91, 149, 0.12) 0%, transparent 50%),
+                linear-gradient(135deg, rgba(15, 20, 25, 0.96) 0%, rgba(107, 91, 149, 0.25) 50%, rgba(30, 60, 114, 0.25) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -211,51 +213,51 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(212,175,55,0.05)" stroke-width="0.5"/></pattern></defs><rect width="1200" height="600" fill="url(%23grid)"/></svg>');
-            opacity: 0.3;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(212,175,55,0.03)" stroke-width="0.5"/></pattern></defs><rect width="1200" height="600" fill="url(%23grid)"/></svg>');
+            opacity: 0.5;
         }
 
         .hero-content {
             position: relative;
             z-index: 2;
-            max-width: 800px;
+            max-width: 750px;
             padding: 0 2rem;
-            animation: fadeInUp 1s ease-out;
+            animation: fadeInUp 0.8s ease-out;
         }
 
         .hero h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
+            font-size: clamp(2rem, 5vw, 3.2rem);
             font-weight: 900;
             color: var(--text-primary);
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-            letter-spacing: -1px;
+            margin-bottom: 1.2rem;
+            line-height: 1.3;
+            letter-spacing: -0.5px;
         }
 
         .hero p {
-            font-size: 1.3rem;
+            font-size: clamp(0.95rem, 3vw, 1.15rem);
             color: var(--text-secondary);
-            margin-bottom: 2.5rem;
-            line-height: 1.8;
+            margin-bottom: 2rem;
+            line-height: 1.7;
         }
 
         .hero-buttons {
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
             justify-content: center;
             flex-wrap: wrap;
         }
 
         .btn-primary, .btn-secondary {
-            padding: 1rem 2.5rem;
-            font-size: 1rem;
+            padding: 0.9rem 2rem;
+            font-size: 0.95rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 600;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             text-decoration: none;
             display: inline-block;
         }
@@ -263,13 +265,13 @@
         .btn-primary {
             background: var(--primary-gold);
             color: var(--bg-dark);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.25);
         }
 
         .btn-primary:hover {
             background: var(--primary-gold-light);
             transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 12px 35px rgba(212, 175, 55, 0.35);
         }
 
         .btn-secondary {
@@ -279,7 +281,7 @@
         }
 
         .btn-secondary:hover {
-            background: rgba(212, 175, 55, 0.1);
+            background: rgba(212, 175, 55, 0.08);
             transform: translateY(-2px);
         }
 
@@ -291,19 +293,19 @@
         }
 
         .section {
-            padding: 5rem 0;
+            padding: 4rem 0;
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
         }
 
         .section-header h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.8rem;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
             color: var(--primary-gold);
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             position: relative;
             display: inline-block;
         }
@@ -311,18 +313,18 @@
         .section-header h2::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: -8px;
             left: 50%;
             transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
+            width: 50px;
+            height: 2px;
             background: var(--primary-gold);
         }
 
         .section-header p {
             color: var(--text-secondary);
-            font-size: 1.1rem;
-            margin-top: 2rem;
+            font-size: 1rem;
+            margin-top: 1.5rem;
         }
 
         /* ==================== Empty State ==================== */
@@ -331,58 +333,87 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 400px;
-            background: linear-gradient(135deg, rgba(26, 31, 46, 0.5) 0%, rgba(36, 45, 61, 0.5) 100%);
+            min-height: 320px;
+            background: linear-gradient(135deg, rgba(26, 31, 46, 0.6) 0%, rgba(36, 45, 61, 0.4) 100%);
             border: 2px dashed var(--border-color);
-            border-radius: 12px;
-            padding: 3rem 2rem;
+            border-radius: 10px;
+            padding: 2.5rem;
             text-align: center;
         }
 
         .empty-state-icon {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.6;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
         }
 
         .empty-state-title {
             font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             color: var(--text-primary);
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
         }
 
         .empty-state-message {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--text-secondary);
-            margin-bottom: 2rem;
-            max-width: 500px;
+            margin-bottom: 0.5rem;
+            max-width: 450px;
+            line-height: 1.6;
         }
 
         .empty-state-submessage {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
-            margin-bottom: 2rem;
             font-style: italic;
         }
 
         /* ==================== Levels Section ==================== */
         .levels-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+
+        @media (min-width: 1024px) {
+            .levels-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .levels-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 767px) {
+            .levels-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .levels-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .level-card {
             background: var(--bg-card);
-            border: 2px solid var(--border-color);
+            border: 1.5px solid var(--border-color);
             border-radius: 8px;
-            padding: 2rem;
+            padding: 1.5rem 1.2rem;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
         }
 
         .level-card::before {
@@ -392,46 +423,97 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, var(--primary-gold), transparent);
+            background: linear-gradient(90deg, var(--level-color), transparent);
         }
 
-        .level-card:nth-child(1) { --level-color: #ffd700; }
-        .level-card:nth-child(2) { --level-color: #c0c0c0; }
-        .level-card:nth-child(3) { --level-color: #cd7f32; }
-        .level-card:nth-child(4) { --level-color: #9932cc; }
-        .level-card:nth-child(5) { --level-color: #20b2aa; }
-        .level-card:nth-child(6) { --level-color: #ff69b4; }
-        .level-card:nth-child(7) { --level-color: #00ced1; }
-        .level-card:nth-child(8) { --level-color: #ff6347; }
-        .level-card:nth-child(9) { --level-color: #3cb371; }
-        .level-card:nth-child(10) { --level-color: #ff4500; }
+        .level-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% -50%, rgba(var(--level-rgb), 0.08), transparent 70%);
+            pointer-events: none;
+        }
 
-        .level-card::before {
-            background: var(--level-color);
+        .level-card:nth-child(1) { 
+            --level-color: #ffd700;
+            --level-rgb: 255, 215, 0;
+        }
+        .level-card:nth-child(2) { 
+            --level-color: #c0c0c0;
+            --level-rgb: 192, 192, 192;
+        }
+        .level-card:nth-child(3) { 
+            --level-color: #cd7f32;
+            --level-rgb: 205, 127, 50;
+        }
+        .level-card:nth-child(4) { 
+            --level-color: #9932cc;
+            --level-rgb: 153, 50, 204;
+        }
+        .level-card:nth-child(5) { 
+            --level-color: #20b2aa;
+            --level-rgb: 32, 178, 170;
+        }
+        .level-card:nth-child(6) { 
+            --level-color: #ff69b4;
+            --level-rgb: 255, 105, 180;
+        }
+        .level-card:nth-child(7) { 
+            --level-color: #00ced1;
+            --level-rgb: 0, 206, 209;
+        }
+        .level-card:nth-child(8) { 
+            --level-color: #ff6347;
+            --level-rgb: 255, 99, 71;
+        }
+        .level-card:nth-child(9) { 
+            --level-color: #3cb371;
+            --level-rgb: 60, 179, 113;
+        }
+        .level-card:nth-child(10) { 
+            --level-color: #ff4500;
+            --level-rgb: 255, 69, 0;
         }
 
         .level-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-5px);
             border-color: var(--level-color);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4), 
+                        0 0 25px rgba(var(--level-rgb), 0.15);
+        }
+
+        .level-rank {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: rgba(var(--level-rgb), 0.3);
+            margin-bottom: -0.5rem;
+            line-height: 1;
         }
 
         .level-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 2.2rem;
+            margin: 0.5rem 0 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .level-card:hover .level-icon {
+            transform: scale(1.15) rotate(5deg);
         }
 
         .level-name {
             font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: var(--text-primary);
             margin-bottom: 0.5rem;
+            font-weight: 700;
         }
 
         .level-description {
             color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            flex-grow: 1;
         }
 
         /* ==================== About Section ==================== */
@@ -439,17 +521,21 @@
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 2.5rem;
+            padding: 2rem;
             color: var(--text-secondary);
-            line-height: 1.9;
-            font-size: 1.05rem;
-            max-width: 900px;
+            line-height: 1.8;
+            font-size: 1rem;
+            max-width: 850px;
             margin: 0 auto;
             text-align: center;
         }
 
         .about-card p {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .about-card p:last-child {
+            margin-bottom: 0;
         }
 
         .about-card strong {
@@ -458,10 +544,10 @@
 
         /* ==================== Footer ==================== */
         footer {
-            background: rgba(15, 20, 25, 0.95);
+            background: rgba(15, 20, 25, 0.97);
             border-top: 1px solid var(--border-color);
-            padding: 3rem 0 1rem;
-            margin-top: 5rem;
+            padding: 2.5rem 0 1rem;
+            margin-top: 4rem;
         }
 
         .footer-container {
@@ -472,94 +558,105 @@
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .footer-section h3 {
             color: var(--primary-gold);
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            margin-bottom: 0.8rem;
             font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
         .footer-section a {
             display: block;
             color: var(--text-secondary);
             text-decoration: none;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.6rem;
             transition: all 0.3s ease;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .footer-section a:hover {
             color: var(--primary-gold);
-            padding-right: 0.5rem;
+            padding-right: 0.4rem;
         }
 
         .footer-tagline {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.3rem;
         }
 
         .footer-tagline p:first-child {
             font-family: 'Playfair Display', serif;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: var(--primary-gold);
+            font-weight: 900;
         }
 
-        .footer-contact-info {
+        .footer-tagline p:last-child {
+            font-family: 'Playfair Display', serif;
             color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-contact-info strong {
-            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-style: italic;
         }
 
         .footer-contact-placeholder {
             color: var(--text-muted);
             font-style: italic;
             font-size: 0.9rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
         }
 
         .footer-socials {
             display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
+            gap: 0.8rem;
         }
 
         .footer-socials a {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             color: var(--primary-gold);
             text-decoration: none;
-            font-size: 1.1rem;
+            font-size: 1rem;
             transition: all 0.3s ease;
             margin: 0;
             padding: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            background: rgba(212, 175, 55, 0.08);
         }
 
         .footer-socials a:hover {
-            transform: scale(1.2);
-            color: var(--primary-gold-light);
+            background: rgba(212, 175, 55, 0.15);
+            transform: translateY(-2px);
         }
 
         .footer-bottom {
             border-top: 1px solid var(--border-color);
-            padding-top: 1.5rem;
+            padding-top: 1.2rem;
             text-align: center;
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+        }
+
+        .footer-bottom p:last-child {
+            margin-top: 0.4rem;
+            font-size: 0.8rem;
         }
 
         /* ==================== Animations ==================== */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(25px);
             }
             to {
                 opacity: 1;
@@ -579,7 +676,7 @@
         /* ==================== Responsive ==================== */
         @media (max-width: 768px) {
             .header-container {
-                padding: 0 1rem;
+                padding: 0 1.2rem;
             }
 
             .desktop-nav {
@@ -590,46 +687,30 @@
                 display: flex;
             }
 
-            .hero h2 {
-                font-size: 2.2rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .btn-primary, .btn-secondary {
-                width: 100%;
-            }
-
-            .section-header h2 {
-                font-size: 2rem;
-            }
-
-            .levels-grid {
-                grid-template-columns: 1fr;
+            .logo-text h1 {
+                font-size: 1.4rem;
             }
 
             .section {
                 padding: 3rem 0;
             }
 
+            .section-header {
+                margin-bottom: 2rem;
+            }
+
             .container {
-                padding: 0 1rem;
+                padding: 0 1.2rem;
             }
 
             .about-card {
                 padding: 1.5rem;
+                font-size: 0.95rem;
             }
 
             .empty-state {
-                min-height: 300px;
-                padding: 2rem 1rem;
+                min-height: 280px;
+                padding: 2rem 1.5rem;
             }
 
             .empty-state-icon {
@@ -637,30 +718,154 @@
             }
 
             .empty-state-title {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
+            }
+
+            .level-card {
+                padding: 1.2rem 1rem;
+            }
+
+            .level-rank {
+                font-size: 1.8rem;
+            }
+
+            .level-icon {
+                font-size: 2rem;
+            }
+
+            .level-name {
+                font-size: 1.1rem;
+            }
+
+            .level-description {
+                font-size: 0.8rem;
+            }
+
+            footer {
+                padding: 2rem 0 0.8rem;
+            }
+
+            .footer-content {
+                gap: 1.2rem;
+                margin-bottom: 1.2rem;
+            }
+
+            .footer-section h3 {
+                font-size: 0.9rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .footer-section a {
+                font-size: 0.85rem;
+                margin-bottom: 0.5rem;
             }
         }
 
         @media (max-width: 480px) {
+            .header-container {
+                padding: 0 1rem;
+            }
+
             .logo-text h1 {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
             }
 
-            .hero h2 {
-                font-size: 1.8rem;
+            .logo-text p {
+                font-size: 0.65rem;
             }
 
-            .hero p {
-                font-size: 0.95rem;
+            .hero {
+                min-height: 480px;
+            }
+
+            .hero-content {
+                padding: 0 1rem;
+            }
+
+            .hero-buttons {
+                gap: 0.8rem;
+            }
+
+            .btn-primary, .btn-secondary {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
             }
 
             .section-header h2 {
                 font-size: 1.5rem;
             }
 
-            .empty-state-message {
-                font-size: 1rem;
+            .section-header p {
+                font-size: 0.95rem;
             }
+
+            .empty-state {
+                min-height: 250px;
+                padding: 1.5rem 1rem;
+                border-radius: 6px;
+            }
+
+            .empty-state-icon {
+                font-size: 2.5rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .empty-state-title {
+                font-size: 1.2rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .empty-state-message {
+                font-size: 0.95rem;
+            }
+
+            .level-card {
+                padding: 1rem 0.8rem;
+            }
+
+            .level-rank {
+                font-size: 1.5rem;
+                margin-bottom: -0.3rem;
+            }
+
+            .level-icon {
+                font-size: 1.8rem;
+                margin: 0.4rem 0 0.8rem;
+            }
+
+            .level-name {
+                font-size: 1rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .level-description {
+                font-size: 0.75rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .footer-section h3 {
+                font-size: 0.85rem;
+            }
+
+            .footer-bottom {
+                padding-top: 1rem;
+                font-size: 0.8rem;
+            }
+
+            .footer-bottom p:last-child {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Prevent horizontal scroll */
+        body, html {
+            overflow-x: hidden;
+            width: 100%;
         }
     </style>
 </head>
@@ -722,8 +927,8 @@
             <div class="empty-state">
                 <div class="empty-state-icon">📚</div>
                 <h3 class="empty-state-title">لا توجد روايات متاحة حالياً</h3>
-                <p class="empty-state-message">منصة رِواق قيد الإعداد والبناء. سيتم إضافة الروايات المترجمة قريباً لتوفير أفضل تجربة قراءة.</p>
-                <p class="empty-state-submessage">تابعنا للحصول على آخر التحديثات</p>
+                <p class="empty-state-message">نعمل حالياً على تجهيز أولى الروايات في رِواق.</p>
+                <p class="empty-state-submessage">ترقب التحديثات القادمة</p>
             </div>
         </div>
     </section>
@@ -738,63 +943,73 @@
 
             <div class="levels-grid">
                 <div class="level-card">
-                    <div class="level-icon">🥇</div>
+                    <div class="level-rank">01</div>
+                    <div class="level-icon">📖</div>
                     <div class="level-name">المبتدئ</div>
-                    <div class="level-description">أول خطواتك في عالم الروايات</div>
+                    <div class="level-description">خطوتك الأولى في عالم الروايات</div>
                 </div>
 
                 <div class="level-card">
-                    <div class="level-icon">🥈</div>
+                    <div class="level-rank">02</div>
+                    <div class="level-icon">📚</div>
                     <div class="level-name">الطالب</div>
-                    <div class="level-description">اكتشف أنواعاً جديدة وتنوعاً في الأجناس</div>
+                    <div class="level-description">تبدأ باكتشاف عوالم جديدة</div>
                 </div>
 
                 <div class="level-card">
-                    <div class="level-icon">🥉</div>
+                    <div class="level-rank">03</div>
+                    <div class="level-icon">🔍</div>
                     <div class="level-name">الباحث</div>
-                    <div class="level-description">تعمق أكثر في عوالم الروايات</div>
+                    <div class="level-description">تتعمق أكثر في عالم الحكايات</div>
                 </div>
 
                 <div class="level-card">
+                    <div class="level-rank">04</div>
                     <div class="level-icon">✨</div>
                     <div class="level-name">المكتشف</div>
-                    <div class="level-description">وجدت الروايات المميزة والفريدة</div>
+                    <div class="level-description">تبحث عن الروايات المميزة والنادرة</div>
                 </div>
 
                 <div class="level-card">
+                    <div class="level-rank">05</div>
                     <div class="level-icon">🌊</div>
                     <div class="level-name">الغوّاص</div>
-                    <div class="level-description">غصت عميقاً في أعماق الأدب</div>
+                    <div class="level-description">تغوص في أعماق الأدب</div>
                 </div>
 
                 <div class="level-card">
-                    <div class="level-icon">💖</div>
+                    <div class="level-rank">06</div>
+                    <div class="level-icon">❤️</div>
                     <div class="level-name">العاشق</div>
-                    <div class="level-description">عشق الروايات وتفانى في القراءة</div>
+                    <div class="level-description">أصبحت الروايات جزءاً من رحلتك</div>
                 </div>
 
                 <div class="level-card">
-                    <div class="level-icon">🎪</div>
+                    <div class="level-rank">07</div>
+                    <div class="level-icon">🎯</div>
                     <div class="level-name">المحترف</div>
-                    <div class="level-description">خبير في اختيار الروايات المثالية</div>
+                    <div class="level-description">خبرة واسعة في اختيار وقراءة الروايات</div>
                 </div>
 
                 <div class="level-card">
+                    <div class="level-rank">08</div>
                     <div class="level-icon">🔥</div>
                     <div class="level-name">الأسطورة</div>
-                    <div class="level-description">روايات الخيال تنحني لك إجلالاً</div>
+                    <div class="level-description">وصلت إلى عالم الروايات الاستثنائية</div>
                 </div>
 
                 <div class="level-card">
+                    <div class="level-rank">09</div>
                     <div class="level-icon">🌿</div>
                     <div class="level-name">الحكيم</div>
-                    <div class="level-description">الحكمة والتأمل في كل اختيار</div>
+                    <div class="level-description">ذائقة واسعة وخبرة عميقة</div>
                 </div>
 
                 <div class="level-card">
+                    <div class="level-rank">10</div>
                     <div class="level-icon">👑</div>
                     <div class="level-name">الإمبراطور</div>
-                    <div class="level-description">ملك المكتبة الرقمية وسيد الروايات</div>
+                    <div class="level-description">قمة رحلة القارئ</div>
                 </div>
             </div>
         </div>
@@ -827,8 +1042,9 @@
         <div class="footer-container">
             <div class="footer-content">
                 <div class="footer-section footer-tagline">
-                    <p>رِواق | RIWAQ</p>
-                    <p style="font-family: 'Playfair Display', serif; color: var(--text-secondary); font-size: 0.95rem;">حيث تبدأ الحكاية</p>
+                    <p>رِواق</p>
+                    <p>RIWAQ</p>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.3rem;">حيث تبدأ الحكاية</p>
                 </div>
 
                 <div class="footer-section">
@@ -866,7 +1082,7 @@
 
             <div class="footer-bottom">
                 <p>&copy; 2024 رِواق - RIWAQ. جميع الحقوق محفوظة.</p>
-                <p style="margin-top: 0.5rem; font-size: 0.85rem;">منصة الروايات المترجمة | تجربة قراءة احترافية</p>
+                <p>منصة الروايات المترجمة | تجربة قراءة احترافية</p>
             </div>
         </div>
     </footer>
@@ -893,7 +1109,7 @@
             const menu = document.getElementById('mobileMenu');
             const hamburger = document.querySelector('.hamburger');
             
-            if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
+            if (menu && hamburger && !menu.contains(event.target) && !hamburger.contains(event.target)) {
                 menu.classList.remove('active');
             }
         });
