@@ -283,7 +283,7 @@
             transform: translateY(-2px);
         }
 
-        /* ==================== Featured Stories Section ==================== */
+        /* ==================== Container & Sections ==================== */
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -325,123 +325,45 @@
             margin-top: 2rem;
         }
 
-        .stories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 2rem;
-        }
-
-        .story-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            height: 100%;
+        /* ==================== Empty State ==================== */
+        .empty-state {
             display: flex;
             flex-direction: column;
-        }
-
-        .story-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--primary-gold);
-            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.2);
-        }
-
-        .story-cover {
-            width: 100%;
-            height: 280px;
-            background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%);
-            display: flex;
             align-items: center;
             justify-content: center;
+            min-height: 400px;
+            background: linear-gradient(135deg, rgba(26, 31, 46, 0.5) 0%, rgba(36, 45, 61, 0.5) 100%);
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .empty-state-icon {
             font-size: 4rem;
-            position: relative;
-            overflow: hidden;
+            margin-bottom: 1.5rem;
+            opacity: 0.6;
         }
 
-        .story-cover::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 280"><defs><pattern id="books" width="60" height="60" patternUnits="userSpaceOnUse"><rect x="10" y="10" width="40" height="40" stroke="rgba(255,255,255,0.1)" fill="none"/></pattern></defs><rect fill="url(%23books)" width="240" height="280"/></svg>');
-            opacity: 0.3;
-        }
-
-        .story-content {
-            padding: 1.5rem;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .story-title {
+        .empty-state-title {
             font-family: 'Playfair Display', serif;
-            font-size: 1.3rem;
+            font-size: 1.8rem;
             color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
+            margin-bottom: 1rem;
         }
 
-        .story-author {
-            font-size: 0.9rem;
+        .empty-state-message {
+            font-size: 1.1rem;
             color: var(--text-secondary);
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
+            max-width: 500px;
         }
 
-        .story-meta {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-            font-size: 0.85rem;
-        }
-
-        .meta-badge {
-            background: rgba(212, 175, 55, 0.15);
-            color: var(--primary-gold);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-        }
-
-        .story-description {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            flex: 1;
-            line-height: 1.6;
-        }
-
-        .story-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .story-rating {
-            color: var(--primary-gold);
-            font-size: 0.9rem;
-        }
-
-        .read-btn {
-            background: var(--primary-gold);
-            color: var(--bg-dark);
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .read-btn:hover {
-            background: var(--primary-gold-light);
-            transform: scale(1.05);
+        .empty-state-submessage {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-style: italic;
         }
 
         /* ==================== Levels Section ==================== */
@@ -512,10 +434,26 @@
             margin-bottom: 1rem;
         }
 
-        .level-count {
-            font-size: 1.3rem;
-            color: var(--level-color);
-            font-weight: bold;
+        /* ==================== About Section ==================== */
+        .about-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2.5rem;
+            color: var(--text-secondary);
+            line-height: 1.9;
+            font-size: 1.05rem;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-card p {
+            margin-bottom: 1.5rem;
+        }
+
+        .about-card strong {
+            color: var(--primary-gold);
         }
 
         /* ==================== Footer ==================== */
@@ -572,6 +510,43 @@
             color: var(--primary-gold);
         }
 
+        .footer-contact-info {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-contact-info strong {
+            color: var(--text-primary);
+        }
+
+        .footer-contact-placeholder {
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .footer-socials a {
+            display: inline-block;
+            color: var(--primary-gold);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            margin: 0;
+            padding: 0;
+        }
+
+        .footer-socials a:hover {
+            transform: scale(1.2);
+            color: var(--primary-gold-light);
+        }
+
         .footer-bottom {
             border-top: 1px solid var(--border-color);
             padding-top: 1.5rem;
@@ -597,15 +572,9 @@
             to { opacity: 1; }
         }
 
-        .story-card {
-            animation: fadeIn 0.6s ease-out;
+        .empty-state {
+            animation: fadeIn 0.8s ease-out;
         }
-
-        .story-card:nth-child(2) { animation-delay: 0.1s; }
-        .story-card:nth-child(3) { animation-delay: 0.2s; }
-        .story-card:nth-child(4) { animation-delay: 0.3s; }
-        .story-card:nth-child(5) { animation-delay: 0.4s; }
-        .story-card:nth-child(6) { animation-delay: 0.5s; }
 
         /* ==================== Responsive ==================== */
         @media (max-width: 768px) {
@@ -642,11 +611,6 @@
                 font-size: 2rem;
             }
 
-            .stories-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 1.5rem;
-            }
-
             .levels-grid {
                 grid-template-columns: 1fr;
             }
@@ -657,6 +621,23 @@
 
             .container {
                 padding: 0 1rem;
+            }
+
+            .about-card {
+                padding: 1.5rem;
+            }
+
+            .empty-state {
+                min-height: 300px;
+                padding: 2rem 1rem;
+            }
+
+            .empty-state-icon {
+                font-size: 3rem;
+            }
+
+            .empty-state-title {
+                font-size: 1.5rem;
             }
         }
 
@@ -673,12 +654,12 @@
                 font-size: 0.95rem;
             }
 
-            .stories-grid {
-                grid-template-columns: 1fr;
-            }
-
             .section-header h2 {
                 font-size: 1.5rem;
+            }
+
+            .empty-state-message {
+                font-size: 1rem;
             }
         }
     </style>
@@ -697,7 +678,6 @@
             <nav class="desktop-nav">
                 <a href="#home">الرئيسية</a>
                 <a href="#stories">الروايات</a>
-                <a href="#categories">التصنيفات</a>
                 <a href="#levels">المستويات</a>
                 <a href="#about">عن الموقع</a>
                 <i class="fas fa-search search-icon"></i>
@@ -714,7 +694,6 @@
     <nav class="mobile-menu" id="mobileMenu">
         <a href="#home" onclick="toggleMenu()">الرئيسية</a>
         <a href="#stories" onclick="toggleMenu()">الروايات</a>
-        <a href="#categories" onclick="toggleMenu()">التصنيفات</a>
         <a href="#levels" onclick="toggleMenu()">المستويات</a>
         <a href="#about" onclick="toggleMenu()">عن الموقع</a>
         <a href="#contact" onclick="toggleMenu()">تواصل معنا</a>
@@ -726,8 +705,8 @@
             <h2>اكتشف عالماً جديداً بين صفحات الروايات</h2>
             <p>اقرأ، اكتشف، وواصل مغامرتك في عالم من القصص الخيالية والروايات المترجمة</p>
             <div class="hero-buttons">
-                <button class="btn-primary" onclick="scrollToSection('stories')">ابدأ القراءة</button>
-                <button class="btn-secondary" onclick="scrollToSection('stories')">استكشف الروايات</button>
+                <button class="btn-primary" onclick="scrollToSection('stories')">استكشف الروايات</button>
+                <button class="btn-secondary" onclick="scrollToSection('levels')">اكتشف المستويات</button>
             </div>
         </div>
     </section>
@@ -737,111 +716,14 @@
         <div class="container">
             <div class="section-header">
                 <h2>🌟 الروايات المميزة</h2>
-                <p>اختر من أفضل الروايات المترجمة بعناية</p>
+                <p>اختر من أفضل الروايات المترجمة</p>
             </div>
 
-            <div class="stories-grid">
-                <div class="story-card">
-                    <div class="story-cover">📖</div>
-                    <div class="story-content">
-                        <h3 class="story-title">رحلة الأحلام</h3>
-                        <p class="story-author">أحمد محمد</p>
-                        <div class="story-meta">
-                            <span class="meta-badge">Fantasy</span>
-                            <span class="meta-badge">مترجمة</span>
-                        </div>
-                        <p class="story-description">رواية مشوقة تتحدث عن فتاة تسعى لتحقيق أحلامها في عالم مليء بالتحديات والسحر.</p>
-                        <div class="story-footer">
-                            <span class="story-rating">⭐⭐⭐⭐⭐</span>
-                            <button class="read-btn">اقرأ الآن</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="story-card">
-                    <div class="story-cover">💫</div>
-                    <div class="story-content">
-                        <h3 class="story-title">نجوم الليل</h3>
-                        <p class="story-author">فاطمة علي</p>
-                        <div class="story-meta">
-                            <span class="meta-badge">Romance</span>
-                            <span class="meta-badge">مستمرة</span>
-                        </div>
-                        <p class="story-description">قصة رومانسية جميلة عن حب حقيقي يتغلب على جميع العقبات والمشاكل.</p>
-                        <div class="story-footer">
-                            <span class="story-rating">⭐⭐⭐⭐⭐</span>
-                            <button class="read-btn">اقرأ الآن</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="story-card">
-                    <div class="story-cover">⚔️</div>
-                    <div class="story-content">
-                        <h3 class="story-title">حارس الممالك</h3>
-                        <p class="story-author">محمود حسن</p>
-                        <div class="story-meta">
-                            <span class="meta-badge">Action</span>
-                            <span class="meta-badge">مكتملة</span>
-                        </div>
-                        <p class="story-description">رواية خيال علمي مليئة بالمغامرات والأكشن والتشويق في عوالم خيالية.</p>
-                        <div class="story-footer">
-                            <span class="story-rating">⭐⭐⭐⭐⭐</span>
-                            <button class="read-btn">اقرأ الآن</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="story-card">
-                    <div class="story-cover">🌹</div>
-                    <div class="story-content">
-                        <h3 class="story-title">وردة الصحراء</h3>
-                        <p class="story-author">ليلى محمود</p>
-                        <div class="story-meta">
-                            <span class="meta-badge">Drama</span>
-                            <span class="meta-badge">مستمرة</span>
-                        </div>
-                        <p class="story-description">قصة درامية تروي حكاية حب وصراع عبر الأجيال في صحراء العربية.</p>
-                        <div class="story-footer">
-                            <span class="story-rating">⭐⭐⭐⭐</span>
-                            <button class="read-btn">اقرأ الآن</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="story-card">
-                    <div class="story-cover">🔮</div>
-                    <div class="story-content">
-                        <h3 class="story-title">السر المخفي</h3>
-                        <p class="story-author">سالم يوسف</p>
-                        <div class="story-meta">
-                            <span class="meta-badge">Mystery</span>
-                            <span class="meta-badge">مستمرة</span>
-                        </div>
-                        <p class="story-description">رواية غموض وإثارة تكشف عن أسرار غريبة وحقائق مصدومة بكل فصل.</p>
-                        <div class="story-footer">
-                            <span class="story-rating">⭐⭐⭐⭐⭐</span>
-                            <button class="read-btn">اقرأ الآن</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="story-card">
-                    <div class="story-cover">🎭</div>
-                    <div class="story-content">
-                        <h3 class="story-title">حياة مزدوجة</h3>
-                        <p class="story-author">علي إبراهيم</p>
-                        <div class="story-meta">
-                            <span class="meta-badge">Thriller</span>
-                            <span class="meta-badge">مكتملة</span>
-                        </div>
-                        <p class="story-description">قصة عن شخص يعيش حياتين مختلفتين تماماً ويحاول التوازن بينهما.</p>
-                        <div class="story-footer">
-                            <span class="story-rating">⭐⭐⭐⭐</span>
-                            <button class="read-btn">اقرأ الآن</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="empty-state">
+                <div class="empty-state-icon">📚</div>
+                <h3 class="empty-state-title">لا توجد روايات متاحة حالياً</h3>
+                <p class="empty-state-message">منصة رِواق قيد الإعداد والبناء. سيتم إضافة الروايات المترجمة قريباً لتوفير أفضل تجربة قراءة.</p>
+                <p class="empty-state-submessage">تابعنا للحصول على آخر التحديثات</p>
             </div>
         </div>
     </section>
@@ -859,70 +741,60 @@
                     <div class="level-icon">🥇</div>
                     <div class="level-name">المبتدئ</div>
                     <div class="level-description">أول خطواتك في عالم الروايات</div>
-                    <div class="level-count">156 رواية</div>
                 </div>
 
                 <div class="level-card">
                     <div class="level-icon">🥈</div>
                     <div class="level-name">الطالب</div>
-                    <div class="level-description">اكتشف أنواعاً جديدة</div>
-                    <div class="level-count">143 رواية</div>
+                    <div class="level-description">اكتشف أنواعاً جديدة وتنوعاً في الأجناس</div>
                 </div>
 
                 <div class="level-card">
                     <div class="level-icon">🥉</div>
                     <div class="level-name">الباحث</div>
-                    <div class="level-description">المزيد من المعرفة</div>
-                    <div class="level-count">128 رواية</div>
+                    <div class="level-description">تعمق أكثر في عوالم الروايات</div>
                 </div>
 
                 <div class="level-card">
                     <div class="level-icon">✨</div>
                     <div class="level-name">المكتشف</div>
-                    <div class="level-description">وجدت الروايات المميزة</div>
-                    <div class="level-count">115 رواية</div>
+                    <div class="level-description">وجدت الروايات المميزة والفريدة</div>
                 </div>
 
                 <div class="level-card">
                     <div class="level-icon">🌊</div>
                     <div class="level-name">الغوّاص</div>
-                    <div class="level-description">غصت في أعماق الأدب</div>
-                    <div class="level-count">98 رواية</div>
+                    <div class="level-description">غصت عميقاً في أعماق الأدب</div>
                 </div>
 
                 <div class="level-card">
                     <div class="level-icon">💖</div>
                     <div class="level-name">العاشق</div>
-                    <div class="level-description">عشق الروايات وتفانى</div>
-                    <div class="level-count">87 رواية</div>
+                    <div class="level-description">عشق الروايات وتفانى في القراءة</div>
                 </div>
 
                 <div class="level-card">
                     <div class="level-icon">🎪</div>
                     <div class="level-name">المحترف</div>
-                    <div class="level-description">خبير في اختيار الروايات</div>
-                    <div class="level-count">72 رواية</div>
+                    <div class="level-description">خبير في اختيار الروايات المثالية</div>
                 </div>
 
                 <div class="level-card">
                     <div class="level-icon">🔥</div>
                     <div class="level-name">الأسطورة</div>
-                    <div class="level-description">روايات الخيال تنحني لك</div>
-                    <div class="level-count">56 رواية</div>
+                    <div class="level-description">روايات الخيال تنحني لك إجلالاً</div>
                 </div>
 
                 <div class="level-card">
                     <div class="level-icon">🌿</div>
                     <div class="level-name">الحكيم</div>
-                    <div class="level-description">الحكمة في اختيارك</div>
-                    <div class="level-count">41 رواية</div>
+                    <div class="level-description">الحكمة والتأمل في كل اختيار</div>
                 </div>
 
                 <div class="level-card">
                     <div class="level-icon">👑</div>
                     <div class="level-name">الإمبراطور</div>
-                    <div class="level-description">ملك المكتبة الرقمية</div>
-                    <div class="level-count">28 رواية</div>
+                    <div class="level-description">ملك المكتبة الرقمية وسيد الروايات</div>
                 </div>
             </div>
         </div>
@@ -936,11 +808,11 @@
                 <p>حيث تبدأ الحكاية</p>
             </div>
 
-            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 2.5rem; color: var(--text-secondary); line-height: 1.9; font-size: 1.05rem; max-width: 900px; margin: 0 auto; text-align: center;">
-                <p style="margin-bottom: 1.5rem;">
-                    <strong style="color: var(--primary-gold);">رِواق</strong> هي منصة حديثة مخصصة لهواة الروايات المترجمة، حيث نوفر تجربة قراءة فاخرة وممتعة في بيئة هادئة وأنيقة.
+            <div class="about-card">
+                <p>
+                    <strong>رِواق</strong> هي منصة حديثة مخصصة لهواة الروايات المترجمة، حيث نوفر تجربة قراءة فاخرة وممتعة في بيئة هادئة وأنيقة.
                 </p>
-                <p style="margin-bottom: 1.5rem;">
+                <p>
                     نعتقد أن القراءة هي أعظم رحلة يمكن للإنسان أن يخوضها، وكل رواية هي بابٌ يفتح إلى عوالم جديدة مليئة بالسحر والمغامرة.
                 </p>
                 <p>
@@ -963,8 +835,8 @@
                     <h3>الروابط الرئيسية</h3>
                     <a href="#home">الرئيسية</a>
                     <a href="#stories">الروايات</a>
-                    <a href="#categories">التصنيفات</a>
                     <a href="#levels">المستويات</a>
+                    <a href="#about">عن الموقع</a>
                 </div>
 
                 <div class="footer-section">
@@ -977,20 +849,15 @@
 
                 <div class="footer-section">
                     <h3>تواصل معنا</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">
-                        <strong>البريد:</strong> contact@riwaq.com
-                    </p>
-                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
-                        <strong>الهاتف:</strong> +966 50 123 4567
-                    </p>
-                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                        <a href="#" style="color: var(--primary-gold); font-size: 1.1rem;">
+                    <p class="footer-contact-placeholder">سيتم إضافة معلومات التواصل لاحقاً</p>
+                    <div class="footer-socials">
+                        <a href="#" title="Twitter">
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="#" style="color: var(--primary-gold); font-size: 1.1rem;">
+                        <a href="#" title="Facebook">
                             <i class="fab fa-facebook"></i>
                         </a>
-                        <a href="#" style="color: var(--primary-gold); font-size: 1.1rem;">
+                        <a href="#" title="Instagram">
                             <i class="fab fa-instagram"></i>
                         </a>
                     </div>
@@ -999,7 +866,7 @@
 
             <div class="footer-bottom">
                 <p>&copy; 2024 رِواق - RIWAQ. جميع الحقوق محفوظة.</p>
-                <p style="margin-top: 0.5rem; font-size: 0.85rem;">تصميم احترافي بكل عناية | منصة الروايات المترجمة</p>
+                <p style="margin-top: 0.5rem; font-size: 0.85rem;">منصة الروايات المترجمة | تجربة قراءة احترافية</p>
             </div>
         </div>
     </footer>
