@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عالم الروايات</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #ddd;
+        }
+
+        nav {
+            background: #333;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1.5rem;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #667eea;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .hero {
+            background: white;
+            padding: 3rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .hero h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .story-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .story-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .story-image {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .story-content {
+            padding: 1.5rem;
+        }
+
+        .story-content h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .story-content p {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .story-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        .read-btn {
+            background: #667eea;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 1rem;
+        }
+
+        .read-btn:hover {
+            background: #764ba2;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        .social-links {
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .hero {
+                padding: 1.5rem;
+            }
+
+            nav a {
+                display: block;
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📚 عالم الروايات</h1>
+        <p>أفضل منصة للقراءة والاستمتاع بالروايات</p>
+    </header>
+
+    <nav>
+        <a href="#home">الرئيسية</a>
+        <a href="#stories">الروايات</a>
+        <a href="#about">عن الموقع</a>
+        <a href="#contact">تواصل معنا</a>
+    </nav>
+
+    <div class="container">
+        <section class="hero" id="home">
+            <h2>مرحباً بك في عالم الروايات الساحر</h2>
+            <p>اكتشف أفضل الروايات والقصص الشيقة. اغمر نفسك في عوالم خيالية مليئة بالمغامرة والإثارة.</p>
+        </section>
+
+        <section id="stories">
+            <h2 style="text-align: center; color: white; margin-bottom: 2rem; font-size: 2rem;">أفضل الروايات</h2>
+            <div class="stories-grid">
+                <div class="story-card">
+                    <div class="story-image">📖</div>
+                    <div class="story-content">
+                        <h3>رحلة الأحلام</h3>
+                        <p>رواية مشوقة تتحدث عن فتاة تسعى لتحقيق أحلامها في عالم مليء بالتحديات.</p>
+                        <div class="story-meta">
+                            <span>الكاتب: أحمد محمد</span>
+                            <button class="read-btn">اقرأ الآن</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="story-card">
+                    <div class="story-image">💫</div>
+                    <div class="story-content">
+                        <h3>نجوم الليل</h3>
+                        <p>قصة رومانسية جميلة عن حب حقيقي يتغلب على جميع العقبات والمشاكل.</p>
+                        <div class="story-meta">
+                            <span>الكاتبة: فاطمة علي</span>
+                            <button class="read-btn">اقرأ الآن</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="story-card">
+                    <div class="story-image">⚔️</div>
+                    <div class="story-content">
+                        <h3>حارس الممالك</h3>
+                        <p>رواية خيال علمي مليئة بالمغامرات والأكشن والتشويق في عوالم خيالية.</p>
+                        <div class="story-meta">
+                            <span>الكاتب: محمود حسن</span>
+                            <button class="read-btn">اقرأ الآن</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="story-card">
+                    <div class="story-image">🌹</div>
+                    <div class="story-content">
+                        <h3>وردة الصحراء</h3>
+                        <p>قصة درامية تروي حكاية حب وصراع عبر الأجيال في صحراء العربية.</p>
+                        <div class="story-meta">
+                            <span>الكاتبة: ليلى محمود</span>
+                            <button class="read-btn">اقرأ الآن</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="story-card">
+                    <div class="story-image">🔮</div>
+                    <div class="story-content">
+                        <h3>السر المخفي</h3>
+                        <p>رواية غموض وإثارة تكشف عن سرار غريبة وحقائق مصدومة.</p>
+                        <div class="story-meta">
+                            <span>الكاتب: سالم يوسف</span>
+                            <button class="read-btn">اقرأ الآن</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="story-card">
+                    <div class="story-image">🎭</div>
+                    <div class="story-content">
+                        <h3>حياة مزدوجة</h3>
+                        <p>قصة عن شخص يعيش حياتين مختلفتين تماماً ويحاول التوازن بينهما.</p>
+                        <div class="story-meta">
+                            <span>الكاتب: علي إبراهيم</span>
+                            <button class="read-btn">اقرأ الآن</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="hero" id="about" style="margin-top: 3rem;">
+            <h2>عن الموقع</h2>
+            <p>منصة عالم الروايات تهدف إلى توفير أفضل الروايات والقصص العربية للقراء في جميع أنحاء العالم. نحن نؤمن بقوة القراءة وتأثيرها الإيجابي على حياتنا.</p>
+        </section>
+    </div>
+
+    <footer id="contact">
+        <h3>تواصل معنا</h3>
+        <p>البريد الإلكتروني: contact@stories.com</p>
+        <p>الهاتف: +966 50 123 4567</p>
+        <div class="social-links">
+            <a href="#">تويتر</a>
+            <a href="#">فيسبوك</a>
+            <a href="#">إنستغرام</a>
+        </div>
+        <p style="margin-top: 1.5rem; border-top: 1px solid #555; padding-top: 1rem;">
+            &copy; 2024 عالم الروايات. جميع الحقوق محفوظة.
+        </p>
+    </footer>
+</body>
+</html>
