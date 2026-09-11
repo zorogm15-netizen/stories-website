@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دخول الإدارة</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase-client.js?v=login3"></script>
+<style>
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#111827;font-family:Arial}
+.box{width:90%;max-width:400px;background:#1f2937;padding:30px;border-radius:16px}
+h1{color:white;text-align:center}
+input,button{width:100%;box-sizing:border-box;padding:14px;margin-top:12px;border:0;border-radius:8px}
+button{font-weight:bold}
+#msg{color:#f87171;text-align:center;margin-top:15px;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<div class="box">
+<h1>🔐 لوحة الإدارة</h1>
+<input id="email" type="email" placeholder="البريد الإلكتروني">
+<input id="password" type="password" placeholder="كلمة المرور">
+<button id="login">تسجيل الدخول</button>
+<div id="msg"></div>
+</div>
+
+<script>
+
+document.getElementById('login').onclick = async () => {
+  const msg = document.getElementById('msg');
+  msg.textContent = 'جاري التحقق...';
+
+  const { data: authData, error: authError } =
+    await supabaseClient.auth.signInWithPassword({
+      email: document.getElementById('email').value.trim(),
+      password: document.getElementById('password').value
+    });
+
+  if (authError) {
+    msg.textContent = 'AUTH ERROR:\n' + authError.message;
+    return;
+  }
+
+  const user = authData.user;
+
+  const { data: profile, error: profileError } =
+    await supabaseClient.from('profiles')
+      .select('id,email,role')
+      .eq('id', user.id)
+      .single();
+
+  if (profileError) {
+    msg.textContent =
+      'PROFILE ERROR:\n' +
+      profileError.message +
+      '\n\nUSER ID:\n' + user.id;
+    return;
+  }
+
+  msg.textContent =
+    'PROFILE FOUND\n\n' +
+    'Email: ' + profile.email +
+    '\nRole: ' + profile.role +
+    '\nID: ' + profile.id;
+
+  if (profile.role === 'admin' || profile.role === 'super_admin') {
+    setTimeout(() => {
+      window.location.href = 'dashboard.html';
+    }, 1000);
+  } else {
+    await supabaseClient.auth.signOut();
+  }
+};
+</script>
+</body>
+</html>
