@@ -842,7 +842,39 @@
                     <div class="section-title">
                         <i class="fas fa-cog"></i> إعدادات الموقع
                     </div>
-                    <p style="text-align: center; color: var(--text-secondary); padding: 2rem;">قريباً...</p>
+                    <form id="settingsForm">
+                        <div class="form-group">
+                            <label>اسم الموقع</label>
+                            <input type="text" id="setting_site_name" placeholder="رِواق">
+                        </div>
+                        <div class="form-group">
+                            <label>الشعار الفرعي (Tagline)</label>
+                            <input type="text" id="setting_site_tagline" placeholder="حيث تبدأ الحكاية">
+                        </div>
+                        <div class="form-group">
+                            <label>وصف الموقع</label>
+                            <textarea id="setting_site_description" placeholder="وصف قصير عن الموقع"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>بريد التواصل</label>
+                            <input type="text" id="setting_contact_email" placeholder="contact@riwaq.com">
+                        </div>
+                        <div class="form-group">
+                            <label>رابط تويتر / X</label>
+                            <input type="text" id="setting_twitter_url" placeholder="https://twitter.com/...">
+                        </div>
+                        <div class="form-group">
+                            <label>رابط فيسبوك</label>
+                            <input type="text" id="setting_facebook_url" placeholder="https://facebook.com/...">
+                        </div>
+                        <div class="form-group">
+                            <label>رابط انستغرام</label>
+                            <input type="text" id="setting_instagram_url" placeholder="https://instagram.com/...">
+                        </div>
+                        <div class="modal-actions" style="max-width: 300px;">
+                            <button type="submit" class="btn-primary" id="settingsSaveBtn">حفظ الإعدادات</button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -1030,6 +1062,8 @@
                 loadUsers();
             } else if (page === 'categories') {
                 loadCategories();
+            } else if (page === 'settings') {
+                loadSettings();
             }
 
             if (action === 'add' && page === 'novels') {
@@ -1613,6 +1647,51 @@
                 showAlert('خطأ: ' + result.error, 'error');
             }
         }
+
+        /* ==================== Settings ==================== */
+        async function loadSettings() {
+            const result = await getSettings();
+            if (!result.success) {
+                showAlert('تعذر تحميل الإعدادات: ' + result.error, 'error');
+                return;
+            }
+            const s = result.data || {};
+            document.getElementById('setting_site_name').value = s.site_name || '';
+            document.getElementById('setting_site_tagline').value = s.site_tagline || '';
+            document.getElementById('setting_site_description').value = s.site_description || '';
+            document.getElementById('setting_contact_email').value = s.contact_email || '';
+            document.getElementById('setting_twitter_url').value = s.twitter_url || '';
+            document.getElementById('setting_facebook_url').value = s.facebook_url || '';
+            document.getElementById('setting_instagram_url').value = s.instagram_url || '';
+        }
+
+        document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('settingsSaveBtn');
+            btn.disabled = true;
+            btn.textContent = 'جاري الحفظ...';
+
+            const payload = {
+                site_name: document.getElementById('setting_site_name').value.trim(),
+                site_tagline: document.getElementById('setting_site_tagline').value.trim(),
+                site_description: document.getElementById('setting_site_description').value.trim(),
+                contact_email: document.getElementById('setting_contact_email').value.trim(),
+                twitter_url: document.getElementById('setting_twitter_url').value.trim(),
+                facebook_url: document.getElementById('setting_facebook_url').value.trim(),
+                instagram_url: document.getElementById('setting_instagram_url').value.trim()
+            };
+
+            const result = await saveSettings(payload);
+
+            btn.disabled = false;
+            btn.textContent = 'حفظ الإعدادات';
+
+            if (result.success) {
+                showAlert('تم حفظ الإعدادات بنجاح');
+            } else {
+                showAlert('خطأ: ' + result.error, 'error');
+            }
+        });
 
         /* ==================== Auth / Bootstrap ==================== */
         document.getElementById('logoutBtn').addEventListener('click', async () => {
