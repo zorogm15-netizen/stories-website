@@ -84,11 +84,11 @@ async function isUserAdmin(userId) {
             .select('role')
             .eq('id', userId)
             .single();
-        
+
         if (error) throw error;
-        alert('ROLE: ' + (data ? data.role : 'NO DATA')); alert('ROLE: ' + (data ? data.role : 'NO DATA')); return data && (data.role === 'admin' || data.role === 'super_admin');
+        return data && (data.role === 'admin' || data.role === 'super_admin');
     } catch (error) {
-        console.error('Admin check error:', error); alert('ADMIN ERROR: ' + error.message); alert('ADMIN ERROR: ' + error.message);
+        console.error('Admin check error:', error);
         return false;
     }
 }
