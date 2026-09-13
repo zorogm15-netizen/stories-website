@@ -283,10 +283,39 @@
             text-decoration: none;
             margin-left: 1rem;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .item-actions a:hover {
             color: #e6c547;
+        }
+
+        .item-actions a.danger {
+            color: #ff8787;
+        }
+
+        .item-actions a.danger:hover {
+            color: #ff6b6b;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            margin-right: 0.5rem;
+        }
+
+        .badge-published {
+            background: rgba(76, 175, 80, 0.15);
+            color: #81c784;
+            border: 1px solid #4caf50;
+        }
+
+        .badge-draft {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffb300;
+            border: 1px solid #ffc107;
         }
 
         /* ==================== Empty State ==================== */
@@ -319,6 +348,12 @@
         .btn-primary:hover {
             background: #e6c547;
             transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .btn-secondary {
@@ -399,6 +434,91 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* ==================== Modal ==================== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 1.8rem;
+        }
+
+        .modal-box h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="url"],
+        .form-group textarea {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Lora', serif;
+            font-size: 0.95rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-check input {
+            width: 17px;
+            height: 17px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .modal-actions button {
+            flex: 1;
         }
 
         /* ==================== Responsive ==================== */
@@ -512,6 +632,10 @@
             .dashboard-actions button {
                 width: 100%;
             }
+
+            .modal-actions {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -564,7 +688,7 @@
             <!-- Dashboard Page -->
             <div id="dashboard-page" class="page">
                 <div class="dashboard-actions">
-                    <button class="btn-primary" onclick="goToPage('novels', 'add')">
+                    <button class="btn-primary" onclick="openNovelModal()">
                         <i class="fas fa-plus"></i> إضافة رواية
                     </button>
                     <button class="btn-secondary" onclick="goToPage('categories', 'list')">
@@ -610,7 +734,7 @@
             <!-- Novels Page -->
             <div id="novels-page" class="page" style="display: none;">
                 <div class="dashboard-actions">
-                    <button class="btn-primary" onclick="goToPage('novels', 'add')">
+                    <button class="btn-primary" onclick="openNovelModal()">
                         <i class="fas fa-plus"></i> إضافة رواية جديدة
                     </button>
                 </div>
@@ -621,8 +745,8 @@
 
             <!-- Chapters Page -->
             <div id="chapters-page" class="page" style="display: none;">
-                <div class="recent-section">
-                    <p style="text-align: center; color: var(--text-secondary);">اختر رواية لإدارة فصولها</p>
+                <div class="recent-section" id="chaptersContainer">
+                    <p style="text-align: center; color: var(--text-secondary);">اختر رواية من صفحة "الروايات" لإدارة فصولها (اضغط "الفصول").</p>
                 </div>
             </div>
 
@@ -636,7 +760,7 @@
             <!-- Categories Page -->
             <div id="categories-page" class="page" style="display: none;">
                 <div class="dashboard-actions">
-                    <button class="btn-primary" onclick="addNewCategory()">
+                    <button class="btn-primary" onclick="openCategoryModal()">
                         <i class="fas fa-plus"></i> إضافة تصنيف جديد
                     </button>
                 </div>
@@ -674,9 +798,102 @@
         </main>
     </div>
 
+    <!-- Novel Modal -->
+    <div class="modal-overlay" id="novelModalOverlay">
+        <div class="modal-box">
+            <h2 id="novelModalTitle">إضافة رواية جديدة</h2>
+            <form id="novelForm">
+                <input type="hidden" id="novelId">
+                <div class="form-group">
+                    <label>عنوان الرواية (بالعربية) *</label>
+                    <input type="text" id="novelTitleAr" required>
+                </div>
+                <div class="form-group">
+                    <label>عنوان الرواية (بالإنجليزية)</label>
+                    <input type="text" id="novelTitleEn">
+                </div>
+                <div class="form-group">
+                    <label>المؤلف *</label>
+                    <input type="text" id="novelAuthor" required>
+                </div>
+                <div class="form-group">
+                    <label>التصنيف</label>
+                    <select id="novelCategory" style="width:100%; padding:0.7rem; border:1px solid var(--border-color); border-radius:6px; background: var(--bg-dark); color: var(--text-primary); font-family: 'Lora', serif;">
+                        <option value="">بدون تصنيف</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>الوصف</label>
+                    <textarea id="novelDescription"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>رابط صورة الغلاف</label>
+                    <input type="url" id="novelCover" placeholder="https://...">
+                </div>
+                <div class="form-group form-check">
+                    <input type="checkbox" id="novelPublished">
+                    <label for="novelPublished" style="margin:0;">نشر الرواية (تظهر للزوار)</label>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeNovelModal()">إلغاء</button>
+                    <button type="submit" class="btn-primary" id="novelSaveBtn">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Category Modal -->
+    <div class="modal-overlay" id="categoryModalOverlay">
+        <div class="modal-box">
+            <h2 id="categoryModalTitle">إضافة تصنيف جديد</h2>
+            <form id="categoryForm">
+                <input type="hidden" id="categoryId">
+                <div class="form-group">
+                    <label>اسم التصنيف *</label>
+                    <input type="text" id="categoryName" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeCategoryModal()">إلغاء</button>
+                    <button type="submit" class="btn-primary" id="categorySaveBtn">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Chapter Modal -->
+    <div class="modal-overlay" id="chapterModalOverlay">
+        <div class="modal-box">
+            <h2 id="chapterModalTitle">إضافة فصل جديد</h2>
+            <form id="chapterForm">
+                <input type="hidden" id="chapterId">
+                <input type="hidden" id="chapterNovelId">
+                <div class="form-group">
+                    <label>رقم الفصل *</label>
+                    <input type="number" id="chapterNumber" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label>عنوان الفصل *</label>
+                    <input type="text" id="chapterTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>محتوى الفصل *</label>
+                    <textarea id="chapterContent" style="min-height: 220px;" required></textarea>
+                </div>
+                <div class="form-group form-check">
+                    <input type="checkbox" id="chapterPublished">
+                    <label for="chapterPublished" style="margin:0;">نشر الفصل (يظهر للزوار)</label>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeChapterModal()">إلغاء</button>
+                    <button type="submit" class="btn-primary" id="chapterSaveBtn">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/supabase-client.js"></script>
+    <script src="../js/supabase-client.js?v=4"></script>
 
     <script>
         // Page Navigation
@@ -695,19 +912,15 @@
         });
 
         function goToPage(page, action = 'list') {
-            // Update sidebar
             navLinks.forEach(link => link.classList.remove('active'));
             document.querySelector(`[data-page="${page}"]`).classList.add('active');
 
-            // Hide all pages
             pages.forEach(p => {
                 document.getElementById(`${p}-page`).style.display = 'none';
             });
 
-            // Show selected page
             document.getElementById(`${page}-page`).style.display = 'block';
 
-            // Update title
             const titles = {
                 dashboard: 'لوحة التحكم',
                 novels: 'إدارة الروايات',
@@ -721,7 +934,6 @@
             document.getElementById('pageTitle').textContent = titles[page];
             document.getElementById('breadcrumb').textContent = titles[page];
 
-            // Load page content
             if (page === 'dashboard') {
                 loadDashboard();
             } else if (page === 'novels') {
@@ -731,9 +943,31 @@
             } else if (page === 'categories') {
                 loadCategories();
             }
+
+            if (action === 'add' && page === 'novels') {
+                openNovelModal();
+            }
         }
 
-        // Load Dashboard
+        // Alert helper
+        function showAlert(message, type = 'success') {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} show`;
+            alert.textContent = message;
+            document.getElementById('alertContainer').appendChild(alert);
+            setTimeout(() => alert.remove(), 4000);
+        }
+
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        /* ==================== Dashboard ==================== */
         async function loadDashboard() {
             const result = await getDashboardStats();
             if (result.success) {
@@ -742,50 +976,292 @@
                 document.getElementById('stat-chapters').textContent = data.chapters || 0;
                 document.getElementById('stat-users').textContent = data.users || 0;
 
-                // Load latest novels
                 if (data.latestNovels && data.latestNovels.length > 0) {
                     const html = data.latestNovels.map(novel => `
                         <li>
                             <div class="item-info">
-                                <div class="item-title">${novel.title_ar}</div>
+                                <div class="item-title">${escapeHtml(novel.title_ar)}</div>
                                 <div class="item-date">تم الإضافة: ${new Date(novel.created_at).toLocaleDateString('ar-SA')}</div>
                             </div>
                             <div class="item-actions">
-                                <a href="#" onclick="goToPage('novels', 'edit')">تعديل</a>
-                                <a href="#" onclick="goToPage('chapters', 'list')">الفصول</a>
+                                <a onclick="editNovel('${novel.id}')">تعديل</a>
+                                <a onclick="viewChapters('${novel.id}')">الفصول</a>
                             </div>
                         </li>
                     `).join('');
                     document.getElementById('latestNovelsList').innerHTML = html;
+                } else {
+                    document.getElementById('latestNovelsList').innerHTML = `
+                        <li><div class="empty-state"><div class="empty-state-icon">📚</div><p>لا توجد روايات بعد</p></div></li>`;
                 }
+            } else {
+                showAlert('تعذر تحميل الإحصائيات: ' + result.error, 'error');
             }
         }
 
-        // Load Novels
+        /* ==================== Novels ==================== */
+        let novelsCache = [];
+        let categoriesCache = [];
+
         async function loadNovels() {
             const result = await getNovels();
+            if (!result.success) {
+                showAlert('تعذر تحميل الروايات: ' + result.error, 'error');
+                return;
+            }
+            novelsCache = result.data || [];
+
+            const html = novelsCache.length > 0
+                ? novelsCache.map(novel => `
+                    <li>
+                        <div class="item-info">
+                            <div class="item-title">
+                                ${escapeHtml(novel.title_ar)}
+                                <span class="badge ${novel.is_published ? 'badge-published' : 'badge-draft'}">
+                                    ${novel.is_published ? 'منشورة' : 'مسودة'}
+                                </span>
+                            </div>
+                            <div class="item-date">المؤلف: ${escapeHtml(novel.author)}</div>
+                        </div>
+                        <div class="item-actions">
+                            <a onclick="editNovel('${novel.id}')">تعديل</a>
+                            <a onclick="viewChapters('${novel.id}')">الفصول</a>
+                            <a class="danger" onclick="deleteNovelConfirm('${novel.id}')">حذف</a>
+                        </div>
+                    </li>
+                `).join('')
+                : '<li><div class="empty-state"><div class="empty-state-icon">📚</div><p>لا توجد روايات بعد</p></div></li>';
+
+            document.getElementById('novelsList').innerHTML = `<ul class="item-list">${html}</ul>`;
+        }
+
+        async function populateCategorySelect(selectedId = '') {
+            const result = await getCategories();
+            const select = document.getElementById('novelCategory');
+            select.innerHTML = '<option value="">بدون تصنيف</option>';
             if (result.success && result.data) {
-                const html = result.data.length > 0 
-                    ? result.data.map(novel => `
-                        <li>
-                            <div class="item-info">
-                                <div class="item-title">${novel.title_ar}</div>
-                                <div class="item-date">المؤلف: ${novel.author}</div>
-                            </div>
-                            <div class="item-actions">
-                                <a href="#" onclick="editNovel('${novel.id}')">تعديل</a>
-                                <a href="#" onclick="viewChapters('${novel.id}')">الفصول</a>
-                                <a href="#" onclick="deleteNovelConfirm('${novel.id}')">حذف</a>
-                            </div>
-                        </li>
-                    `).join('')
-                    : '<li><div class="empty-state"><div class="empty-state-icon">📚</div><p>لا توجد روايات بعد</p></div></li>';
-                
-                document.getElementById('novelsList').innerHTML = `<ul class="item-list">${html}</ul>`;
+                categoriesCache = result.data;
+                result.data.forEach(cat => {
+                    const opt = document.createElement('option');
+                    opt.value = cat.id;
+                    opt.textContent = cat.name;
+                    if (cat.id === selectedId) opt.selected = true;
+                    select.appendChild(opt);
+                });
             }
         }
 
-        // Load Users
+        async function openNovelModal(id = null) {
+            document.getElementById('novelForm').reset();
+            document.getElementById('novelId').value = '';
+            document.getElementById('novelModalTitle').textContent = id ? 'تعديل الرواية' : 'إضافة رواية جديدة';
+
+            let selectedCategory = '';
+            if (id) {
+                const novel = novelsCache.find(n => n.id === id) || (await getNovel(id)).data;
+                if (novel) {
+                    document.getElementById('novelId').value = novel.id;
+                    document.getElementById('novelTitleAr').value = novel.title_ar || '';
+                    document.getElementById('novelTitleEn').value = novel.title_en || '';
+                    document.getElementById('novelAuthor').value = novel.author || '';
+                    document.getElementById('novelDescription').value = novel.description || '';
+                    document.getElementById('novelCover').value = novel.cover_url || '';
+                    document.getElementById('novelPublished').checked = !!novel.is_published;
+                    selectedCategory = novel.category_id || '';
+                }
+            }
+
+            await populateCategorySelect(selectedCategory);
+            document.getElementById('novelModalOverlay').classList.add('show');
+        }
+
+        function closeNovelModal() {
+            document.getElementById('novelModalOverlay').classList.remove('show');
+        }
+
+        function editNovel(id) {
+            openNovelModal(id);
+        }
+
+        document.getElementById('novelForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('novelSaveBtn');
+            btn.disabled = true;
+            btn.textContent = 'جاري الحفظ...';
+
+            const id = document.getElementById('novelId').value;
+            const payload = {
+                title_ar: document.getElementById('novelTitleAr').value.trim(),
+                title_en: document.getElementById('novelTitleEn').value.trim(),
+                author: document.getElementById('novelAuthor').value.trim(),
+                category_id: document.getElementById('novelCategory').value || null,
+                description: document.getElementById('novelDescription').value.trim(),
+                cover_url: document.getElementById('novelCover').value.trim(),
+                is_published: document.getElementById('novelPublished').checked
+            };
+
+            const result = id ? await updateNovel(id, payload) : await createNovel(payload);
+
+            btn.disabled = false;
+            btn.textContent = 'حفظ';
+
+            if (result.success) {
+                showAlert(id ? 'تم تعديل الرواية بنجاح' : 'تمت إضافة الرواية بنجاح');
+                closeNovelModal();
+                loadNovels();
+                loadDashboard();
+            } else {
+                showAlert('خطأ: ' + result.error, 'error');
+            }
+        });
+
+        async function deleteNovelConfirm(id) {
+            if (!confirm('هل أنت متأكد من حذف هذه الرواية؟ سيتم حذف جميع فصولها أيضاً.')) return;
+            const result = await deleteNovel(id);
+            if (result.success) {
+                showAlert('تم حذف الرواية');
+                loadNovels();
+                loadDashboard();
+            } else {
+                showAlert('خطأ: ' + result.error, 'error');
+            }
+        }
+
+        /* ==================== Chapters ==================== */
+        let currentNovelIdForChapters = null;
+
+        async function viewChapters(novelId) {
+            currentNovelIdForChapters = novelId;
+            goToPage('chapters', 'list');
+            await renderChaptersPage();
+        }
+
+        async function renderChaptersPage() {
+            const container = document.getElementById('chaptersContainer');
+            if (!currentNovelIdForChapters) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">اختر رواية من صفحة "الروايات" لإدارة فصولها (اضغط "الفصول").</p>';
+                return;
+            }
+
+            container.innerHTML = '<p style="text-align:center; color: var(--text-secondary);">جاري التحميل...</p>';
+
+            const novelResult = await getNovel(currentNovelIdForChapters);
+            const chaptersResult = await getChapters(currentNovelIdForChapters);
+
+            const novelTitle = novelResult.success ? novelResult.data.title_ar : 'الرواية';
+
+            let listHtml = '<li><div class="empty-state"><div class="empty-state-icon">📄</div><p>لا توجد فصول بعد</p></div></li>';
+            if (chaptersResult.success && chaptersResult.data.length > 0) {
+                listHtml = chaptersResult.data.map(ch => `
+                    <li>
+                        <div class="item-info">
+                            <div class="item-title">
+                                الفصل ${ch.chapter_number}: ${escapeHtml(ch.title)}
+                                <span class="badge ${ch.is_published ? 'badge-published' : 'badge-draft'}">
+                                    ${ch.is_published ? 'منشور' : 'مسودة'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <a onclick="editChapter('${ch.id}')">تعديل</a>
+                            <a class="danger" onclick="deleteChapterConfirm('${ch.id}')">حذف</a>
+                        </div>
+                    </li>
+                `).join('');
+            }
+
+            container.innerHTML = `
+                <div class="dashboard-actions">
+                    <button class="btn-secondary" onclick="goBackToNovels()"><i class="fas fa-arrow-right"></i> رجوع للروايات</button>
+                    <button class="btn-primary" onclick="openChapterModal()"><i class="fas fa-plus"></i> إضافة فصل جديد</button>
+                </div>
+                <div class="section-title"><i class="fas fa-file-alt"></i> فصول: ${escapeHtml(novelTitle)}</div>
+                <ul class="item-list">${listHtml}</ul>
+            `;
+
+            window._chaptersCache = chaptersResult.success ? chaptersResult.data : [];
+        }
+
+        function goBackToNovels() {
+            currentNovelIdForChapters = null;
+            goToPage('novels', 'list');
+        }
+
+        function openChapterModal(id = null) {
+            document.getElementById('chapterForm').reset();
+            document.getElementById('chapterId').value = '';
+            document.getElementById('chapterNovelId').value = currentNovelIdForChapters || '';
+            document.getElementById('chapterModalTitle').textContent = id ? 'تعديل الفصل' : 'إضافة فصل جديد';
+
+            if (id) {
+                const ch = (window._chaptersCache || []).find(c => c.id === id);
+                if (ch) {
+                    document.getElementById('chapterId').value = ch.id;
+                    document.getElementById('chapterNumber').value = ch.chapter_number;
+                    document.getElementById('chapterTitle').value = ch.title;
+                    document.getElementById('chapterContent').value = ch.content;
+                    document.getElementById('chapterPublished').checked = !!ch.is_published;
+                }
+            } else {
+                const nextNumber = (window._chaptersCache || []).length + 1;
+                document.getElementById('chapterNumber').value = nextNumber;
+            }
+
+            document.getElementById('chapterModalOverlay').classList.add('show');
+        }
+
+        function closeChapterModal() {
+            document.getElementById('chapterModalOverlay').classList.remove('show');
+        }
+
+        function editChapter(id) {
+            openChapterModal(id);
+        }
+
+        document.getElementById('chapterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('chapterSaveBtn');
+            btn.disabled = true;
+            btn.textContent = 'جاري الحفظ...';
+
+            const id = document.getElementById('chapterId').value;
+            const novelId = document.getElementById('chapterNovelId').value;
+            const payload = {
+                novel_id: novelId,
+                chapter_number: parseInt(document.getElementById('chapterNumber').value, 10),
+                title: document.getElementById('chapterTitle').value.trim(),
+                content: document.getElementById('chapterContent').value.trim(),
+                is_published: document.getElementById('chapterPublished').checked
+            };
+
+            const result = id ? await updateChapter(id, payload) : await createChapter(payload);
+
+            btn.disabled = false;
+            btn.textContent = 'حفظ';
+
+            if (result.success) {
+                showAlert(id ? 'تم تعديل الفصل بنجاح' : 'تمت إضافة الفصل بنجاح');
+                closeChapterModal();
+                renderChaptersPage();
+                loadDashboard();
+            } else {
+                showAlert('خطأ: ' + result.error, 'error');
+            }
+        });
+
+        async function deleteChapterConfirm(id) {
+            if (!confirm('هل أنت متأكد من حذف هذا الفصل؟')) return;
+            const result = await deleteChapter(id);
+            if (result.success) {
+                showAlert('تم حذف الفصل');
+                renderChaptersPage();
+                loadDashboard();
+            } else {
+                showAlert('خطأ: ' + result.error, 'error');
+            }
+        }
+
+        /* ==================== Users ==================== */
         async function loadUsers() {
             const { data, error } = await supabaseClient
                 .from('profiles')
@@ -796,11 +1272,8 @@
                 const html = data.map(user => `
                     <li>
                         <div class="item-info">
-                            <div class="item-title">${user.email}</div>
-                            <div class="item-date">المستوى: ${user.level} | Role: ${user.role}</div>
-                        </div>
-                        <div class="item-actions">
-                            <a href="#" onclick="editUser('${user.id}')">تعديل</a>
+                            <div class="item-title">${escapeHtml(user.email)}</div>
+                            <div class="item-date">المستوى: ${user.level} | الصلاحية: ${user.role}</div>
                         </div>
                     </li>
                 `).join('');
@@ -810,37 +1283,92 @@
             }
         }
 
-        // Load Categories
+        /* ==================== Categories ==================== */
         async function loadCategories() {
             const result = await getCategories();
             if (result.success && result.data) {
+                categoriesCache = result.data;
                 const html = result.data.length > 0
                     ? result.data.map(cat => `
                         <li>
                             <div class="item-info">
-                                <div class="item-title">${cat.name}</div>
-                                <div class="item-date">عدد الروايات: ${cat.novel_count || 0}</div>
+                                <div class="item-title">${escapeHtml(cat.name)}</div>
                             </div>
                             <div class="item-actions">
-                                <a href="#" onclick="editCategory('${cat.id}')">تعديل</a>
-                                <a href="#" onclick="deleteCategory('${cat.id}')">حذف</a>
+                                <a onclick="openCategoryModal('${cat.id}')">تعديل</a>
+                                <a class="danger" onclick="deleteCategoryConfirm('${cat.id}')">حذف</a>
                             </div>
                         </li>
                     `).join('')
                     : '<li><div class="empty-state"><div class="empty-state-icon">📂</div><p>لا توجد تصنيفات بعد</p></div></li>';
-                
+
                 document.getElementById('categoriesList').innerHTML = `<ul class="item-list">${html}</ul>`;
+            } else {
+                showAlert('تعذر تحميل التصنيفات: ' + (result.error || ''), 'error');
             }
         }
 
-        // Logout
+        function openCategoryModal(id = null) {
+            document.getElementById('categoryForm').reset();
+            document.getElementById('categoryId').value = '';
+            document.getElementById('categoryModalTitle').textContent = id ? 'تعديل التصنيف' : 'إضافة تصنيف جديد';
+
+            if (id) {
+                const cat = categoriesCache.find(c => c.id === id);
+                if (cat) {
+                    document.getElementById('categoryId').value = cat.id;
+                    document.getElementById('categoryName').value = cat.name;
+                }
+            }
+
+            document.getElementById('categoryModalOverlay').classList.add('show');
+        }
+
+        function closeCategoryModal() {
+            document.getElementById('categoryModalOverlay').classList.remove('show');
+        }
+
+        document.getElementById('categoryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('categorySaveBtn');
+            btn.disabled = true;
+            btn.textContent = 'جاري الحفظ...';
+
+            const id = document.getElementById('categoryId').value;
+            const payload = { name: document.getElementById('categoryName').value.trim() };
+
+            const result = id ? await updateCategory(id, payload) : await createCategory(payload);
+
+            btn.disabled = false;
+            btn.textContent = 'حفظ';
+
+            if (result.success) {
+                showAlert(id ? 'تم تعديل التصنيف بنجاح' : 'تمت إضافة التصنيف بنجاح');
+                closeCategoryModal();
+                loadCategories();
+            } else {
+                showAlert('خطأ: ' + result.error, 'error');
+            }
+        });
+
+        async function deleteCategoryConfirm(id) {
+            if (!confirm('هل أنت متأكد من حذف هذا التصنيف؟')) return;
+            const result = await deleteCategory(id);
+            if (result.success) {
+                showAlert('تم حذف التصنيف');
+                loadCategories();
+            } else {
+                showAlert('خطأ: ' + result.error, 'error');
+            }
+        }
+
+        /* ==================== Auth / Bootstrap ==================== */
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await signOut();
             localStorage.removeItem('adminSessionTime');
             window.location.href = '../admin/login.html';
         });
 
-        // Load user info
         window.addEventListener('load', async () => {
             const session = await checkAuth();
             if (!session) {
@@ -858,48 +1386,6 @@
             document.getElementById('userEmail').textContent = session.user.email;
             loadDashboard();
         });
-
-        // Alert helper
-        function showAlert(message, type = 'success') {
-            const alert = document.createElement('div');
-            alert.className = `alert alert-${type} show`;
-            alert.textContent = message;
-            document.getElementById('alertContainer').appendChild(alert);
-            setTimeout(() => alert.remove(), 4000);
-        }
-
-        // Stub functions for future implementation
-        function editNovel(id) {
-            showAlert('سيتم تطوير خاصية التعديل قريباً');
-        }
-
-        function viewChapters(id) {
-            showAlert('سيتم تطوير إدارة الفصول قريباً');
-        }
-
-        function deleteNovelConfirm(id) {
-            if (confirm('هل أنت متأكد من حذف هذه الرواية؟')) {
-                showAlert('سيتم تطوير خاصية الحذف قريباً');
-            }
-        }
-
-        function editUser(id) {
-            showAlert('سيتم تطوير خاصية التعديل قريباً');
-        }
-
-        function editCategory(id) {
-            showAlert('سيتم تطوير خاصية التعديل قريباً');
-        }
-
-        function deleteCategory(id) {
-            if (confirm('هل أنت متأكد من حذف هذا التصنيف؟')) {
-                showAlert('سيتم تطوير خاصية الحذف قريباً');
-            }
-        }
-
-        function addNewCategory() {
-            showAlert('سيتم تطوير خاصية الإضافة قريباً');
-        }
     </script>
 </body>
 </html>
