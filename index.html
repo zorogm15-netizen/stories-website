@@ -368,6 +368,114 @@
             font-style: italic;
         }
 
+        /* ==================== Trending Marquee (Most Popular Novels) ==================== */
+        .marquee-section {
+            padding: 3rem 0 1rem;
+        }
+
+        .marquee-outer {
+            position: relative;
+            overflow: hidden;
+            -webkit-mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
+        }
+
+        .marquee-track {
+            display: flex;
+            gap: 1.2rem;
+            width: max-content;
+            animation: marqueeScroll 40s linear infinite;
+        }
+
+        .marquee-track.paused,
+        .marquee-outer:hover .marquee-track {
+            animation-play-state: paused;
+        }
+
+        @keyframes marqueeScroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        .marquee-card {
+            flex: 0 0 210px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .marquee-card:hover {
+            border-color: var(--primary-gold);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(212, 175, 55, 0.15);
+        }
+
+        .marquee-rank {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.6rem;
+            z-index: 2;
+            background: rgba(15, 20, 25, 0.85);
+            color: var(--primary-gold);
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: 0.95rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--primary-gold);
+        }
+
+        .marquee-cover {
+            height: 140px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .marquee-info {
+            padding: 0.9rem 1rem 1.1rem;
+        }
+
+        .marquee-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .marquee-author {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        @media (max-width: 767px) {
+            .marquee-card {
+                flex: 0 0 160px;
+            }
+
+            .marquee-cover {
+                height: 110px;
+            }
+        }
+
         /* ==================== Stories Grid ==================== */
         .stories-grid {
             display: grid;
@@ -685,6 +793,16 @@
             font-size: 0.85rem;
             line-height: 1.5;
             flex-grow: 1;
+        }
+
+        .level-xp {
+            margin-top: 0.8rem;
+            font-size: 0.75rem;
+            color: var(--level-color);
+            background: rgba(var(--level-rgb), 0.1);
+            padding: 0.25rem 0.7rem;
+            border-radius: 10px;
+            font-weight: 600;
         }
 
         /* ==================== About Section ==================== */
@@ -1087,6 +1205,19 @@
         </div>
     </section>
 
+    <!-- Trending Marquee: Most Popular Novels -->
+    <section class="marquee-section" id="trending">
+        <div class="container">
+            <div class="section-header">
+                <h2>🔥 أشهر الروايات</h2>
+                <p>الروايات الأكثر تفاعلاً على رِواق</p>
+            </div>
+        </div>
+        <div class="marquee-outer" id="marqueeOuter" style="display:none;">
+            <div class="marquee-track" id="marqueeTrack"></div>
+        </div>
+    </section>
+
     <!-- Featured Stories Section -->
     <section class="section" id="stories">
         <div class="container">
@@ -1128,6 +1259,7 @@
                     <div class="level-icon">📖</div>
                     <div class="level-name">المبتدئ</div>
                     <div class="level-description">خطوتك الأولى في عالم الروايات</div>
+                    <div class="level-xp">0 - 99 XP</div>
                 </div>
 
                 <div class="level-card">
@@ -1135,6 +1267,7 @@
                     <div class="level-icon">📚</div>
                     <div class="level-name">الطالب</div>
                     <div class="level-description">تبدأ باكتشاف عوالم جديدة</div>
+                    <div class="level-xp">100 - 249 XP</div>
                 </div>
 
                 <div class="level-card">
@@ -1142,6 +1275,7 @@
                     <div class="level-icon">🔍</div>
                     <div class="level-name">الباحث</div>
                     <div class="level-description">تتعمق أكثر في عالم الحكايات</div>
+                    <div class="level-xp">250 - 449 XP</div>
                 </div>
 
                 <div class="level-card">
@@ -1149,6 +1283,7 @@
                     <div class="level-icon">✨</div>
                     <div class="level-name">المكتشف</div>
                     <div class="level-description">تبحث عن الروايات المميزة والنادرة</div>
+                    <div class="level-xp">450 - 699 XP</div>
                 </div>
 
                 <div class="level-card">
@@ -1156,6 +1291,7 @@
                     <div class="level-icon">🌊</div>
                     <div class="level-name">الغوّاص</div>
                     <div class="level-description">تغوص في أعماق الأدب</div>
+                    <div class="level-xp">700 - 999 XP</div>
                 </div>
 
                 <div class="level-card">
@@ -1163,6 +1299,7 @@
                     <div class="level-icon">❤️</div>
                     <div class="level-name">العاشق</div>
                     <div class="level-description">أصبحت الروايات جزءاً من رحلتك</div>
+                    <div class="level-xp">1000 - 1399 XP</div>
                 </div>
 
                 <div class="level-card">
@@ -1170,6 +1307,7 @@
                     <div class="level-icon">🎯</div>
                     <div class="level-name">المحترف</div>
                     <div class="level-description">خبرة واسعة في اختيار وقراءة الروايات</div>
+                    <div class="level-xp">1400 - 1899 XP</div>
                 </div>
 
                 <div class="level-card">
@@ -1177,6 +1315,7 @@
                     <div class="level-icon">🔥</div>
                     <div class="level-name">الأسطورة</div>
                     <div class="level-description">وصلت إلى عالم الروايات الاستثنائية</div>
+                    <div class="level-xp">1900 - 2499 XP</div>
                 </div>
 
                 <div class="level-card">
@@ -1184,6 +1323,7 @@
                     <div class="level-icon">🌿</div>
                     <div class="level-name">الحكيم</div>
                     <div class="level-description">ذائقة واسعة وخبرة عميقة</div>
+                    <div class="level-xp">2500 - 3199 XP</div>
                 </div>
 
                 <div class="level-card">
@@ -1191,6 +1331,7 @@
                     <div class="level-icon">👑</div>
                     <div class="level-name">الإمبراطور</div>
                     <div class="level-description">قمة رحلة القارئ</div>
+                    <div class="level-xp">3200+ XP</div>
                 </div>
             </div>
         </div>
@@ -1338,9 +1479,51 @@
                 `).join('');
 
                 container.innerHTML = `<div class="stories-grid">${cardsHtml}</div>`;
+
+                renderTrendingMarquee(result.data);
             } catch (err) {
                 console.error('Failed to load stories:', err);
             }
+        }
+
+        /* ==================== Trending Marquee (Most Popular Novels) ==================== */
+        function renderTrendingMarquee(novels) {
+            const outer = document.getElementById('marqueeOuter');
+            const track = document.getElementById('marqueeTrack');
+            if (!outer || !track || !novels || novels.length === 0) return;
+
+            // Most-viewed first when a "views" counter exists in the DB,
+            // otherwise fall back to the most recently published novels.
+            const sorted = [...novels].sort((a, b) => (b.views || 0) - (a.views || 0));
+            const topNovels = sorted.slice(0, 10);
+            if (topNovels.length === 0) return;
+
+            const buildCard = (novel, index) => `
+                <div class="marquee-card" onclick="openStoryModal('${novel.id}')">
+                    <div class="marquee-rank">${index + 1}</div>
+                    <div class="marquee-cover" style="${novel.cover_url ? `background-image:url('${novel.cover_url}')` : ''}">
+                        ${novel.cover_url ? '' : '📖'}
+                    </div>
+                    <div class="marquee-info">
+                        <div class="marquee-title">${escapeHtml(novel.title_ar)}</div>
+                        <div class="marquee-author">✍️ ${escapeHtml(novel.author)}</div>
+                    </div>
+                </div>
+            `;
+
+            const cardsHtml = topNovels.map(buildCard).join('');
+            // Duplicate the list so the CSS animation (-50% translateX) loops seamlessly.
+            track.innerHTML = cardsHtml + cardsHtml;
+
+            // If there's only a couple of novels, the loop looks too fast/empty — slow it down.
+            const duration = Math.max(20, topNovels.length * 4);
+            track.style.animationDuration = `${duration}s`;
+
+            outer.style.display = 'block';
+
+            // Pause on touch for mobile users (hover doesn't exist there).
+            track.addEventListener('touchstart', () => track.classList.add('paused'), { passive: true });
+            track.addEventListener('touchend', () => track.classList.remove('paused'), { passive: true });
         }
 
         async function openStoryModal(novelId) {
