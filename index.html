@@ -1527,7 +1527,7 @@
         }
 
         async function openStoryModal(novelId) {
-            const novel = publicNovelsCache.find(n => n.id === novelId);
+            const novel = publicNovelsCache.find(n => String(n.id) === String(novelId));
             if (!novel) return;
 
             const modalBody = document.getElementById('riwaqModalBody');
