@@ -508,3 +508,41 @@ async function deleteCategory(categoryId) {
         return { success: false, error: error.message };
     }
 }
+
+/* ==================== Site Settings ==================== */
+
+// Get all settings as a key-value object
+async function getSettings() {
+    try {
+        const { data, error } = await supabaseClient
+            .from('settings')
+            .select('*');
+
+        if (error) throw error;
+
+        const settingsObj = {};
+        (data || []).forEach(row => {
+            settingsObj[row.key] = row.value;
+        });
+
+        return { success: true, data: settingsObj };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Save a batch of settings (key-value pairs) using upsert
+async function saveSettings(settingsObj) {
+    try {
+        const rows = Object.entries(settingsObj).map(([key, value]) => ({ key, value }));
+
+        const { error } = await supabaseClient
+            .from('settings')
+            .upsert(rows, { onConflict: 'key' });
+
+        if (error) throw error;
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
