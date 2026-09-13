@@ -198,7 +198,7 @@ async function createNovel(novelData) {
                 {
                     ...novelData,
                     created_at: new Date(),
-                    is_published: false
+                    is_published: novelData.is_published ?? false
                 }
             ])
             .select();
@@ -300,7 +300,7 @@ async function createChapter(chapterData) {
                 {
                     ...chapterData,
                     created_at: new Date(),
-                    is_published: false
+                    is_published: chapterData.is_published ?? false
                 }
             ])
             .select();
