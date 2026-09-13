@@ -546,3 +546,111 @@ async function saveSettings(settingsObj) {
         return { success: false, error: error.message };
     }
 }
+
+/* ==================== Levels (Reader Ranks) ==================== */
+
+// Get all levels, ordered from lowest to highest
+async function getLevels() {
+    try {
+        const { data, error } = await supabaseClient
+            .from('levels')
+            .select('*')
+            .order('level_number', { ascending: true });
+
+        if (error) throw error;
+        return { success: true, data };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+/* ==================== Comments ==================== */
+
+// Get comments for a chapter (oldest first), joined with the commenter's username
+async function getComments(chapterId) {
+    try {
+        const { data, error } = await supabaseClient
+            .from('comments')
+            .select('id, content, created_at, user_id, profiles ( username, email )')
+            .eq('chapter_id', chapterId)
+            .order('created_at', { ascending: true });
+
+        if (error) throw error;
+        return { success: true, data };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Post a new comment on a chapter (must be logged in). Also awards XP (capped per day).
+async function addComment(chapterId, content) {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) {
+            return { success: false, error: 'يجب تسجيل الدخول لإضافة تعليق' };
+        }
+
+        const { data, error } = await supabaseClient
+            .from('comments')
+            .insert([{ chapter_id: chapterId, user_id: user.id, content }])
+            .select('id, content, created_at, user_id')
+            .single();
+
+        if (error) throw error;
+
+        let xpResult = null;
+        try {
+            const { data: xpData } = await supabaseClient.rpc('award_comment_xp', { p_comment_id: data.id });
+            xpResult = xpData;
+        } catch (xpErr) {
+            console.error('XP award (comment) failed:', xpErr);
+        }
+
+        return { success: true, data, xp: xpResult };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+/* ==================== XP / Reading Tracking ==================== */
+
+// Call this once a chapter has actually loaded for a logged-in reader.
+// Awards reading XP the first time only; safe to call every time the chapter opens.
+async function trackChapterRead(chapterId) {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) {
+            return { success: false, awarded: false, reason: 'not_authenticated' };
+        }
+
+        const { data, error } = await supabaseClient.rpc('award_reading_xp', { p_chapter_id: chapterId });
+        if (error) throw error;
+
+        return { success: true, ...data };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Fetch the logged-in reader's own profile + matching level info in one call
+async function getMyReaderStatus() {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return { success: true, data: null };
+
+        const profile = await getUserProfile(user.id);
+        if (!profile) return { success: false, error: 'تعذر تحميل الملف الشخصي' };
+
+        const levelsResult = await getLevels();
+        const levels = levelsResult.success ? levelsResult.data : [];
+        const currentLevel = levels.filter(l => l.min_xp <= profile.xp).pop() || levels[0];
+        const nextLevel = levels.find(l => l.min_xp > profile.xp) || null;
+
+        return {
+            success: true,
+            data: { profile, currentLevel, nextLevel, levels }
+        };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
