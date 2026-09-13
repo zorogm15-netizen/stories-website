@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم | رِواق Admin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -521,6 +521,73 @@
             flex: 1;
         }
 
+        /* ==================== Bulk Chapter Upload ==================== */
+        .bulk-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin: 1rem 0;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .bulk-item {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.6rem;
+        }
+
+        .bulk-item .bulk-number {
+            width: 60px;
+            flex-shrink: 0;
+        }
+
+        .bulk-item .bulk-title {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .bulk-item .bulk-meta {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .bulk-item input[type="text"],
+        .bulk-item input[type="number"] {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-family: 'Lora', serif;
+            font-size: 0.85rem;
+        }
+
+        .progress-bar-outer {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-dark);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            background: var(--primary-gold);
+            width: 0%;
+            transition: width 0.2s ease;
+        }
+
         /* ==================== Responsive ==================== */
         @media (max-width: 1024px) {
             .admin-container {
@@ -891,6 +958,27 @@
         </div>
     </div>
 
+    <!-- Bulk Chapter Upload Modal -->
+    <div class="modal-overlay" id="bulkChapterModalOverlay">
+        <div class="modal-box" style="max-width: 680px;">
+            <h2>رفع فصول بالجملة</h2>
+            <div class="form-group">
+                <label>اختر ملفات نصية (.txt) للفصول — يمكن اختيار عدة ملفات دفعة واحدة</label>
+                <input type="file" id="bulkChapterFiles" accept=".txt" multiple>
+            </div>
+            <div id="bulkChapterPreview"></div>
+            <div class="form-group form-check">
+                <input type="checkbox" id="bulkChapterPublished">
+                <label for="bulkChapterPublished" style="margin:0;">نشر جميع الفصول مباشرة بعد الرفع</label>
+            </div>
+            <div id="bulkChapterProgress" style="display:none;"></div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" onclick="closeBulkChapterModal()">إلغاء</button>
+                <button type="button" class="btn-primary" id="bulkChapterUploadBtn" onclick="uploadBulkChapters()" disabled>رفع الفصول</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/supabase-client.js?v=4"></script>
@@ -1174,6 +1262,7 @@
                 <div class="dashboard-actions">
                     <button class="btn-secondary" onclick="goBackToNovels()"><i class="fas fa-arrow-right"></i> رجوع للروايات</button>
                     <button class="btn-primary" onclick="openChapterModal()"><i class="fas fa-plus"></i> إضافة فصل جديد</button>
+                    <button class="btn-secondary" onclick="openBulkChapterModal()"><i class="fas fa-file-upload"></i> رفع فصول بالجملة</button>
                 </div>
                 <div class="section-title"><i class="fas fa-file-alt"></i> فصول: ${escapeHtml(novelTitle)}</div>
                 <ul class="item-list">${listHtml}</ul>
@@ -1259,6 +1348,169 @@
             } else {
                 showAlert('خطأ: ' + result.error, 'error');
             }
+        }
+
+        /* ==================== Bulk Chapter Upload ==================== */
+        let bulkChapterFilesData = [];
+
+        function openBulkChapterModal() {
+            if (!currentNovelIdForChapters) {
+                showAlert('اختر رواية أولاً', 'error');
+                return;
+            }
+            bulkChapterFilesData = [];
+            document.getElementById('bulkChapterFiles').value = '';
+            document.getElementById('bulkChapterPreview').innerHTML = '';
+            document.getElementById('bulkChapterPublished').checked = false;
+            document.getElementById('bulkChapterProgress').style.display = 'none';
+            document.getElementById('bulkChapterProgress').innerHTML = '';
+            const btn = document.getElementById('bulkChapterUploadBtn');
+            btn.disabled = true;
+            btn.textContent = 'رفع الفصول';
+            document.getElementById('bulkChapterModalOverlay').classList.add('show');
+        }
+
+        function closeBulkChapterModal() {
+            document.getElementById('bulkChapterModalOverlay').classList.remove('show');
+        }
+
+        function parseChapterFilename(filename) {
+            const name = filename.replace(/\.[^/.]+$/, '');
+            const match = name.match(/(\d+)/);
+            const number = match ? parseInt(match[1], 10) : null;
+            let title = name.replace(/^[\s_\-]*(?:chapter|ch|الفصل|فصل)?[\s_\-]*\d+[\s_\-]*/i, '').trim();
+            if (!title) title = name;
+            title = title.replace(/[_\-]+/g, ' ').trim();
+            return { number, title: title || 'بدون عنوان' };
+        }
+
+        document.getElementById('bulkChapterFiles').addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files || []);
+            if (files.length === 0) {
+                bulkChapterFilesData = [];
+                document.getElementById('bulkChapterPreview').innerHTML = '';
+                document.getElementById('bulkChapterUploadBtn').disabled = true;
+                return;
+            }
+
+            const existingCount = (window._chaptersCache || []).length;
+
+            const readPromises = files.map(file => new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve({ file, content: reader.result || '' });
+                reader.onerror = () => resolve({ file, content: '' });
+                reader.readAsText(file, 'UTF-8');
+            }));
+
+            const results = await Promise.all(readPromises);
+
+            let parsed = results.map(r => {
+                const { number, title } = parseChapterFilename(r.file.name);
+                return { filename: r.file.name, number, title, content: r.content };
+            });
+
+            const allHaveNumbers = parsed.every(p => p.number !== null);
+            if (allHaveNumbers) {
+                parsed.sort((a, b) => a.number - b.number);
+            }
+
+            parsed = parsed.map((p, idx) => ({
+                ...p,
+                number: p.number !== null ? p.number : existingCount + idx + 1
+            }));
+
+            bulkChapterFilesData = parsed;
+            renderBulkChapterPreview();
+            document.getElementById('bulkChapterUploadBtn').disabled = bulkChapterFilesData.length === 0;
+        });
+
+        function renderBulkChapterPreview() {
+            const container = document.getElementById('bulkChapterPreview');
+            if (bulkChapterFilesData.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            container.innerHTML = `
+                <p style="font-size:0.85rem; color: var(--text-secondary); margin-bottom:0.6rem;">
+                    تم تحديد ${bulkChapterFilesData.length} ملف. راجع رقم وعنوان كل فصل قبل الرفع:
+                </p>
+                <div class="bulk-list">
+                    ${bulkChapterFilesData.map((item, idx) => `
+                        <div class="bulk-item">
+                            <input type="number" class="bulk-number" value="${item.number}" min="1"
+                                onchange="updateBulkChapterField(${idx}, 'number', this.value)">
+                            <input type="text" class="bulk-title" value="${escapeHtml(item.title)}"
+                                onchange="updateBulkChapterField(${idx}, 'title', this.value)">
+                            <span class="bulk-meta">${escapeHtml(item.filename)}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function updateBulkChapterField(idx, field, value) {
+            if (!bulkChapterFilesData[idx]) return;
+            bulkChapterFilesData[idx][field] = field === 'number' ? (parseInt(value, 10) || 0) : value;
+        }
+
+        async function uploadBulkChapters() {
+            if (!currentNovelIdForChapters) {
+                showAlert('لم يتم تحديد رواية', 'error');
+                return;
+            }
+            if (bulkChapterFilesData.length === 0) return;
+
+            const btn = document.getElementById('bulkChapterUploadBtn');
+            btn.disabled = true;
+            btn.textContent = 'جاري الرفع...';
+
+            const publishAll = document.getElementById('bulkChapterPublished').checked;
+            const progressDiv = document.getElementById('bulkChapterProgress');
+            progressDiv.style.display = 'block';
+
+            let successCount = 0;
+            const errors = [];
+
+            for (let i = 0; i < bulkChapterFilesData.length; i++) {
+                const item = bulkChapterFilesData[i];
+                progressDiv.innerHTML = `
+                    <p style="font-size:0.85rem; color: var(--text-secondary);">جاري رفع: ${escapeHtml(item.title)} (${i + 1}/${bulkChapterFilesData.length})</p>
+                    <div class="progress-bar-outer"><div class="progress-bar-inner" style="width:${Math.round((i / bulkChapterFilesData.length) * 100)}%"></div></div>
+                `;
+
+                const payload = {
+                    novel_id: currentNovelIdForChapters,
+                    chapter_number: item.number,
+                    title: item.title,
+                    content: (item.content || '').trim(),
+                    is_published: publishAll
+                };
+
+                const result = await createChapter(payload);
+                if (result.success) {
+                    successCount++;
+                } else {
+                    errors.push(`${item.filename}: ${result.error}`);
+                }
+            }
+
+            progressDiv.innerHTML = `
+                <p style="font-size:0.85rem; color: var(--text-secondary);">اكتمل الرفع</p>
+                <div class="progress-bar-outer"><div class="progress-bar-inner" style="width:100%"></div></div>
+            `;
+
+            btn.disabled = false;
+            btn.textContent = 'رفع الفصول';
+
+            if (errors.length === 0) {
+                showAlert(`تم رفع ${successCount} فصل بنجاح`);
+                closeBulkChapterModal();
+            } else {
+                showAlert(`تم رفع ${successCount} من ${bulkChapterFilesData.length} فصل. حدثت أخطاء في: ${errors.join(' | ')}`, 'error');
+            }
+
+            renderChaptersPage();
+            loadDashboard();
         }
 
         /* ==================== Users ==================== */
