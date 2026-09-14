@@ -25,24 +25,10 @@
             --accent-blue: #1e3c72;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Lora', serif; background-color: var(--bg-dark); color: var(--text-primary); line-height: 1.8; }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Lora', serif;
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
-            line-height: 1.8;
-        }
-
-        /* ==================== Header & Navigation ==================== */
         header {
             background: rgba(15, 20, 25, 0.97);
             backdrop-filter: blur(10px);
@@ -54,143 +40,27 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .header-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .header-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; color: var(--text-primary); transition: all 0.3s ease; }
+        .logo-icon { font-size: 1.8rem; color: var(--primary-gold); }
+        .logo-text h1 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; letter-spacing: 2px; color: var(--primary-gold); }
+        .logo-text p { font-size: 0.7rem; color: var(--text-secondary); letter-spacing: 3px; margin-top: -0.3rem; }
+        .logo:hover .logo-icon { color: var(--primary-gold-light); transform: scale(1.1); }
+        nav.desktop-nav { display: flex; gap: 2rem; align-items: center; }
+        nav.desktop-nav a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.3s ease; position: relative; }
+        nav.desktop-nav a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--primary-gold); transition: width 0.3s ease; }
+        nav.desktop-nav a:hover { color: var(--primary-gold); }
+        nav.desktop-nav a:hover::after { width: 100%; }
+        .search-icon { color: var(--text-secondary); cursor: pointer; font-size: 1rem; transition: all 0.3s ease; }
+        .search-icon:hover { color: var(--primary-gold); }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+        .hamburger span { width: 22px; height: 2px; background: var(--primary-gold); transition: all 0.3s ease; }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            text-decoration: none;
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-        }
+        .mobile-menu { display: none; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 999; padding-top: 4rem; overflow-y: auto; }
+        .mobile-menu.active { display: flex; flex-direction: column; }
+        .mobile-menu a { color: var(--text-primary); text-decoration: none; padding: 1rem 2rem; border-bottom: 1px solid var(--border-color); transition: all 0.3s ease; font-size: 1rem; }
+        .mobile-menu a:hover { color: var(--primary-gold); background: var(--bg-card); }
 
-        .logo-icon {
-            font-size: 1.8rem;
-            color: var(--primary-gold);
-        }
-
-        .logo-text h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.6rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            color: var(--primary-gold);
-        }
-
-        .logo-text p {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            letter-spacing: 3px;
-            margin-top: -0.3rem;
-        }
-
-        .logo:hover .logo-icon {
-            color: var(--primary-gold-light);
-            transform: scale(1.1);
-        }
-
-        nav.desktop-nav {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        nav.desktop-nav a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        nav.desktop-nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary-gold);
-            transition: width 0.3s ease;
-        }
-
-        nav.desktop-nav a:hover {
-            color: var(--primary-gold);
-        }
-
-        nav.desktop-nav a:hover::after {
-            width: 100%;
-        }
-
-        .search-icon {
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .search-icon:hover {
-            color: var(--primary-gold);
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-
-        .hamburger span {
-            width: 22px;
-            height: 2px;
-            background: var(--primary-gold);
-            transition: all 0.3s ease;
-        }
-
-        /* ==================== Mobile Menu ==================== */
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 999;
-            padding-top: 4rem;
-            overflow-y: auto;
-        }
-
-        .mobile-menu.active {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .mobile-menu a {
-            color: var(--text-primary);
-            text-decoration: none;
-            padding: 1rem 2rem;
-            border-bottom: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-            font-size: 1rem;
-        }
-
-        .mobile-menu a:hover {
-            color: var(--primary-gold);
-            background: var(--bg-card);
-        }
-
-        /* ==================== Hero Section ==================== */
         .hero {
             min-height: 550px;
             background: linear-gradient(135deg, rgba(15, 20, 25, 0.96) 0%, rgba(107, 91, 149, 0.25) 50%, rgba(30, 60, 114, 0.25) 100%);
@@ -198,1399 +68,208 @@
                 radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(107, 91, 149, 0.12) 0%, transparent 50%),
                 linear-gradient(135deg, rgba(15, 20, 25, 0.96) 0%, rgba(107, 91, 149, 0.25) 50%, rgba(30, 60, 114, 0.25) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+            display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden;
         }
-
         .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(212,175,55,0.03)" stroke-width="0.5"/></pattern></defs><rect width="1200" height="600" fill="url(%23grid)"/></svg>');
             opacity: 0.5;
         }
+        .hero-content { position: relative; z-index: 2; max-width: 750px; padding: 0 2rem; animation: fadeInUp 0.8s ease-out; }
+        .hero h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; color: var(--text-primary); margin-bottom: 1.2rem; line-height: 1.3; letter-spacing: -0.5px; }
+        .hero p { font-size: clamp(0.95rem, 3vw, 1.15rem); color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.7; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn-primary, .btn-secondary { padding: 0.9rem 2rem; font-size: 0.95rem; border: none; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; font-weight: 600; letter-spacing: 0.5px; text-decoration: none; display: inline-block; }
+        .btn-primary { background: var(--primary-gold); color: var(--bg-dark); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.25); }
+        .btn-primary:hover { background: var(--primary-gold-light); transform: translateY(-2px); box-shadow: 0 12px 35px rgba(212, 175, 55, 0.35); }
+        .btn-secondary { background: transparent; color: var(--primary-gold); border: 2px solid var(--primary-gold); }
+        .btn-secondary:hover { background: rgba(212, 175, 55, 0.08); transform: translateY(-2px); }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        .section { padding: 4rem 0; }
+        .section-header { text-align: center; margin-bottom: 2.5rem; }
+        .section-header h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--primary-gold); margin-bottom: 0.8rem; position: relative; display: inline-block; }
+        .section-header h2::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 50px; height: 2px; background: var(--primary-gold); }
+        .section-header p { color: var(--text-secondary); font-size: 1rem; margin-top: 1.5rem; }
+
+        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 320px; background: linear-gradient(135deg, rgba(26, 31, 46, 0.6) 0%, rgba(36, 45, 61, 0.4) 100%); border: 2px dashed var(--border-color); border-radius: 10px; padding: 2.5rem; text-align: center; animation: fadeIn 0.8s ease-out; }
+        .empty-state-icon { font-size: 3.5rem; margin-bottom: 1rem; opacity: 0.5; }
+        .empty-state-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--text-primary); margin-bottom: 0.8rem; }
+        .empty-state-message { font-size: 1rem; color: var(--text-secondary); margin-bottom: 0.5rem; max-width: 450px; line-height: 1.6; }
+        .empty-state-submessage { font-size: 0.9rem; color: var(--text-muted); font-style: italic; }
+
+        .marquee-section { padding: 3rem 0 1rem; }
+        .marquee-outer { position: relative; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%); mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%); }
+        .marquee-track { display: flex; gap: 1.2rem; width: max-content; animation: marqueeScroll 40s linear infinite; }
+        .marquee-track.paused, .marquee-outer:hover .marquee-track { animation-play-state: paused; }
+        @keyframes marqueeScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .marquee-card { flex: 0 0 210px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; cursor: pointer; transition: all 0.3s ease; position: relative; }
+        .marquee-card:hover { border-color: var(--primary-gold); transform: translateY(-5px); box-shadow: 0 12px 30px rgba(212, 175, 55, 0.15); }
+        .marquee-rank { position: absolute; top: 0.6rem; right: 0.6rem; z-index: 2; background: rgba(15, 20, 25, 0.85); color: var(--primary-gold); font-family: 'Playfair Display', serif; font-weight: 900; font-size: 0.95rem; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--primary-gold); }
+        .marquee-cover { height: 140px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-size: 2.4rem; background-size: cover; background-position: center; }
+        .marquee-info { padding: 0.9rem 1rem 1.1rem; }
+        .marquee-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text-primary); margin-bottom: 0.3rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .marquee-author { font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        @media (max-width: 767px) { .marquee-card { flex: 0 0 160px; } .marquee-cover { height: 110px; } }
+
+        .stories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.5rem; }
+        .story-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; cursor: pointer; transition: all 0.3s ease; display: flex; flex-direction: column; }
+        .story-card:hover { border-color: var(--primary-gold); transform: translateY(-5px); box-shadow: 0 12px 30px rgba(212, 175, 55, 0.15); }
+        .story-cover { height: 180px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-size: 3rem; background-size: cover; background-position: center; }
+        .story-info { padding: 1.2rem; flex: 1; display: flex; flex-direction: column; }
+        .story-category { display: inline-block; align-self: flex-start; background: rgba(212, 175, 55, 0.15); color: var(--primary-gold); font-size: 0.75rem; padding: 0.2rem 0.7rem; border-radius: 12px; margin-bottom: 0.6rem; }
+        .story-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--text-primary); margin-bottom: 0.4rem; }
+        .story-author { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.6rem; }
+        .story-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; flex: 1; }
+
+        .riwaq-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; padding: 1rem; }
+        .riwaq-modal-overlay.show { display: flex; }
+        .riwaq-modal-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; width: 100%; max-width: 650px; max-height: 88vh; overflow-y: auto; padding: 2rem; position: relative; }
+        .riwaq-modal-close { position: absolute; top: 1rem; left: 1.2rem; font-size: 1.6rem; color: var(--text-secondary); cursor: pointer; line-height: 1; }
+        .riwaq-modal-close:hover { color: var(--primary-gold); }
+        .riwaq-modal-box h2 { font-family: 'Playfair Display', serif; color: var(--primary-gold); font-size: 1.6rem; margin-bottom: 0.5rem; }
+
+        .levels-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
+        @media (min-width: 1024px) { .levels-grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (min-width: 768px) and (max-width: 1023px) { .levels-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 767px) { .levels-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 500px) { .levels-grid { grid-template-columns: 1fr; } }
+
+        .level-card { background: var(--bg-card); border: 1.5px solid var(--border-color); border-radius: 8px; padding: 1.5rem 1.2rem; text-align: center; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
+        .level-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--level-color), transparent); }
+        .level-card::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% -50%, rgba(var(--level-rgb), 0.08), transparent 70%); pointer-events: none; }
+        .level-card:nth-child(1) { --level-color: #ffd700; --level-rgb: 255, 215, 0; }
+        .level-card:nth-child(2) { --level-color: #c0c0c0; --level-rgb: 192, 192, 192; }
+        .level-card:nth-child(3) { --level-color: #cd7f32; --level-rgb: 205, 127, 50; }
+        .level-card:nth-child(4) { --level-color: #9932cc; --level-rgb: 153, 50, 204; }
+        .level-card:nth-child(5) { --level-color: #20b2aa; --level-rgb: 32, 178, 170; }
+        .level-card:nth-child(6) { --level-color: #ff69b4; --level-rgb: 255, 105, 180; }
+        .level-card:nth-child(7) { --level-color: #00ced1; --level-rgb: 0, 206, 209; }
+        .level-card:nth-child(8) { --level-color: #ff6347; --level-rgb: 255, 99, 71; }
+        .level-card:nth-child(9) { --level-color: #3cb371; --level-rgb: 60, 179, 113; }
+        .level-card:nth-child(10) { --level-color: #ff4500; --level-rgb: 255, 69, 0; }
+        .level-card:hover { transform: translateY(-5px); border-color: var(--level-color); box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4), 0 0 25px rgba(var(--level-rgb), 0.15); }
+        .level-rank { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; color: rgba(var(--level-rgb), 0.3); margin-bottom: -0.5rem; line-height: 1; }
+        .level-icon { font-size: 2.2rem; margin: 0.5rem 0 1rem; transition: all 0.3s ease; }
+        .level-card:hover .level-icon { transform: scale(1.15) rotate(5deg); }
+        .level-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700; }
+        .level-description { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5; flex-grow: 1; }
+        .level-xp { margin-top: 0.8rem; font-size: 0.75rem; color: var(--level-color); background: rgba(var(--level-rgb), 0.1); padding: 0.25rem 0.7rem; border-radius: 10px; font-weight: 600; }
+
+        .auth-area { display: flex; align-items: center; gap: 0.8rem; }
+        .auth-link { color: var(--text-secondary); cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; white-space: nowrap; }
+        .auth-link:hover { color: var(--primary-gold); }
+        .user-badge { display: flex; align-items: center; gap: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.35rem 0.8rem; border-radius: 20px; cursor: pointer; transition: all 0.3s ease; }
+        .user-badge:hover { border-color: var(--primary-gold); }
+        .user-badge .badge-icon { font-size: 1rem; }
+        .user-badge .badge-name { font-size: 0.82rem; color: var(--text-primary); max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .user-badge .badge-xp { font-size: 0.72rem; color: var(--primary-gold); background: rgba(212, 175, 55, 0.12); padding: 0.1rem 0.5rem; border-radius: 10px; }
+        @media (max-width: 480px) { .user-badge .badge-name { display: none; } }
+
+        .auth-modal-box { max-width: 380px; }
+        .auth-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+        .auth-tab { flex: 1; text-align: center; padding: 0.6rem; border-radius: 6px; cursor: pointer; color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.9rem; transition: all 0.2s ease; }
+        .auth-tab.active { color: var(--bg-dark); background: var(--primary-gold); border-color: var(--primary-gold); font-weight: 600; }
+        .auth-field { margin-bottom: 1rem; }
+        .auth-field label { display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.4rem; }
+        .auth-field input { width: 100%; padding: 0.7rem 0.9rem; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-dark); color: var(--text-primary); font-size: 0.95rem; font-family: inherit; }
+        .auth-field input:focus { outline: none; border-color: var(--primary-gold); }
+        .auth-submit { width: 100%; padding: 0.8rem; border: none; border-radius: 6px; background: var(--primary-gold); color: var(--bg-dark); font-weight: 700; cursor: pointer; font-size: 0.95rem; transition: all 0.3s ease; }
+        .auth-submit:hover { background: var(--primary-gold-light); }
+        .auth-submit:disabled { opacity: 0.6; cursor: default; }
+        .auth-message { margin-top: 0.9rem; font-size: 0.85rem; text-align: center; min-height: 1.2em; }
+        .auth-message.error { color: #ff8787; }
+        .auth-message.success { color: #7ee787; }
+
+        .my-level-banner { background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(107, 91, 149, 0.08)); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.2rem 1.5rem; margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.6rem; }
+        .my-level-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+        .my-level-top .name { font-family: 'Playfair Display', serif; color: var(--primary-gold); font-size: 1.1rem; }
+        .my-level-top .xp-count { font-size: 0.85rem; color: var(--text-secondary); }
+        .progress-track { width: 100%; height: 8px; border-radius: 5px; background: var(--bg-hover); overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary-gold), var(--primary-gold-light)); border-radius: 5px; transition: width 0.6s ease; }
+        .progress-next { font-size: 0.75rem; color: var(--text-muted); text-align: left; }
+        .level-card.current-level { border-color: var(--primary-gold); box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.25); }
+        .level-card .current-tag { position: absolute; top: 0.6rem; left: 0.6rem; background: var(--primary-gold); color: var(--bg-dark); font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 10px; }
+
+        .xp-toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--primary-gold); color: var(--bg-dark); padding: 0.7rem 1.4rem; border-radius: 30px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35); z-index: 3000; opacity: 0; transition: all 0.35s ease; pointer-events: none; }
+        .xp-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        .about-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 2rem; color: var(--text-secondary); line-height: 1.8; font-size: 1rem; max-width: 850px; margin: 0 auto; text-align: center; }
+        .about-card p { margin-bottom: 1.2rem; }
+        .about-card p:last-child { margin-bottom: 0; }
+        .about-card strong { color: var(--primary-gold); }
+
+        footer { background: rgba(15, 20, 25, 0.97); border-top: 1px solid var(--border-color); padding: 2.5rem 0 1rem; margin-top: 4rem; }
+        .footer-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; }
+        .footer-section h3 { color: var(--primary-gold); font-size: 0.95rem; margin-bottom: 0.8rem; font-weight: 600; letter-spacing: 0.5px; }
+        .footer-section a { display: block; color: var(--text-secondary); text-decoration: none; margin-bottom: 0.6rem; transition: all 0.3s ease; font-size: 0.9rem; }
+        .footer-section a:hover { color: var(--primary-gold); padding-right: 0.4rem; }
+        .footer-tagline { display: flex; flex-direction: column; gap: 0.3rem; }
+        .footer-tagline p:first-child { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--primary-gold); font-weight: 900; }
+        .footer-tagline p:last-child { font-family: 'Playfair Display', serif; color: var(--text-secondary); font-size: 0.9rem; font-style: italic; }
+        .footer-contact-placeholder { color: var(--text-muted); font-style: italic; font-size: 0.9rem; margin-bottom: 0.8rem; line-height: 1.5; }
+        .footer-socials { display: flex; gap: 0.8rem; }
+        .footer-socials a { display: inline-flex; align-items: center; justify-content: center; color: var(--primary-gold); text-decoration: none; font-size: 1rem; transition: all 0.3s ease; margin: 0; padding: 0; width: 32px; height: 32px; border-radius: 4px; background: rgba(212, 175, 55, 0.08); }
+        .footer-socials a:hover { background: rgba(212, 175, 55, 0.15); transform: translateY(-2px); }
+        .footer-bottom { border-top: 1px solid var(--border-color); padding-top: 1.2rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
+        .footer-bottom p:last-child { margin-top: 0.4rem; font-size: 0.8rem; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 750px;
-            padding: 0 2rem;
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .hero h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 5vw, 3.2rem);
-            font-weight: 900;
-            color: var(--text-primary);
-            margin-bottom: 1.2rem;
-            line-height: 1.3;
-            letter-spacing: -0.5px;
-        }
-
-        .hero p {
-            font-size: clamp(0.95rem, 3vw, 1.15rem);
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.7;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary, .btn-secondary {
-            padding: 0.9rem 2rem;
-            font-size: 0.95rem;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-primary {
-            background: var(--primary-gold);
-            color: var(--bg-dark);
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.25);
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-gold-light);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 35px rgba(212, 175, 55, 0.35);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--primary-gold);
-            border: 2px solid var(--primary-gold);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(212, 175, 55, 0.08);
-            transform: translateY(-2px);
-        }
-
-        /* ==================== Container & Sections ==================== */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .section {
-            padding: 4rem 0;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-
-        .section-header h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(1.8rem, 4vw, 2.5rem);
-            color: var(--primary-gold);
-            margin-bottom: 0.8rem;
-            position: relative;
-            display: inline-block;
-        }
-
-        .section-header h2::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 2px;
-            background: var(--primary-gold);
-        }
-
-        .section-header p {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        /* ==================== Empty State ==================== */
-        .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 320px;
-            background: linear-gradient(135deg, rgba(26, 31, 46, 0.6) 0%, rgba(36, 45, 61, 0.4) 100%);
-            border: 2px dashed var(--border-color);
-            border-radius: 10px;
-            padding: 2.5rem;
-            text-align: center;
-        }
-
-        .empty-state-icon {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        .empty-state-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            color: var(--text-primary);
-            margin-bottom: 0.8rem;
-        }
-
-        .empty-state-message {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-            max-width: 450px;
-            line-height: 1.6;
-        }
-
-        .empty-state-submessage {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-style: italic;
-        }
-
-        /* ==================== Trending Marquee (Most Popular Novels) ==================== */
-        .marquee-section {
-            padding: 3rem 0 1rem;
-        }
-
-        .marquee-outer {
-            position: relative;
-            overflow: hidden;
-            -webkit-mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
-            mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
-        }
-
-        .marquee-track {
-            display: flex;
-            gap: 1.2rem;
-            width: max-content;
-            animation: marqueeScroll 40s linear infinite;
-        }
-
-        .marquee-track.paused,
-        .marquee-outer:hover .marquee-track {
-            animation-play-state: paused;
-        }
-
-        @keyframes marqueeScroll {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
-        }
-
-        .marquee-card {
-            flex: 0 0 210px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .marquee-card:hover {
-            border-color: var(--primary-gold);
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(212, 175, 55, 0.15);
-        }
-
-        .marquee-rank {
-            position: absolute;
-            top: 0.6rem;
-            right: 0.6rem;
-            z-index: 2;
-            background: rgba(15, 20, 25, 0.85);
-            color: var(--primary-gold);
-            font-family: 'Playfair Display', serif;
-            font-weight: 900;
-            font-size: 0.95rem;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid var(--primary-gold);
-        }
-
-        .marquee-cover {
-            height: 140px;
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.4rem;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .marquee-info {
-            padding: 0.9rem 1rem 1.1rem;
-        }
-
-        .marquee-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1rem;
-            color: var(--text-primary);
-            margin-bottom: 0.3rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .marquee-author {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        @media (max-width: 767px) {
-            .marquee-card {
-                flex: 0 0 160px;
-            }
-
-            .marquee-cover {
-                height: 110px;
-            }
-        }
-
-        /* ==================== Stories Grid ==================== */
-        .stories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .story-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .story-card:hover {
-            border-color: var(--primary-gold);
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(212, 175, 55, 0.15);
-        }
-
-        .story-cover {
-            height: 180px;
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .story-info {
-            padding: 1.2rem;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .story-category {
-            display: inline-block;
-            align-self: flex-start;
-            background: rgba(212, 175, 55, 0.15);
-            color: var(--primary-gold);
-            font-size: 0.75rem;
-            padding: 0.2rem 0.7rem;
-            border-radius: 12px;
-            margin-bottom: 0.6rem;
-        }
-
-        .story-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.15rem;
-            color: var(--text-primary);
-            margin-bottom: 0.4rem;
-        }
-
-        .story-author {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 0.6rem;
-        }
-
-        .story-desc {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            flex: 1;
-        }
-
-        /* ==================== Novel / Reader Modal ==================== */
-        .riwaq-modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .riwaq-modal-overlay.show {
-            display: flex;
-        }
-
-        .riwaq-modal-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            width: 100%;
-            max-width: 650px;
-            max-height: 88vh;
-            overflow-y: auto;
-            padding: 2rem;
-            position: relative;
-        }
-
-        .riwaq-modal-close {
-            position: absolute;
-            top: 1rem;
-            left: 1.2rem;
-            font-size: 1.6rem;
-            color: var(--text-secondary);
-            cursor: pointer;
-            line-height: 1;
-        }
-
-        .riwaq-modal-close:hover {
-            color: var(--primary-gold);
-        }
-
-        .riwaq-modal-box h2 {
-            font-family: 'Playfair Display', serif;
-            color: var(--primary-gold);
-            font-size: 1.6rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .riwaq-modal-box .modal-author {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .riwaq-modal-box .modal-desc {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            line-height: 1.7;
-        }
-
-        .chapters-list {
-            list-style: none;
-        }
-
-        .chapters-list li {
-            padding: 0.9rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            margin-bottom: 0.6rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .chapters-list li:hover {
-            border-color: var(--primary-gold);
-            background: var(--bg-hover);
-        }
-
-        .chapter-reader-content {
-            color: var(--text-primary);
-            line-height: 2;
-            white-space: pre-wrap;
-            font-size: 1.02rem;
-        }
-
-        .back-link {
-            display: inline-block;
-            color: var(--primary-gold);
-            cursor: pointer;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
-        /* ==================== Reader Toolbar (font + size) ==================== */
-        .reader-toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--bg-dark);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 0.6rem 0.9rem;
-            margin-bottom: 1.3rem;
-        }
-
-        .reader-toolbar-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .reader-toolbar-group label {
-            font-size: 0.78rem;
-            color: var(--text-secondary);
-            white-space: nowrap;
-        }
-
-        .reader-font-select {
-            padding: 0.4rem 0.5rem;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            background: var(--bg-card);
-            color: var(--text-primary);
-            font-size: 0.82rem;
-            max-width: 130px;
-        }
-
-        .reader-size-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 5px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-card);
-            color: var(--primary-gold);
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        .reader-size-btn:hover {
-            border-color: var(--primary-gold);
-            background: var(--bg-hover);
-        }
-
-        .reader-size-label {
-            font-size: 0.78rem;
-            color: var(--text-secondary);
-            min-width: 36px;
-            text-align: center;
-        }
-
-        /* ==================== Chapter Navigation ==================== */
-        .chapter-nav {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            margin-top: 1.8rem;
-            padding-top: 1.2rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .chapter-nav-btn {
-            flex: 1;
-            padding: 0.7rem 1rem;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-dark);
-            color: var(--text-primary);
-            cursor: pointer;
-            font-family: 'Lora', serif;
-            font-size: 0.85rem;
-            text-align: center;
-            transition: all 0.25s ease;
-        }
-
-        .chapter-nav-btn:hover {
-            border-color: var(--primary-gold);
-            color: var(--primary-gold);
-            background: var(--bg-hover);
-        }
-
-        .chapter-nav-btn.disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        /* ==================== Levels Section ==================== */
-        .levels-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2.5rem;
-        }
-
-        @media (min-width: 1024px) {
-            .levels-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        @media (min-width: 768px) and (max-width: 1023px) {
-            .levels-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-width: 767px) {
-            .levels-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 500px) {
-            .levels-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .level-card {
-            background: var(--bg-card);
-            border: 1.5px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.5rem 1.2rem;
-            text-align: center;
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-        }
-
-        .level-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--level-color), transparent);
-        }
-
-        .level-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 50% -50%, rgba(var(--level-rgb), 0.08), transparent 70%);
-            pointer-events: none;
-        }
-
-        .level-card:nth-child(1) { 
-            --level-color: #ffd700;
-            --level-rgb: 255, 215, 0;
-        }
-        .level-card:nth-child(2) { 
-            --level-color: #c0c0c0;
-            --level-rgb: 192, 192, 192;
-        }
-        .level-card:nth-child(3) { 
-            --level-color: #cd7f32;
-            --level-rgb: 205, 127, 50;
-        }
-        .level-card:nth-child(4) { 
-            --level-color: #9932cc;
-            --level-rgb: 153, 50, 204;
-        }
-        .level-card:nth-child(5) { 
-            --level-color: #20b2aa;
-            --level-rgb: 32, 178, 170;
-        }
-        .level-card:nth-child(6) { 
-            --level-color: #ff69b4;
-            --level-rgb: 255, 105, 180;
-        }
-        .level-card:nth-child(7) { 
-            --level-color: #00ced1;
-            --level-rgb: 0, 206, 209;
-        }
-        .level-card:nth-child(8) { 
-            --level-color: #ff6347;
-            --level-rgb: 255, 99, 71;
-        }
-        .level-card:nth-child(9) { 
-            --level-color: #3cb371;
-            --level-rgb: 60, 179, 113;
-        }
-        .level-card:nth-child(10) { 
-            --level-color: #ff4500;
-            --level-rgb: 255, 69, 0;
-        }
-
-        .level-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--level-color);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4), 
-                        0 0 25px rgba(var(--level-rgb), 0.15);
-        }
-
-        .level-rank {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            font-weight: 900;
-            color: rgba(var(--level-rgb), 0.3);
-            margin-bottom: -0.5rem;
-            line-height: 1;
-        }
-
-        .level-icon {
-            font-size: 2.2rem;
-            margin: 0.5rem 0 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .level-card:hover .level-icon {
-            transform: scale(1.15) rotate(5deg);
-        }
-
-        .level-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
-
-        .level-description {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            line-height: 1.5;
-            flex-grow: 1;
-        }
-
-        .level-xp {
-            margin-top: 0.8rem;
-            font-size: 0.75rem;
-            color: var(--level-color);
-            background: rgba(var(--level-rgb), 0.1);
-            padding: 0.25rem 0.7rem;
-            border-radius: 10px;
-            font-weight: 600;
-        }
-
-        /* ==================== Auth (header) ==================== */
-        .auth-area {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .auth-link {
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .auth-link:hover {
-            color: var(--primary-gold);
-        }
-
-        .user-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 0.35rem 0.8rem;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .user-badge:hover {
-            border-color: var(--primary-gold);
-        }
-
-        .user-badge .badge-icon {
-            font-size: 1rem;
-        }
-
-        .user-badge .badge-name {
-            font-size: 0.82rem;
-            color: var(--text-primary);
-            max-width: 90px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .user-badge .badge-xp {
-            font-size: 0.72rem;
-            color: var(--primary-gold);
-            background: rgba(212, 175, 55, 0.12);
-            padding: 0.1rem 0.5rem;
-            border-radius: 10px;
-        }
-
-        @media (max-width: 480px) {
-            .user-badge .badge-name { display: none; }
-        }
-
-        /* ==================== Auth Modal ==================== */
-        .auth-modal-box {
-            max-width: 380px;
-        }
-
-        .auth-tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .auth-tab {
-            flex: 1;
-            text-align: center;
-            padding: 0.6rem;
-            border-radius: 6px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-        }
-
-        .auth-tab.active {
-            color: var(--bg-dark);
-            background: var(--primary-gold);
-            border-color: var(--primary-gold);
-            font-weight: 600;
-        }
-
-        .auth-field {
-            margin-bottom: 1rem;
-        }
-
-        .auth-field label {
-            display: block;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.4rem;
-        }
-
-        .auth-field input {
-            width: 100%;
-            padding: 0.7rem 0.9rem;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-dark);
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            font-family: inherit;
-        }
-
-        .auth-field input:focus {
-            outline: none;
-            border-color: var(--primary-gold);
-        }
-
-        .auth-submit {
-            width: 100%;
-            padding: 0.8rem;
-            border: none;
-            border-radius: 6px;
-            background: var(--primary-gold);
-            color: var(--bg-dark);
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-
-        .auth-submit:hover {
-            background: var(--primary-gold-light);
-        }
-
-        .auth-submit:disabled {
-            opacity: 0.6;
-            cursor: default;
-        }
-
-        .auth-message {
-            margin-top: 0.9rem;
-            font-size: 0.85rem;
-            text-align: center;
-            min-height: 1.2em;
-        }
-
-        .auth-message.error {
-            color: #ff8787;
-        }
-
-        .auth-message.success {
-            color: #7ee787;
-        }
-
-        /* ==================== My Level Banner + Progress ==================== */
-        .my-level-banner {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(107, 91, 149, 0.08));
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 1.2rem 1.5rem;
-            margin-bottom: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-        }
-
-        .my-level-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .my-level-top .name {
-            font-family: 'Playfair Display', serif;
-            color: var(--primary-gold);
-            font-size: 1.1rem;
-        }
-
-        .my-level-top .xp-count {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .progress-track {
-            width: 100%;
-            height: 8px;
-            border-radius: 5px;
-            background: var(--bg-hover);
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-gold), var(--primary-gold-light));
-            border-radius: 5px;
-            transition: width 0.6s ease;
-        }
-
-        .progress-next {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-align: left;
-        }
-
-        .level-card.current-level {
-            border-color: var(--primary-gold);
-            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.25);
-        }
-
-        .level-card .current-tag {
-            position: absolute;
-            top: 0.6rem;
-            left: 0.6rem;
-            background: var(--primary-gold);
-            color: var(--bg-dark);
-            font-size: 0.65rem;
-            font-weight: 700;
-            padding: 0.15rem 0.5rem;
-            border-radius: 10px;
-        }
-
-        /* ==================== Comments ==================== */
-        .comments-section {
-            margin-top: 2rem;
-            border-top: 1px solid var(--border-color);
-            padding-top: 1.5rem;
-        }
-
-        .comments-section h3 {
-            font-family: 'Playfair Display', serif;
-            color: var(--primary-gold);
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-        }
-
-        .comment-item {
-            background: var(--bg-hover);
-            border-radius: 8px;
-            padding: 0.8rem 1rem;
-            margin-bottom: 0.7rem;
-        }
-
-        .comment-item .comment-author {
-            font-size: 0.82rem;
-            color: var(--primary-gold);
-            font-weight: 600;
-            margin-bottom: 0.2rem;
-        }
-
-        .comment-item .comment-content {
-            font-size: 0.92rem;
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-
-        .comment-item .comment-date {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-top: 0.3rem;
-        }
-
-        .comment-form textarea {
-            width: 100%;
-            min-height: 80px;
-            padding: 0.7rem 0.9rem;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-dark);
-            color: var(--text-primary);
-            font-family: inherit;
-            font-size: 0.92rem;
-            resize: vertical;
-            margin-bottom: 0.6rem;
-        }
-
-        .comment-form textarea:focus {
-            outline: none;
-            border-color: var(--primary-gold);
-        }
-
-        .comment-form button {
-            padding: 0.6rem 1.4rem;
-            border: none;
-            border-radius: 6px;
-            background: var(--primary-gold);
-            color: var(--bg-dark);
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 0.88rem;
-        }
-
-        .comment-form button:disabled {
-            opacity: 0.6;
-            cursor: default;
-        }
-
-        .comment-login-hint {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-align: center;
-            padding: 0.8rem;
-            border: 1px dashed var(--border-color);
-            border-radius: 8px;
-        }
-
-        /* ==================== XP Toast ==================== */
-        .xp-toast {
-            position: fixed;
-            bottom: 1.5rem;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: var(--primary-gold);
-            color: var(--bg-dark);
-            padding: 0.7rem 1.4rem;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
-            z-index: 3000;
-            opacity: 0;
-            transition: all 0.35s ease;
-            pointer-events: none;
-        }
-
-        .xp-toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* ==================== About Section ==================== */
-        .about-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 2rem;
-            color: var(--text-secondary);
-            line-height: 1.8;
-            font-size: 1rem;
-            max-width: 850px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .about-card p {
-            margin-bottom: 1.2rem;
-        }
-
-        .about-card p:last-child {
-            margin-bottom: 0;
-        }
-
-        .about-card strong {
-            color: var(--primary-gold);
-        }
-
-        /* ==================== Footer ==================== */
-        footer {
-            background: rgba(15, 20, 25, 0.97);
-            border-top: 1px solid var(--border-color);
-            padding: 2.5rem 0 1rem;
-            margin-top: 4rem;
-        }
-
-        .footer-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .footer-section h3 {
-            color: var(--primary-gold);
-            font-size: 0.95rem;
-            margin-bottom: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .footer-section a {
-            display: block;
-            color: var(--text-secondary);
-            text-decoration: none;
-            margin-bottom: 0.6rem;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .footer-section a:hover {
-            color: var(--primary-gold);
-            padding-right: 0.4rem;
-        }
-
-        .footer-tagline {
-            display: flex;
-            flex-direction: column;
-            gap: 0.3rem;
-        }
-
-        .footer-tagline p:first-child {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            color: var(--primary-gold);
-            font-weight: 900;
-        }
-
-        .footer-tagline p:last-child {
-            font-family: 'Playfair Display', serif;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-style: italic;
-        }
-
-        .footer-contact-placeholder {
-            color: var(--text-muted);
-            font-style: italic;
-            font-size: 0.9rem;
-            margin-bottom: 0.8rem;
-            line-height: 1.5;
-        }
-
-        .footer-socials {
-            display: flex;
-            gap: 0.8rem;
-        }
-
-        .footer-socials a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-gold);
-            text-decoration: none;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            margin: 0;
-            padding: 0;
-            width: 32px;
-            height: 32px;
-            border-radius: 4px;
-            background: rgba(212, 175, 55, 0.08);
-        }
-
-        .footer-socials a:hover {
-            background: rgba(212, 175, 55, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .footer-bottom {
-            border-top: 1px solid var(--border-color);
-            padding-top: 1.2rem;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-
-        .footer-bottom p:last-child {
-            margin-top: 0.4rem;
-            font-size: 0.8rem;
-        }
-
-        /* ==================== Animations ==================== */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(25px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .empty-state {
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        /* ==================== Responsive ==================== */
         @media (max-width: 768px) {
-            .header-container {
-                padding: 0 1.2rem;
-            }
-
-            .desktop-nav {
-                display: none;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .logo-text h1 {
-                font-size: 1.4rem;
-            }
-
-            .section {
-                padding: 3rem 0;
-            }
-
-            .section-header {
-                margin-bottom: 2rem;
-            }
-
-            .container {
-                padding: 0 1.2rem;
-            }
-
-            .about-card {
-                padding: 1.5rem;
-                font-size: 0.95rem;
-            }
-
-            .empty-state {
-                min-height: 280px;
-                padding: 2rem 1.5rem;
-            }
-
-            .empty-state-icon {
-                font-size: 3rem;
-            }
-
-            .empty-state-title {
-                font-size: 1.3rem;
-            }
-
-            .level-card {
-                padding: 1.2rem 1rem;
-            }
-
-            .level-rank {
-                font-size: 1.8rem;
-            }
-
-            .level-icon {
-                font-size: 2rem;
-            }
-
-            .level-name {
-                font-size: 1.1rem;
-            }
-
-            .level-description {
-                font-size: 0.8rem;
-            }
-
-            footer {
-                padding: 2rem 0 0.8rem;
-            }
-
-            .footer-content {
-                gap: 1.2rem;
-                margin-bottom: 1.2rem;
-            }
-
-            .footer-section h3 {
-                font-size: 0.9rem;
-                margin-bottom: 0.6rem;
-            }
-
-            .footer-section a {
-                font-size: 0.85rem;
-                margin-bottom: 0.5rem;
-            }
+            .header-container { padding: 0 1.2rem; }
+            .desktop-nav { display: none; }
+            .hamburger { display: flex; }
+            .logo-text h1 { font-size: 1.4rem; }
+            .section { padding: 3rem 0; }
+            .section-header { margin-bottom: 2rem; }
+            .container { padding: 0 1.2rem; }
+            .about-card { padding: 1.5rem; font-size: 0.95rem; }
+            .empty-state { min-height: 280px; padding: 2rem 1.5rem; }
+            .empty-state-icon { font-size: 3rem; }
+            .empty-state-title { font-size: 1.3rem; }
+            .level-card { padding: 1.2rem 1rem; }
+            .level-rank { font-size: 1.8rem; }
+            .level-icon { font-size: 2rem; }
+            .level-name { font-size: 1.1rem; }
+            .level-description { font-size: 0.8rem; }
+            footer { padding: 2rem 0 0.8rem; }
+            .footer-content { gap: 1.2rem; margin-bottom: 1.2rem; }
+            .footer-section h3 { font-size: 0.9rem; margin-bottom: 0.6rem; }
+            .footer-section a { font-size: 0.85rem; margin-bottom: 0.5rem; }
         }
 
         @media (max-width: 480px) {
-            .header-container {
-                padding: 0 1rem;
-            }
-
-            .logo-text h1 {
-                font-size: 1.2rem;
-            }
-
-            .logo-text p {
-                font-size: 0.65rem;
-            }
-
-            .hero {
-                min-height: 480px;
-            }
-
-            .hero-content {
-                padding: 0 1rem;
-            }
-
-            .hero-buttons {
-                gap: 0.8rem;
-            }
-
-            .btn-primary, .btn-secondary {
-                padding: 0.8rem 1.5rem;
-                font-size: 0.9rem;
-            }
-
-            .section-header h2 {
-                font-size: 1.5rem;
-            }
-
-            .section-header p {
-                font-size: 0.95rem;
-            }
-
-            .empty-state {
-                min-height: 250px;
-                padding: 1.5rem 1rem;
-                border-radius: 6px;
-            }
-
-            .empty-state-icon {
-                font-size: 2.5rem;
-                margin-bottom: 0.8rem;
-            }
-
-            .empty-state-title {
-                font-size: 1.2rem;
-                margin-bottom: 0.6rem;
-            }
-
-            .empty-state-message {
-                font-size: 0.95rem;
-            }
-
-            .level-card {
-                padding: 1rem 0.8rem;
-            }
-
-            .level-rank {
-                font-size: 1.5rem;
-                margin-bottom: -0.3rem;
-            }
-
-            .level-icon {
-                font-size: 1.8rem;
-                margin: 0.4rem 0 0.8rem;
-            }
-
-            .level-name {
-                font-size: 1rem;
-                margin-bottom: 0.4rem;
-            }
-
-            .level-description {
-                font-size: 0.75rem;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-                margin-bottom: 1rem;
-            }
-
-            .footer-section h3 {
-                font-size: 0.85rem;
-            }
-
-            .footer-bottom {
-                padding-top: 1rem;
-                font-size: 0.8rem;
-            }
-
-            .footer-bottom p:last-child {
-                font-size: 0.75rem;
-            }
+            .header-container { padding: 0 1rem; }
+            .logo-text h1 { font-size: 1.2rem; }
+            .logo-text p { font-size: 0.65rem; }
+            .hero { min-height: 480px; }
+            .hero-content { padding: 0 1rem; }
+            .hero-buttons { gap: 0.8rem; }
+            .btn-primary, .btn-secondary { padding: 0.8rem 1.5rem; font-size: 0.9rem; }
+            .section-header h2 { font-size: 1.5rem; }
+            .section-header p { font-size: 0.95rem; }
+            .empty-state { min-height: 250px; padding: 1.5rem 1rem; border-radius: 6px; }
+            .empty-state-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+            .empty-state-title { font-size: 1.2rem; margin-bottom: 0.6rem; }
+            .empty-state-message { font-size: 0.95rem; }
+            .level-card { padding: 1rem 0.8rem; }
+            .level-rank { font-size: 1.5rem; margin-bottom: -0.3rem; }
+            .level-icon { font-size: 1.8rem; margin: 0.4rem 0 0.8rem; }
+            .level-name { font-size: 1rem; margin-bottom: 0.4rem; }
+            .level-description { font-size: 0.75rem; }
+            .footer-content { grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1rem; }
+            .footer-section h3 { font-size: 0.85rem; }
+            .footer-bottom { padding-top: 1rem; font-size: 0.8rem; }
+            .footer-bottom p:last-child { font-size: 0.75rem; }
         }
 
-        /* Prevent horizontal scroll */
-        body, html {
-            overflow-x: hidden;
-            width: 100%;
-        }
+        body, html { overflow-x: hidden; width: 100%; }
     </style>
 </head>
 <body>
-    <!-- Header & Navigation -->
     <header>
         <div class="header-container">
             <a href="#" class="logo">
@@ -1611,14 +290,11 @@
                 <span class="auth-link" onclick="openAuthModal('login')">دخول</span>
             </div>
             <button class="hamburger" onclick="toggleMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
+                <span></span><span></span><span></span>
             </button>
         </div>
     </header>
 
-    <!-- Mobile Menu -->
     <nav class="mobile-menu" id="mobileMenu">
         <a href="#home" onclick="toggleMenu()">الرئيسية</a>
         <a href="#stories" onclick="toggleMenu()">الروايات</a>
@@ -1627,7 +303,6 @@
         <a href="#contact" onclick="toggleMenu()">تواصل معنا</a>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-content">
             <h2>اكتشف عالماً جديداً بين صفحات الروايات</h2>
@@ -1639,7 +314,6 @@
         </div>
     </section>
 
-    <!-- Trending Marquee: Most Popular Novels -->
     <section class="marquee-section" id="trending">
         <div class="container">
             <div class="section-header">
@@ -1652,14 +326,12 @@
         </div>
     </section>
 
-    <!-- Featured Stories Section -->
     <section class="section" id="stories">
         <div class="container">
             <div class="section-header">
                 <h2>🌟 الروايات المميزة</h2>
                 <p>اختر من أفضل الروايات المترجمة</p>
             </div>
-
             <div id="storiesContainer">
                 <div class="empty-state">
                     <div class="empty-state-icon">📚</div>
@@ -1670,14 +342,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Novel / Chapter Reader Modal -->
-    <div class="riwaq-modal-overlay" id="riwaqModalOverlay">
-        <div class="riwaq-modal-box">
-            <span class="riwaq-modal-close" onclick="closeRiwaqModal()">&times;</span>
-            <div id="riwaqModalBody"></div>
-        </div>
-    </div>
 
     <!-- Auth Modal -->
     <div class="riwaq-modal-overlay" id="authModalOverlay">
@@ -1702,16 +366,13 @@
         </div>
     </div>
 
-    <!-- Levels/Ranks Section -->
     <section class="section" id="levels">
         <div class="container">
             <div class="section-header">
                 <h2>🏆 مستويات القراء</h2>
                 <p>اكتشف رحلتك من المستوى الأول إلى المستوى الأسطوري — اقرأ وعلّق لتكسب XP</p>
             </div>
-
             <div id="myLevelBanner"></div>
-
             <div class="levels-grid" id="levelsGrid">
                 <div class="empty-state" style="min-height:160px;">
                     <p class="empty-state-message">جاري تحميل المستويات...</p>
@@ -1720,29 +381,20 @@
         </div>
     </section>
 
-    <!-- About Section -->
     <section class="section" id="about">
         <div class="container">
             <div class="section-header">
                 <h2>💝 عن رِواق</h2>
                 <p>حيث تبدأ الحكاية</p>
             </div>
-
             <div class="about-card">
-                <p>
-                    <strong>رِواق</strong> هي منصة حديثة مخصصة لهواة الروايات المترجمة، حيث نوفر تجربة قراءة فاخرة وممتعة في بيئة هادئة وأنيقة.
-                </p>
-                <p>
-                    نعتقد أن القراءة هي أعظم رحلة يمكن للإنسان أن يخوضها، وكل رواية هي بابٌ يفتح إلى عوالم جديدة مليئة بالسحر والمغامرة.
-                </p>
-                <p>
-                    مهمتنا هي جعل عملية البحث عن الرواية المثالية سهلة وممتعة، مع الحفاظ على تجربة قراءة احترافية تليق بقيمة كل عمل أدبي.
-                </p>
+                <p><strong>رِواق</strong> هي منصة حديثة مخصصة لهواة الروايات المترجمة، حيث نوفر تجربة قراءة فاخرة وممتعة في بيئة هادئة وأنيقة.</p>
+                <p>نعتقد أن القراءة هي أعظم رحلة يمكن للإنسان أن يخوضها، وكل رواية هي بابٌ يفتح إلى عوالم جديدة مليئة بالسحر والمغامرة.</p>
+                <p>مهمتنا هي جعل عملية البحث عن الرواية المثالية سهلة وممتعة، مع الحفاظ على تجربة قراءة احترافية تليق بقيمة كل عمل أدبي.</p>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer id="contact">
         <div class="footer-container">
             <div class="footer-content">
@@ -1751,7 +403,6 @@
                     <p>RIWAQ</p>
                     <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.3rem;">حيث تبدأ الحكاية</p>
                 </div>
-
                 <div class="footer-section">
                     <h3>الروابط الرئيسية</h3>
                     <a href="#home">الرئيسية</a>
@@ -1759,7 +410,6 @@
                     <a href="#levels">المستويات</a>
                     <a href="#about">عن الموقع</a>
                 </div>
-
                 <div class="footer-section">
                     <h3>المزيد</h3>
                     <a href="#about">عن الموقع</a>
@@ -1767,24 +417,16 @@
                     <a href="#">سياسة الخصوصية</a>
                     <a href="#">شروط الاستخدام</a>
                 </div>
-
                 <div class="footer-section">
                     <h3>تواصل معنا</h3>
                     <p class="footer-contact-placeholder">سيتم إضافة معلومات التواصل لاحقاً</p>
                     <div class="footer-socials">
-                        <a href="#" title="Twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" title="Facebook">
-                            <i class="fab fa-facebook"></i>
-                        </a>
-                        <a href="#" title="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
+                        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
             </div>
-
             <div class="footer-bottom">
                 <p>&copy; 2024 رِواق - RIWAQ. جميع الحقوق محفوظة.</p>
                 <p>منصة الروايات المترجمة | تجربة قراءة احترافية</p>
@@ -1794,14 +436,12 @@
 
     <div class="xp-toast" id="xpToast"></div>
 
-    <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-client.js?v=5"></script>
 
     <script>
         function toggleMenu() {
-            const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('active');
+            document.getElementById('mobileMenu').classList.toggle('active');
         }
 
         function scrollToSection(sectionId) {
@@ -1809,17 +449,13 @@
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth' });
                 const menu = document.getElementById('mobileMenu');
-                if (menu.classList.contains('active')) {
-                    toggleMenu();
-                }
+                if (menu.classList.contains('active')) toggleMenu();
             }
         }
 
-        // Close mobile menu on outside click
         document.addEventListener('click', function(event) {
             const menu = document.getElementById('mobileMenu');
             const hamburger = document.querySelector('.hamburger');
-            
             if (menu && hamburger && !menu.contains(event.target) && !hamburger.contains(event.target)) {
                 menu.classList.remove('active');
             }
@@ -1827,84 +463,10 @@
 
         function escapeHtml(str) {
             if (str === null || str === undefined) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;');
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
 
-        /* ==================== Reader Preferences (font + size) ==================== */
-        const READER_PREFS_KEY = 'riwaq_reader_prefs';
-        const READER_FONTS = [
-            { id: 'naskh', label: 'نسخ (افتراضي)', family: "'Noto Naskh Arabic', serif" },
-            { id: 'amiri', label: 'أميري', family: "'Amiri', serif" },
-            { id: 'cairo', label: 'القاهرة', family: "'Cairo', sans-serif" },
-            { id: 'tajawal', label: 'تجوال', family: "'Tajawal', sans-serif" },
-            { id: 'lora', label: 'كلاسيكي', family: "'Lora', serif" }
-        ];
-        const READER_SIZES = [15, 16, 17, 18, 19, 20, 22, 24, 26, 28];
-        const READER_SIZE_DEFAULT_INDEX = 3; // 18px
-
-        function getReaderPrefs() {
-            try {
-                const raw = localStorage.getItem(READER_PREFS_KEY);
-                if (raw) {
-                    const parsed = JSON.parse(raw);
-                    return {
-                        fontId: parsed.fontId || READER_FONTS[0].id,
-                        sizeIndex: typeof parsed.sizeIndex === 'number' ? parsed.sizeIndex : READER_SIZE_DEFAULT_INDEX
-                    };
-                }
-            } catch (e) { /* ignore */ }
-            return { fontId: READER_FONTS[0].id, sizeIndex: READER_SIZE_DEFAULT_INDEX };
-        }
-
-        function saveReaderPrefs(prefs) {
-            try { localStorage.setItem(READER_PREFS_KEY, JSON.stringify(prefs)); } catch (e) { /* ignore */ }
-        }
-
-        function applyReaderStyles() {
-            const prefs = getReaderPrefs();
-            const content = document.querySelector('.chapter-reader-content');
-            if (!content) return;
-            const font = READER_FONTS.find(f => f.id === prefs.fontId) || READER_FONTS[0];
-            const size = READER_SIZES[prefs.sizeIndex] ?? READER_SIZES[READER_SIZE_DEFAULT_INDEX];
-            content.style.fontFamily = font.family;
-            content.style.fontSize = size + 'px';
-            const sizeLabel = document.getElementById('readerSizeLabel');
-            if (sizeLabel) sizeLabel.textContent = size + 'px';
-        }
-
-        function changeReaderFont(fontId) {
-            const prefs = getReaderPrefs();
-            prefs.fontId = fontId;
-            saveReaderPrefs(prefs);
-            applyReaderStyles();
-        }
-
-        function changeReaderFontSize(direction) {
-            const prefs = getReaderPrefs();
-            let idx = typeof prefs.sizeIndex === 'number' ? prefs.sizeIndex : READER_SIZE_DEFAULT_INDEX;
-            idx = Math.min(READER_SIZES.length - 1, Math.max(0, idx + direction));
-            prefs.sizeIndex = idx;
-            saveReaderPrefs(prefs);
-            applyReaderStyles();
-        }
-
-        /* ==================== XP Toast ==================== */
-        let xpToastTimer = null;
-        function showXpToast(amount) {
-            const toast = document.getElementById('xpToast');
-            if (!toast) return;
-            toast.textContent = `✨ +${amount} XP`;
-            toast.classList.add('show');
-            clearTimeout(xpToastTimer);
-            xpToastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
-        }
-
-        /* ==================== Auth (reader login/signup) ==================== */
-        let currentReaderStatus = null; // { profile, currentLevel, nextLevel, levels }
+        let currentReaderStatus = null;
         let authMode = 'login';
 
         function openAuthModal(mode) {
@@ -1928,8 +490,7 @@
         }
 
         async function handleUserBadgeClick() {
-            const ok = confirm('هل تريد تسجيل الخروج؟');
-            if (!ok) return;
+            if (!confirm('هل تريد تسجيل الخروج؟')) return;
             await signOut();
             currentReaderStatus = null;
             await refreshAuthUI();
@@ -1939,13 +500,11 @@
         async function refreshAuthUI() {
             const authArea = document.getElementById('authArea');
             const session = await checkAuth();
-
             if (!session) {
                 currentReaderStatus = null;
                 authArea.innerHTML = `<span class="auth-link" onclick="openAuthModal('login')">دخول / تسجيل</span>`;
                 return;
             }
-
             const statusResult = await getMyReaderStatus();
             if (statusResult.success && statusResult.data) {
                 currentReaderStatus = statusResult.data;
@@ -1970,12 +529,10 @@
             const password = document.getElementById('authPassword').value;
             const msg = document.getElementById('authMessage');
             const btn = document.getElementById('authSubmitBtn');
-
             msg.textContent = '';
             msg.className = 'auth-message';
             btn.disabled = true;
             btn.textContent = 'جاري المعالجة...';
-
             try {
                 if (authMode === 'signup') {
                     const result = await signUp(email, password);
@@ -1999,23 +556,16 @@
             }
         });
 
-        /* ==================== Dynamic Stories (Supabase) ==================== */
         let publicNovelsCache = [];
 
         async function loadPublishedStories() {
             try {
-                const result = await getNovels(true); // published_only = true
+                const result = await getNovels(true);
                 const container = document.getElementById('storiesContainer');
-
-                if (!result.success || !result.data || result.data.length === 0) {
-                    // Keep the existing empty-state markup as-is
-                    return;
-                }
-
+                if (!result.success || !result.data || result.data.length === 0) return;
                 publicNovelsCache = result.data;
-
                 const cardsHtml = result.data.map(novel => `
-                    <div class="story-card" onclick="openStoryModal('${novel.id}')">
+                    <div class="story-card" onclick="location.href='novel.html?id=${novel.id}'">
                         <div class="story-cover" style="${novel.cover_url ? `background-image:url('${novel.cover_url}')` : ''}">
                             ${novel.cover_url ? '' : '📖'}
                         </div>
@@ -2027,29 +577,22 @@
                         </div>
                     </div>
                 `).join('');
-
                 container.innerHTML = `<div class="stories-grid">${cardsHtml}</div>`;
-
                 renderTrendingMarquee(result.data);
             } catch (err) {
                 console.error('Failed to load stories:', err);
             }
         }
 
-        /* ==================== Trending Marquee (Most Popular Novels) ==================== */
         function renderTrendingMarquee(novels) {
             const outer = document.getElementById('marqueeOuter');
             const track = document.getElementById('marqueeTrack');
             if (!outer || !track || !novels || novels.length === 0) return;
-
-            // Most-viewed first when a "views" counter exists in the DB,
-            // otherwise fall back to the most recently published novels.
             const sorted = [...novels].sort((a, b) => (b.views || 0) - (a.views || 0));
             const topNovels = sorted.slice(0, 10);
             if (topNovels.length === 0) return;
-
             const buildCard = (novel, index) => `
-                <div class="marquee-card" onclick="openStoryModal('${novel.id}')">
+                <div class="marquee-card" onclick="location.href='novel.html?id=${novel.id}'">
                     <div class="marquee-rank">${index + 1}</div>
                     <div class="marquee-cover" style="${novel.cover_url ? `background-image:url('${novel.cover_url}')` : ''}">
                         ${novel.cover_url ? '' : '📖'}
@@ -2060,217 +603,30 @@
                     </div>
                 </div>
             `;
-
             const cardsHtml = topNovels.map(buildCard).join('');
-            // Duplicate the list so the CSS animation (-50% translateX) loops seamlessly.
             track.innerHTML = cardsHtml + cardsHtml;
-
-            // If there's only a couple of novels, the loop looks too fast/empty — slow it down.
             const duration = Math.max(20, topNovels.length * 4);
             track.style.animationDuration = `${duration}s`;
-
             outer.style.display = 'block';
-
-            // Pause on touch for mobile users (hover doesn't exist there).
             track.addEventListener('touchstart', () => track.classList.add('paused'), { passive: true });
             track.addEventListener('touchend', () => track.classList.remove('paused'), { passive: true });
         }
 
-        async function openStoryModal(novelId) {
-            const novel = publicNovelsCache.find(n => String(n.id) === String(novelId));
-            if (!novel) return;
-
-            const modalBody = document.getElementById('riwaqModalBody');
-            modalBody.innerHTML = `<p style="text-align:center; color: var(--text-secondary);">جاري التحميل...</p>`;
-            document.getElementById('riwaqModalOverlay').classList.add('show');
-
-            const chaptersResult = await getChapters(novelId, true); // published_only = true
-            const chapters = chaptersResult.success ? chaptersResult.data : [];
-
-            const chaptersHtml = chapters.length > 0
-                ? `<ul class="chapters-list">${chapters.map(ch => `
-                    <li onclick="openChapterReader('${novelId}', '${ch.id}')">
-                        الفصل ${ch.chapter_number}: ${escapeHtml(ch.title)}
-                    </li>
-                `).join('')}</ul>`
-                : `<p style="color: var(--text-muted);">لا توجد فصول منشورة بعد لهذه الرواية.</p>`;
-
-            modalBody.innerHTML = `
-                <h2>${escapeHtml(novel.title_ar)}</h2>
-                <p class="modal-author">✍️ بقلم: ${escapeHtml(novel.author)}</p>
-                <p class="modal-desc">${escapeHtml(novel.description || '')}</p>
-                ${chaptersHtml}
-            `;
-        }
-
-        async function openChapterReader(novelId, chapterId) {
-            const modalBody = document.getElementById('riwaqModalBody');
-            modalBody.innerHTML = `<p style="text-align:center; color: var(--text-secondary);">جاري التحميل...</p>`;
-
-            const [chapterResult, chaptersListResult] = await Promise.all([
-                getChapter(chapterId),
-                getChapters(novelId, true)
-            ]);
-
-            if (!chapterResult.success) {
-                modalBody.innerHTML = `<p style="color:#ff8787;">تعذر تحميل الفصل.</p>`;
-                return;
-            }
-
-            const chapter = chapterResult.data;
-            const chaptersList = chaptersListResult.success ? chaptersListResult.data : [];
-            const currentIndex = chaptersList.findIndex(c => String(c.id) === String(chapterId));
-            const prevChapter = currentIndex > 0 ? chaptersList[currentIndex - 1] : null;
-            const nextChapter = (currentIndex >= 0 && currentIndex < chaptersList.length - 1) ? chaptersList[currentIndex + 1] : null;
-
-            const prefs = getReaderPrefs();
-
-            const navHtml = `
-                <div class="chapter-nav">
-                    ${prevChapter
-                        ? `<button class="chapter-nav-btn" onclick="openChapterReader('${novelId}', '${prevChapter.id}')">→ الفصل السابق</button>`
-                        : `<span class="chapter-nav-btn disabled">→ الفصل السابق</span>`}
-                    ${nextChapter
-                        ? `<button class="chapter-nav-btn" onclick="openChapterReader('${novelId}', '${nextChapter.id}')">الفصل التالي ←</button>`
-                        : `<span class="chapter-nav-btn disabled">الفصل التالي ←</span>`}
-                </div>
-            `;
-
-            modalBody.innerHTML = `
-                <span class="back-link" onclick="openStoryModal('${novelId}')">&#8594; رجوع لقائمة الفصول</span>
-                <h2>الفصل ${chapter.chapter_number}: ${escapeHtml(chapter.title)}</h2>
-                <div class="reader-toolbar">
-                    <div class="reader-toolbar-group">
-                        <label for="readerFontSelect">الخط</label>
-                        <select id="readerFontSelect" class="reader-font-select" onchange="changeReaderFont(this.value)">
-                            ${READER_FONTS.map(f => `<option value="${f.id}" ${f.id === prefs.fontId ? 'selected' : ''}>${f.label}</option>`).join('')}
-                        </select>
-                    </div>
-                    <div class="reader-toolbar-group">
-                        <button type="button" class="reader-size-btn" onclick="changeReaderFontSize(-1)" aria-label="تصغير الخط">A-</button>
-                        <span class="reader-size-label" id="readerSizeLabel">${READER_SIZES[prefs.sizeIndex]}px</span>
-                        <button type="button" class="reader-size-btn" onclick="changeReaderFontSize(1)" aria-label="تكبير الخط">A+</button>
-                    </div>
-                </div>
-                <div class="chapter-reader-content">${escapeHtml(chapter.content)}</div>
-                ${navHtml}
-                <div class="comments-section" id="commentsSection">
-                    <h3>💬 التعليقات</h3>
-                    <div id="commentsList"><p style="color:var(--text-muted); font-size:0.9rem;">جاري تحميل التعليقات...</p></div>
-                    <div id="commentFormArea"></div>
-                </div>
-            `;
-
-            applyReaderStyles();
-
-            // Award reading XP (only counts once per chapter per logged-in user)
-            trackChapterRead(chapterId).then(async (res) => {
-                if (res && res.success && res.awarded) {
-                    showXpToast(5);
-                    await refreshAuthUI();
-                }
-            });
-
-            loadComments(chapterId);
-        }
-
-        async function loadComments(chapterId) {
-            const listEl = document.getElementById('commentsList');
-            const formArea = document.getElementById('commentFormArea');
-            if (!listEl) return;
-
-            const result = await getComments(chapterId);
-            if (!result.success) {
-                listEl.innerHTML = `<p style="color:#ff8787; font-size:0.9rem;">تعذر تحميل التعليقات.</p>`;
-                return;
-            }
-
-            const comments = result.data || [];
-            listEl.innerHTML = comments.length > 0
-                ? comments.map(c => `
-                    <div class="comment-item">
-                        <div class="comment-author">${escapeHtml((c.profiles && (c.profiles.username || c.profiles.email)) || 'قارئ')}</div>
-                        <div class="comment-content">${escapeHtml(c.content)}</div>
-                        <div class="comment-date">${new Date(c.created_at).toLocaleDateString('ar-EG')}</div>
-                    </div>
-                `).join('')
-                : `<p style="color:var(--text-muted); font-size:0.9rem;">لا توجد تعليقات بعد، كن أول من يعلّق!</p>`;
-
-            const session = await checkAuth();
-            if (session) {
-                formArea.innerHTML = `
-                    <div class="comment-form">
-                        <textarea id="newCommentText" placeholder="شارك رأيك في هذا الفصل..."></textarea>
-                        <button id="submitCommentBtn" onclick="submitComment(${chapterId})">إرسال التعليق (+10 XP)</button>
-                    </div>
-                `;
-            } else {
-                formArea.innerHTML = `
-                    <div class="comment-login-hint">
-                        <span class="auth-link" onclick="openAuthModal('login')">سجّل الدخول</span> لإضافة تعليق واكتساب XP
-                    </div>
-                `;
-            }
-        }
-
-        async function submitComment(chapterId) {
-            const textarea = document.getElementById('newCommentText');
-            const btn = document.getElementById('submitCommentBtn');
-            const content = textarea.value.trim();
-            if (content.length < 2) return;
-
-            btn.disabled = true;
-            btn.textContent = 'جاري الإرسال...';
-
-            const result = await addComment(chapterId, content);
-
-            btn.disabled = false;
-            btn.textContent = 'إرسال التعليق (+10 XP)';
-
-            if (!result.success) {
-                alert(result.error || 'تعذر إرسال التعليق');
-                return;
-            }
-
-            textarea.value = '';
-            await loadComments(chapterId);
-
-            if (result.xp && result.xp.awarded) {
-                showXpToast(10);
-            }
-            await refreshAuthUI();
-        }
-
-        function closeRiwaqModal() {
-            document.getElementById('riwaqModalOverlay').classList.remove('show');
-        }
-
         window.addEventListener('click', function (event) {
-            const overlay = document.getElementById('riwaqModalOverlay');
             const authOverlay = document.getElementById('authModalOverlay');
-            if (event.target === overlay) {
-                closeRiwaqModal();
-            }
-            if (event.target === authOverlay) {
-                closeAuthModal();
-            }
+            if (event.target === authOverlay) closeAuthModal();
         });
 
-        /* ==================== Levels Section (dynamic) ==================== */
         async function loadLevelsSection() {
             const grid = document.getElementById('levelsGrid');
             const banner = document.getElementById('myLevelBanner');
-
             const levelsResult = await getLevels();
             if (!levelsResult.success || !levelsResult.data || levelsResult.data.length === 0) {
                 grid.innerHTML = `<div class="empty-state" style="min-height:160px;"><p class="empty-state-message">تعذر تحميل المستويات حالياً.</p></div>`;
                 return;
             }
-
             const levels = levelsResult.data;
-            const myXp = currentReaderStatus ? currentReaderStatus.profile.xp : null;
             const myLevelNumber = currentReaderStatus && currentReaderStatus.currentLevel ? currentReaderStatus.currentLevel.level_number : null;
-
             grid.innerHTML = levels.map((lvl, idx) => {
                 const nextLvl = levels[idx + 1];
                 const rangeLabel = nextLvl ? `${lvl.min_xp} - ${nextLvl.min_xp - 1} XP` : `${lvl.min_xp}+ XP`;
@@ -2286,7 +642,6 @@
                     </div>
                 `;
             }).join('');
-
             if (currentReaderStatus && currentReaderStatus.currentLevel) {
                 const { profile, currentLevel, nextLevel } = currentReaderStatus;
                 if (nextLevel) {
