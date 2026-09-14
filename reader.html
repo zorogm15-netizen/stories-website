@@ -74,7 +74,7 @@
         .reader-titles {
             text-align: center;
             flex: 1;
-            min-width: 150px;
+            min-width: 140px;
         }
 
         .reader-titles .novel-name {
@@ -88,7 +88,36 @@
             color: var(--text-primary);
         }
 
-        /* ==================== Settings Panel ==================== */
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .auth-link {
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .auth-link:hover {
+            color: var(--primary-gold);
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            color: var(--primary-gold);
+        }
+
         .settings-toggle {
             background: none;
             border: 1px solid var(--border-color);
@@ -110,6 +139,7 @@
             border-color: var(--primary-gold);
         }
 
+        /* ==================== Settings Panel ==================== */
         .settings-panel {
             display: none;
             background: var(--bg-card);
@@ -286,6 +316,238 @@
             margin-right: auto;
         }
 
+        /* ==================== Comments ==================== */
+        .comments-section {
+            margin-top: 3rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+        }
+
+        .comments-section h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-gold);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .comment-item {
+            background: var(--bg-hover);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .comment-item .comment-author {
+            font-size: 0.82rem;
+            color: var(--primary-gold);
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .comment-item .comment-content {
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .comment-item .comment-date {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 0.7rem 0.9rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.92rem;
+            resize: vertical;
+            margin-bottom: 0.6rem;
+        }
+
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+        }
+
+        .comment-form button {
+            padding: 0.6rem 1.4rem;
+            border: none;
+            border-radius: 6px;
+            background: var(--primary-gold);
+            color: var(--bg-dark);
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.88rem;
+        }
+
+        .comment-form button:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .comment-login-hint {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 0.8rem;
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+        }
+
+        /* ==================== Auth Modal ==================== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 380px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            left: 1.2rem;
+            font-size: 1.6rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--primary-gold);
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 0.6rem;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .auth-tab.active {
+            color: var(--bg-dark);
+            background: var(--primary-gold);
+            border-color: var(--primary-gold);
+            font-weight: 600;
+        }
+
+        .auth-field {
+            margin-bottom: 1rem;
+        }
+
+        .auth-field label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+        }
+
+        .auth-field input {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .auth-field input:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+        }
+
+        .auth-submit {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 6px;
+            background: var(--primary-gold);
+            color: var(--bg-dark);
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .auth-submit:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .auth-message {
+            margin-top: 0.9rem;
+            font-size: 0.85rem;
+            text-align: center;
+            min-height: 1.2em;
+        }
+
+        .auth-message.error {
+            color: #ff8787;
+        }
+
+        .auth-message.success {
+            color: #7ee787;
+        }
+
+        /* ==================== XP Toast ==================== */
+        .xp-toast {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--primary-gold);
+            color: var(--bg-dark);
+            padding: 0.7rem 1.4rem;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+            z-index: 3000;
+            opacity: 0;
+            transition: all 0.35s ease;
+            pointer-events: none;
+        }
+
+        .xp-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
         /* ==================== Responsive ==================== */
         @media (max-width: 480px) {
             .reader-topbar {
@@ -313,6 +575,10 @@
             .chapter-nav-btn span {
                 display: none;
             }
+
+            .user-badge span:not(.badge-icon) {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -325,9 +591,12 @@
             <div class="novel-name" id="novelNameLabel">...</div>
             <div class="chapter-name" id="chapterNameLabel">جاري التحميل...</div>
         </div>
-        <button class="settings-toggle" id="settingsToggle" onclick="toggleSettingsPanel()" aria-label="إعدادات القراءة">
-            <i class="fas fa-text-height"></i>
-        </button>
+        <div class="topbar-actions">
+            <div id="authArea"><span class="auth-link" onclick="openAuthModal('login')">دخول</span></div>
+            <button class="settings-toggle" id="settingsToggle" onclick="toggleSettingsPanel()" aria-label="إعدادات القراءة">
+                <i class="fas fa-text-height"></i>
+            </button>
+        </div>
     </div>
 
     <div class="settings-panel" id="settingsPanel">
@@ -355,9 +624,34 @@
         </div>
     </div>
 
+    <!-- Auth Modal -->
+    <div class="modal-overlay" id="authModalOverlay">
+        <div class="modal-box">
+            <span class="modal-close" onclick="closeAuthModal()">&times;</span>
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="authTabLogin" onclick="switchAuthTab('login')">تسجيل الدخول</div>
+                <div class="auth-tab" id="authTabSignup" onclick="switchAuthTab('signup')">حساب جديد</div>
+            </div>
+            <form id="authForm">
+                <div class="auth-field">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="authEmail" required>
+                </div>
+                <div class="auth-field">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="authPassword" required minlength="6">
+                </div>
+                <button type="submit" class="auth-submit" id="authSubmitBtn">تسجيل الدخول</button>
+            </form>
+            <div class="auth-message" id="authMessage"></div>
+        </div>
+    </div>
+
+    <div class="xp-toast" id="xpToast"></div>
+
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase-client.js?v=4"></script>
+    <script src="js/supabase-client.js?v=5"></script>
 
     <script>
         function escapeHtml(str) {
@@ -418,6 +712,109 @@
             toggle.classList.toggle('active');
         }
 
+        /* ==================== XP Toast ==================== */
+        let xpToastTimer = null;
+        function showXpToast(amount) {
+            const toast = document.getElementById('xpToast');
+            if (!toast) return;
+            toast.textContent = `✨ +${amount} XP`;
+            toast.classList.add('show');
+            clearTimeout(xpToastTimer);
+            xpToastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+        }
+
+        /* ==================== Auth ==================== */
+        let authMode = 'login';
+
+        function openAuthModal(mode) {
+            switchAuthTab(mode || 'login');
+            document.getElementById('authModalOverlay').classList.add('show');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModalOverlay').classList.remove('show');
+            document.getElementById('authMessage').textContent = '';
+            document.getElementById('authMessage').className = 'auth-message';
+        }
+
+        function switchAuthTab(mode) {
+            authMode = mode;
+            document.getElementById('authTabLogin').classList.toggle('active', mode === 'login');
+            document.getElementById('authTabSignup').classList.toggle('active', mode === 'signup');
+            document.getElementById('authSubmitBtn').textContent = mode === 'login' ? 'تسجيل الدخول' : 'إنشاء الحساب';
+        }
+
+        async function handleUserBadgeClick() {
+            if (!confirm('هل تريد تسجيل الخروج؟')) return;
+            await signOut();
+            await refreshAuthUI();
+            if (currentChapter) loadComments(chapterId);
+        }
+
+        async function refreshAuthUI() {
+            const authArea = document.getElementById('authArea');
+            const session = await checkAuth();
+
+            if (!session) {
+                authArea.innerHTML = `<span class="auth-link" onclick="openAuthModal('login')">دخول</span>`;
+                return;
+            }
+
+            const statusResult = await getMyReaderStatus();
+            if (statusResult.success && statusResult.data) {
+                const { profile, currentLevel } = statusResult.data;
+                const displayName = profile.username || (profile.email ? profile.email.split('@')[0] : 'قارئ');
+                authArea.innerHTML = `
+                    <div class="user-badge" onclick="handleUserBadgeClick()" title="تسجيل الخروج">
+                        <span class="badge-icon">${currentLevel ? currentLevel.icon : '📖'}</span>
+                        <span>${escapeHtml(displayName)} · ${profile.xp} XP</span>
+                    </div>
+                `;
+            } else {
+                authArea.innerHTML = `<span class="auth-link" onclick="openAuthModal('login')">دخول</span>`;
+            }
+        }
+
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value;
+            const msg = document.getElementById('authMessage');
+            const btn = document.getElementById('authSubmitBtn');
+
+            msg.textContent = '';
+            msg.className = 'auth-message';
+            btn.disabled = true;
+            btn.textContent = 'جاري المعالجة...';
+
+            try {
+                if (authMode === 'signup') {
+                    const result = await signUp(email, password);
+                    if (!result.success) throw new Error(result.error);
+                    msg.textContent = 'تم إنشاء الحساب! تحقق من بريدك الإلكتروني لتأكيده ثم سجّل الدخول.';
+                    msg.className = 'auth-message success';
+                    switchAuthTab('login');
+                } else {
+                    const result = await signIn(email, password);
+                    if (!result.success) throw new Error(result.error);
+                    closeAuthModal();
+                    await refreshAuthUI();
+                    if (currentChapter) loadComments(chapterId);
+                }
+            } catch (err) {
+                msg.textContent = err.message || 'حدث خطأ ما';
+                msg.className = 'auth-message error';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = authMode === 'login' ? 'تسجيل الدخول' : 'إنشاء الحساب';
+            }
+        });
+
+        window.addEventListener('click', function (event) {
+            const authOverlay = document.getElementById('authModalOverlay');
+            if (event.target === authOverlay) closeAuthModal();
+        });
+
         /* ==================== Navigation ==================== */
         function goBackToNovel() {
             if (novelId) {
@@ -429,6 +826,74 @@
 
         function goToChapter(id) {
             window.location.href = `reader.html?novel=${novelId}&chapter=${id}`;
+        }
+
+        /* ==================== Comments ==================== */
+        async function loadComments(chapterId) {
+            const listEl = document.getElementById('commentsList');
+            const formArea = document.getElementById('commentFormArea');
+            if (!listEl) return;
+
+            const result = await getComments(chapterId);
+            if (!result.success) {
+                listEl.innerHTML = `<p style="color:#ff8787; font-size:0.9rem;">تعذر تحميل التعليقات.</p>`;
+                return;
+            }
+
+            const comments = result.data || [];
+            listEl.innerHTML = comments.length > 0
+                ? comments.map(c => `
+                    <div class="comment-item">
+                        <div class="comment-author">${escapeHtml((c.profiles && (c.profiles.username || c.profiles.email)) || 'قارئ')}</div>
+                        <div class="comment-content">${escapeHtml(c.content)}</div>
+                        <div class="comment-date">${new Date(c.created_at).toLocaleDateString('ar-EG')}</div>
+                    </div>
+                `).join('')
+                : `<p style="color:var(--text-muted); font-size:0.9rem;">لا توجد تعليقات بعد، كن أول من يعلّق!</p>`;
+
+            const session = await checkAuth();
+            if (session) {
+                formArea.innerHTML = `
+                    <div class="comment-form">
+                        <textarea id="newCommentText" placeholder="شارك رأيك في هذا الفصل..."></textarea>
+                        <button id="submitCommentBtn" onclick="submitComment('${chapterId}')">إرسال التعليق (+10 XP)</button>
+                    </div>
+                `;
+            } else {
+                formArea.innerHTML = `
+                    <div class="comment-login-hint">
+                        <span class="auth-link" onclick="openAuthModal('login')">سجّل الدخول</span> لإضافة تعليق واكتساب XP
+                    </div>
+                `;
+            }
+        }
+
+        async function submitComment(chapterId) {
+            const textarea = document.getElementById('newCommentText');
+            const btn = document.getElementById('submitCommentBtn');
+            const content = textarea.value.trim();
+            if (content.length < 2) return;
+
+            btn.disabled = true;
+            btn.textContent = 'جاري الإرسال...';
+
+            const result = await addComment(chapterId, content);
+
+            btn.disabled = false;
+            btn.textContent = 'إرسال التعليق (+10 XP)';
+
+            if (!result.success) {
+                alert(result.error || 'تعذر إرسال التعليق');
+                return;
+            }
+
+            textarea.value = '';
+            await loadComments(chapterId);
+
+            if (result.xp && result.xp.awarded) {
+                showXpToast(10);
+            }
+            await refreshAuthUI();
         }
 
         /* ==================== Load Chapter ==================== */
@@ -467,7 +932,7 @@
             document.getElementById('chapterNameLabel').textContent = `الفصل ${currentChapter.chapter_number}: ${currentChapter.title}`;
             document.title = `${currentChapter.title} | رِواق`;
 
-            const idx = allChapters.findIndex(c => c.id === chapterId);
+            const idx = allChapters.findIndex(c => String(c.id) === String(chapterId));
             const prevChapter = idx > 0 ? allChapters[idx - 1] : null;
             const nextChapter = idx >= 0 && idx < allChapters.length - 1 ? allChapters[idx + 1] : null;
 
@@ -485,12 +950,27 @@
                         <span>الفصل التالي</span> <i class="fas fa-arrow-left"></i>
                     </a>
                 </div>
+                <div class="comments-section" id="commentsSection">
+                    <h3>💬 التعليقات</h3>
+                    <div id="commentsList"><p style="color:var(--text-muted); font-size:0.9rem;">جاري تحميل التعليقات...</p></div>
+                    <div id="commentFormArea"></div>
+                </div>
             `;
 
             window.scrollTo(0, 0);
+
+            trackChapterRead(chapterId).then(async (res) => {
+                if (res && res.success && res.awarded) {
+                    showXpToast(5);
+                    await refreshAuthUI();
+                }
+            });
+
+            loadComments(chapterId);
         }
 
         loadFontPrefs();
+        refreshAuthUI();
         loadReader();
     </script>
 </body>
