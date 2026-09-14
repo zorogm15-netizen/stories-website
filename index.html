@@ -9,7 +9,7 @@
     <meta property="og:title" content="رِواق | RIWAQ - منصة الروايات">
     <meta property="og:description" content="اكتشف عالماً جديداً بين صفحات الروايات">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cairo:wght@300;400;600;700&family=Tajawal:wght@300;400;500;700&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-dark: #0f1419;
@@ -645,6 +645,106 @@
 
         .back-link:hover {
             text-decoration: underline;
+        }
+
+        /* ==================== Reader Toolbar (font + size) ==================== */
+        .reader-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.6rem 0.9rem;
+            margin-bottom: 1.3rem;
+        }
+
+        .reader-toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .reader-toolbar-group label {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .reader-font-select {
+            padding: 0.4rem 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 0.82rem;
+            max-width: 130px;
+        }
+
+        .reader-size-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--primary-gold);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .reader-size-btn:hover {
+            border-color: var(--primary-gold);
+            background: var(--bg-hover);
+        }
+
+        .reader-size-label {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            min-width: 36px;
+            text-align: center;
+        }
+
+        /* ==================== Chapter Navigation ==================== */
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 1.8rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .chapter-nav-btn {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-family: 'Lora', serif;
+            font-size: 0.85rem;
+            text-align: center;
+            transition: all 0.25s ease;
+        }
+
+        .chapter-nav-btn:hover {
+            border-color: var(--primary-gold);
+            color: var(--primary-gold);
+            background: var(--bg-hover);
+        }
+
+        .chapter-nav-btn.disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            pointer-events: none;
         }
 
         /* ==================== Levels Section ==================== */
@@ -1734,6 +1834,64 @@
                 .replace(/"/g, '&quot;');
         }
 
+        /* ==================== Reader Preferences (font + size) ==================== */
+        const READER_PREFS_KEY = 'riwaq_reader_prefs';
+        const READER_FONTS = [
+            { id: 'naskh', label: 'نسخ (افتراضي)', family: "'Noto Naskh Arabic', serif" },
+            { id: 'amiri', label: 'أميري', family: "'Amiri', serif" },
+            { id: 'cairo', label: 'القاهرة', family: "'Cairo', sans-serif" },
+            { id: 'tajawal', label: 'تجوال', family: "'Tajawal', sans-serif" },
+            { id: 'lora', label: 'كلاسيكي', family: "'Lora', serif" }
+        ];
+        const READER_SIZES = [15, 16, 17, 18, 19, 20, 22, 24, 26, 28];
+        const READER_SIZE_DEFAULT_INDEX = 3; // 18px
+
+        function getReaderPrefs() {
+            try {
+                const raw = localStorage.getItem(READER_PREFS_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    return {
+                        fontId: parsed.fontId || READER_FONTS[0].id,
+                        sizeIndex: typeof parsed.sizeIndex === 'number' ? parsed.sizeIndex : READER_SIZE_DEFAULT_INDEX
+                    };
+                }
+            } catch (e) { /* ignore */ }
+            return { fontId: READER_FONTS[0].id, sizeIndex: READER_SIZE_DEFAULT_INDEX };
+        }
+
+        function saveReaderPrefs(prefs) {
+            try { localStorage.setItem(READER_PREFS_KEY, JSON.stringify(prefs)); } catch (e) { /* ignore */ }
+        }
+
+        function applyReaderStyles() {
+            const prefs = getReaderPrefs();
+            const content = document.querySelector('.chapter-reader-content');
+            if (!content) return;
+            const font = READER_FONTS.find(f => f.id === prefs.fontId) || READER_FONTS[0];
+            const size = READER_SIZES[prefs.sizeIndex] ?? READER_SIZES[READER_SIZE_DEFAULT_INDEX];
+            content.style.fontFamily = font.family;
+            content.style.fontSize = size + 'px';
+            const sizeLabel = document.getElementById('readerSizeLabel');
+            if (sizeLabel) sizeLabel.textContent = size + 'px';
+        }
+
+        function changeReaderFont(fontId) {
+            const prefs = getReaderPrefs();
+            prefs.fontId = fontId;
+            saveReaderPrefs(prefs);
+            applyReaderStyles();
+        }
+
+        function changeReaderFontSize(direction) {
+            const prefs = getReaderPrefs();
+            let idx = typeof prefs.sizeIndex === 'number' ? prefs.sizeIndex : READER_SIZE_DEFAULT_INDEX;
+            idx = Math.min(READER_SIZES.length - 1, Math.max(0, idx + direction));
+            prefs.sizeIndex = idx;
+            saveReaderPrefs(prefs);
+            applyReaderStyles();
+        }
+
         /* ==================== XP Toast ==================== */
         let xpToastTimer = null;
         function showXpToast(amount) {
@@ -1949,23 +2107,61 @@
             const modalBody = document.getElementById('riwaqModalBody');
             modalBody.innerHTML = `<p style="text-align:center; color: var(--text-secondary);">جاري التحميل...</p>`;
 
-            const result = await getChapter(chapterId);
-            if (!result.success) {
+            const [chapterResult, chaptersListResult] = await Promise.all([
+                getChapter(chapterId),
+                getChapters(novelId, true)
+            ]);
+
+            if (!chapterResult.success) {
                 modalBody.innerHTML = `<p style="color:#ff8787;">تعذر تحميل الفصل.</p>`;
                 return;
             }
 
-            const chapter = result.data;
+            const chapter = chapterResult.data;
+            const chaptersList = chaptersListResult.success ? chaptersListResult.data : [];
+            const currentIndex = chaptersList.findIndex(c => String(c.id) === String(chapterId));
+            const prevChapter = currentIndex > 0 ? chaptersList[currentIndex - 1] : null;
+            const nextChapter = (currentIndex >= 0 && currentIndex < chaptersList.length - 1) ? chaptersList[currentIndex + 1] : null;
+
+            const prefs = getReaderPrefs();
+
+            const navHtml = `
+                <div class="chapter-nav">
+                    ${prevChapter
+                        ? `<button class="chapter-nav-btn" onclick="openChapterReader('${novelId}', '${prevChapter.id}')">→ الفصل السابق</button>`
+                        : `<span class="chapter-nav-btn disabled">→ الفصل السابق</span>`}
+                    ${nextChapter
+                        ? `<button class="chapter-nav-btn" onclick="openChapterReader('${novelId}', '${nextChapter.id}')">الفصل التالي ←</button>`
+                        : `<span class="chapter-nav-btn disabled">الفصل التالي ←</span>`}
+                </div>
+            `;
+
             modalBody.innerHTML = `
                 <span class="back-link" onclick="openStoryModal('${novelId}')">&#8594; رجوع لقائمة الفصول</span>
                 <h2>الفصل ${chapter.chapter_number}: ${escapeHtml(chapter.title)}</h2>
+                <div class="reader-toolbar">
+                    <div class="reader-toolbar-group">
+                        <label for="readerFontSelect">الخط</label>
+                        <select id="readerFontSelect" class="reader-font-select" onchange="changeReaderFont(this.value)">
+                            ${READER_FONTS.map(f => `<option value="${f.id}" ${f.id === prefs.fontId ? 'selected' : ''}>${f.label}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="reader-toolbar-group">
+                        <button type="button" class="reader-size-btn" onclick="changeReaderFontSize(-1)" aria-label="تصغير الخط">A-</button>
+                        <span class="reader-size-label" id="readerSizeLabel">${READER_SIZES[prefs.sizeIndex]}px</span>
+                        <button type="button" class="reader-size-btn" onclick="changeReaderFontSize(1)" aria-label="تكبير الخط">A+</button>
+                    </div>
+                </div>
                 <div class="chapter-reader-content">${escapeHtml(chapter.content)}</div>
+                ${navHtml}
                 <div class="comments-section" id="commentsSection">
                     <h3>💬 التعليقات</h3>
                     <div id="commentsList"><p style="color:var(--text-muted); font-size:0.9rem;">جاري تحميل التعليقات...</p></div>
                     <div id="commentFormArea"></div>
                 </div>
             `;
+
+            applyReaderStyles();
 
             // Award reading XP (only counts once per chapter per logged-in user)
             trackChapterRead(chapterId).then(async (res) => {
