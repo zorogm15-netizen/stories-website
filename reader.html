@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>القراءة | رِواق</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Tajawal:wght@400;500;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f1419;
+            --bg-card: #1a1f2e;
+            --bg-hover: #242d3d;
+            --primary-gold: #d4af37;
+            --primary-gold-light: #e6c547;
+            --text-primary: #f5f1e8;
+            --text-secondary: #b8b4a8;
+            --text-muted: #7a7a7a;
+            --border-color: #2a3344;
+            --reader-font-size: 18px;
+            --reader-font-family: 'Lora', serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Lora', serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* ==================== Top Bar ==================== */
+        .reader-topbar {
+            background: rgba(15, 20, 25, 0.97);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.9rem 1.2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-gold);
+            text-decoration: none;
+            font-size: 0.9rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: inherit;
+        }
+
+        .back-btn:hover {
+            color: var(--primary-gold-light);
+        }
+
+        .reader-titles {
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .reader-titles .novel-name {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .reader-titles .chapter-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        /* ==================== Settings Panel ==================== */
+        .settings-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .settings-toggle:hover,
+        .settings-toggle.active {
+            color: var(--primary-gold);
+            border-color: var(--primary-gold);
+        }
+
+        .settings-panel {
+            display: none;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.2rem;
+            position: sticky;
+            top: 65px;
+            z-index: 99;
+        }
+
+        .settings-panel.show {
+            display: block;
+        }
+
+        .settings-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto 1rem;
+            flex-wrap: wrap;
+        }
+
+        .settings-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .settings-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            min-width: 90px;
+        }
+
+        .font-size-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .font-size-controls button {
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .font-size-controls button:hover {
+            border-color: var(--primary-gold);
+            color: var(--primary-gold);
+        }
+
+        .font-size-value {
+            min-width: 34px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .font-family-options {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .font-family-btn {
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-dark);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .font-family-btn.active {
+            border-color: var(--primary-gold);
+            color: var(--primary-gold);
+            background: rgba(212, 175, 55, 0.08);
+        }
+
+        /* ==================== Reader Body ==================== */
+        .reader-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 4rem;
+        }
+
+        .reader-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .reader-header .chapter-label {
+            font-size: 0.8rem;
+            color: var(--primary-gold);
+            margin-bottom: 0.4rem;
+        }
+
+        .reader-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--text-primary);
+        }
+
+        .reader-content {
+            font-family: var(--reader-font-family);
+            font-size: var(--reader-font-size);
+            line-height: 2;
+            white-space: pre-wrap;
+            color: var(--text-primary);
+        }
+
+        .reader-loading,
+        .reader-error {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: var(--text-secondary);
+        }
+
+        .reader-error i {
+            font-size: 2rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* ==================== Chapter Navigation ==================== */
+        .chapter-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .chapter-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.2rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .chapter-nav-btn:hover {
+            border-color: var(--primary-gold);
+            color: var(--primary-gold);
+        }
+
+        .chapter-nav-btn.disabled {
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        .chapter-nav-btn.next {
+            margin-right: auto;
+        }
+
+        /* ==================== Responsive ==================== */
+        @media (max-width: 480px) {
+            .reader-topbar {
+                padding: 0.7rem 0.9rem;
+            }
+
+            .reader-titles .chapter-name {
+                font-size: 0.9rem;
+            }
+
+            .reader-container {
+                padding: 1.8rem 1.1rem 3rem;
+            }
+
+            .reader-header h1 {
+                font-size: 1.3rem;
+            }
+
+            .settings-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .chapter-nav-btn span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="reader-topbar">
+        <button class="back-btn" onclick="goBackToNovel()">
+            <i class="fas fa-arrow-right"></i> رجوع
+        </button>
+        <div class="reader-titles">
+            <div class="novel-name" id="novelNameLabel">...</div>
+            <div class="chapter-name" id="chapterNameLabel">جاري التحميل...</div>
+        </div>
+        <button class="settings-toggle" id="settingsToggle" onclick="toggleSettingsPanel()" aria-label="إعدادات القراءة">
+            <i class="fas fa-text-height"></i>
+        </button>
+    </div>
+
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-row">
+            <span class="settings-label">حجم الخط</span>
+            <div class="font-size-controls">
+                <button onclick="changeFontSize(-2)" aria-label="تصغير الخط">A-</button>
+                <span class="font-size-value" id="fontSizeValue">18</span>
+                <button onclick="changeFontSize(2)" aria-label="تكبير الخط">A+</button>
+            </div>
+        </div>
+        <div class="settings-row">
+            <span class="settings-label">نوع الخط</span>
+            <div class="font-family-options" id="fontFamilyOptions">
+                <button class="font-family-btn" data-font="'Lora', serif" onclick="setFontFamily(this)">افتراضي</button>
+                <button class="font-family-btn" data-font="'Tajawal', sans-serif" onclick="setFontFamily(this)">حديث</button>
+                <button class="font-family-btn" data-font="'Amiri', serif" onclick="setFontFamily(this)">تقليدي</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="reader-container">
+        <div id="readerBody">
+            <div class="reader-loading">جاري التحميل...</div>
+        </div>
+    </div>
+
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js?v=4"></script>
+
+    <script>
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const novelId = params.get('novel');
+        const chapterId = params.get('chapter');
+
+        let allChapters = [];
+        let currentChapter = null;
+        let currentNovel = null;
+
+        /* ==================== Font Settings ==================== */
+        function loadFontPrefs() {
+            const savedSize = localStorage.getItem('riwaq_font_size');
+            const savedFamily = localStorage.getItem('riwaq_font_family');
+
+            const size = savedSize ? parseInt(savedSize, 10) : 18;
+            document.documentElement.style.setProperty('--reader-font-size', size + 'px');
+            document.getElementById('fontSizeValue').textContent = size;
+
+            const family = savedFamily || "'Lora', serif";
+            document.documentElement.style.setProperty('--reader-font-family', family);
+
+            document.querySelectorAll('.font-family-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.font === family);
+            });
+        }
+
+        function changeFontSize(delta) {
+            const current = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--reader-font-size'), 10) || 18;
+            let next = current + delta;
+            next = Math.max(14, Math.min(32, next));
+            document.documentElement.style.setProperty('--reader-font-size', next + 'px');
+            document.getElementById('fontSizeValue').textContent = next;
+            localStorage.setItem('riwaq_font_size', next);
+        }
+
+        function setFontFamily(btn) {
+            const family = btn.dataset.font;
+            document.documentElement.style.setProperty('--reader-font-family', family);
+            localStorage.setItem('riwaq_font_family', family);
+            document.querySelectorAll('.font-family-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function toggleSettingsPanel() {
+            const panel = document.getElementById('settingsPanel');
+            const toggle = document.getElementById('settingsToggle');
+            panel.classList.toggle('show');
+            toggle.classList.toggle('active');
+        }
+
+        /* ==================== Navigation ==================== */
+        function goBackToNovel() {
+            if (novelId) {
+                window.location.href = `index.html?novel=${novelId}#stories`;
+            } else {
+                window.location.href = 'index.html#stories';
+            }
+        }
+
+        function goToChapter(id) {
+            window.location.href = `reader.html?novel=${novelId}&chapter=${id}`;
+        }
+
+        /* ==================== Load Chapter ==================== */
+        async function loadReader() {
+            if (!novelId || !chapterId) {
+                document.getElementById('readerBody').innerHTML = `
+                    <div class="reader-error">
+                        <i class="fas fa-book-open"></i>
+                        لم يتم تحديد فصل للقراءة.
+                    </div>
+                `;
+                return;
+            }
+
+            const [novelResult, chaptersResult, chapterResult] = await Promise.all([
+                getNovel(novelId),
+                getChapters(novelId, true),
+                getChapter(chapterId)
+            ]);
+
+            if (!chapterResult.success) {
+                document.getElementById('readerBody').innerHTML = `
+                    <div class="reader-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        تعذر تحميل الفصل. قد يكون غير متاح حالياً.
+                    </div>
+                `;
+                return;
+            }
+
+            currentNovel = novelResult.success ? novelResult.data : null;
+            allChapters = chaptersResult.success ? chaptersResult.data : [];
+            currentChapter = chapterResult.data;
+
+            document.getElementById('novelNameLabel').textContent = currentNovel ? currentNovel.title_ar : '';
+            document.getElementById('chapterNameLabel').textContent = `الفصل ${currentChapter.chapter_number}: ${currentChapter.title}`;
+            document.title = `${currentChapter.title} | رِواق`;
+
+            const idx = allChapters.findIndex(c => c.id === chapterId);
+            const prevChapter = idx > 0 ? allChapters[idx - 1] : null;
+            const nextChapter = idx >= 0 && idx < allChapters.length - 1 ? allChapters[idx + 1] : null;
+
+            document.getElementById('readerBody').innerHTML = `
+                <div class="reader-header">
+                    <div class="chapter-label">${currentNovel ? escapeHtml(currentNovel.title_ar) : ''}</div>
+                    <h1>الفصل ${currentChapter.chapter_number}: ${escapeHtml(currentChapter.title)}</h1>
+                </div>
+                <div class="reader-content">${escapeHtml(currentChapter.content)}</div>
+                <div class="chapter-nav">
+                    <a class="chapter-nav-btn prev ${prevChapter ? '' : 'disabled'}" ${prevChapter ? `onclick="goToChapter('${prevChapter.id}')"` : ''}>
+                        <i class="fas fa-arrow-right"></i> <span>الفصل السابق</span>
+                    </a>
+                    <a class="chapter-nav-btn next ${nextChapter ? '' : 'disabled'}" ${nextChapter ? `onclick="goToChapter('${nextChapter.id}')"` : ''}>
+                        <span>الفصل التالي</span> <i class="fas fa-arrow-left"></i>
+                    </a>
+                </div>
+            `;
+
+            window.scrollTo(0, 0);
+        }
+
+        loadFontPrefs();
+        loadReader();
+    </script>
+</body>
+</html>
