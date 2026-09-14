@@ -995,8 +995,8 @@
         <div class="modal-box" style="max-width: 680px;">
             <h2>رفع فصول بالجملة</h2>
             <div class="form-group">
-                <label>اختر ملفات نصية (.txt) للفصول — يمكن اختيار عدة ملفات دفعة واحدة</label>
-                <input type="file" id="bulkChapterFiles" accept=".txt" multiple>
+                <label>اختر ملفات نصية (.txt) أو ملف ZIP فيه كل الفصول — يمكن اختيار عدة ملفات دفعة واحدة</label>
+                <input type="file" id="bulkChapterFiles" accept=".txt,.zip" multiple>
             </div>
             <div id="bulkChapterPreview"></div>
             <div class="form-group form-check">
@@ -1013,6 +1013,7 @@
 
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="../js/supabase-client.js?v=4"></script>
 
     <script>
@@ -1180,7 +1181,7 @@
 
             let selectedCategory = '';
             if (id) {
-                const novel = novelsCache.find(n => n.id === id) || (await getNovel(id)).data;
+                const novel = novelsCache.find(n => String(n.id) === String(id)) || (await getNovel(id)).data;
                 if (novel) {
                     document.getElementById('novelId').value = novel.id;
                     document.getElementById('novelTitleAr').value = novel.title_ar || '';
@@ -1317,7 +1318,7 @@
             document.getElementById('chapterModalTitle').textContent = id ? 'تعديل الفصل' : 'إضافة فصل جديد';
 
             if (id) {
-                const ch = (window._chaptersCache || []).find(c => c.id === id);
+                const ch = (window._chaptersCache || []).find(c => String(c.id) === String(id));
                 if (ch) {
                     document.getElementById('chapterId').value = ch.id;
                     document.getElementById('chapterNumber').value = ch.chapter_number;
@@ -1419,22 +1420,55 @@
         }
 
         document.getElementById('bulkChapterFiles').addEventListener('change', async (e) => {
-            const files = Array.from(e.target.files || []);
-            if (files.length === 0) {
+            const rawFiles = Array.from(e.target.files || []);
+            if (rawFiles.length === 0) {
                 bulkChapterFilesData = [];
                 document.getElementById('bulkChapterPreview').innerHTML = '';
                 document.getElementById('bulkChapterUploadBtn').disabled = true;
                 return;
             }
 
+            const btn = document.getElementById('bulkChapterUploadBtn');
+            btn.disabled = true;
+
+            const txtFiles = rawFiles.filter(f => f.name.toLowerCase().endsWith('.txt'));
+            const zipFiles = rawFiles.filter(f => f.name.toLowerCase().endsWith('.zip'));
+
+            // { name, _zipText } pseudo-entries for files extracted from a zip
+            const zipEntries = [];
+
+            for (const zipFile of zipFiles) {
+                try {
+                    const zip = await JSZip.loadAsync(zipFile);
+                    const entryNames = Object.keys(zip.files).sort();
+                    for (const relPath of entryNames) {
+                        const entry = zip.files[relPath];
+                        if (entry.dir) continue;
+                        if (!relPath.toLowerCase().endsWith('.txt')) continue;
+                        // Skip macOS resource-fork junk entries
+                        const baseName = relPath.split('/').pop();
+                        if (baseName.startsWith('._')) continue;
+                        const text = await entry.async('string');
+                        zipEntries.push({ name: baseName, _zipText: text });
+                    }
+                } catch (err) {
+                    showAlert(`تعذر فتح الملف المضغوط ${zipFile.name}: ${err.message}`, 'error');
+                }
+            }
+
             const existingCount = (window._chaptersCache || []).length;
 
-            const readPromises = files.map(file => new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve({ file, content: reader.result || '' });
-                reader.onerror = () => resolve({ file, content: '' });
-                reader.readAsText(file, 'UTF-8');
-            }));
+            const readPromises = [...txtFiles, ...zipEntries].map(file => {
+                if (file._zipText !== undefined) {
+                    return Promise.resolve({ file, content: file._zipText });
+                }
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve({ file, content: reader.result || '' });
+                    reader.onerror = () => resolve({ file, content: '' });
+                    reader.readAsText(file, 'UTF-8');
+                });
+            });
 
             const results = await Promise.all(readPromises);
 
@@ -1600,7 +1634,7 @@
             document.getElementById('categoryModalTitle').textContent = id ? 'تعديل التصنيف' : 'إضافة تصنيف جديد';
 
             if (id) {
-                const cat = categoriesCache.find(c => c.id === id);
+                const cat = categoriesCache.find(c => String(c.id) === String(id));
                 if (cat) {
                     document.getElementById('categoryId').value = cat.id;
                     document.getElementById('categoryName').value = cat.name;
