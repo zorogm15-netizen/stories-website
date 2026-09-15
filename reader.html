@@ -228,6 +228,119 @@
             background: rgba(212, 175, 55, 0.08);
         }
 
+        /* ==================== Word Filters ==================== */
+        .word-filter-section {
+            max-width: 600px;
+            margin: 0 auto;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .word-filter-title {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.7rem;
+        }
+
+        .word-filter-form {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.8rem;
+        }
+
+        .word-filter-form input {
+            flex: 1;
+            min-width: 110px;
+            padding: 0.55rem 0.8rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-family: inherit;
+        }
+
+        .word-filter-form input:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+        }
+
+        .word-filter-form button {
+            padding: 0.55rem 1rem;
+            border: none;
+            border-radius: 6px;
+            background: var(--primary-gold);
+            color: var(--bg-dark);
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .word-filter-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            max-height: 160px;
+            overflow-y: auto;
+        }
+
+        .word-filter-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.6rem;
+            background: var(--bg-hover);
+            border-radius: 6px;
+            padding: 0.45rem 0.7rem;
+            font-size: 0.82rem;
+            color: var(--text-primary);
+        }
+
+        .word-filter-item .wf-pair {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            overflow: hidden;
+        }
+
+        .word-filter-item .wf-pair span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .word-filter-item .wf-from {
+            color: var(--text-muted);
+            text-decoration: line-through;
+        }
+
+        .word-filter-item .wf-to {
+            color: var(--primary-gold-light);
+            font-weight: 600;
+        }
+
+        .word-filter-remove {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.95rem;
+            padding: 0 0.2rem;
+        }
+
+        .word-filter-remove:hover {
+            color: #ff8787;
+        }
+
+        .word-filter-empty {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 0.4rem 0;
+        }
+
         /* ==================== Reader Body ==================== */
         .reader-container {
             max-width: 700px;
@@ -616,6 +729,15 @@
                 <button class="font-family-btn" data-font="'Amiri', serif" onclick="setFontFamily(this)">تقليدي</button>
             </div>
         </div>
+        <div class="word-filter-section">
+            <div class="word-filter-title">استبدال كلمات حسب رغبتك (يظهر لك فقط، ولا يغيّر النص الأصلي)</div>
+            <form class="word-filter-form" id="wordFilterForm">
+                <input type="text" id="wfFromInput" placeholder="الكلمة الأصلية" required>
+                <input type="text" id="wfToInput" placeholder="استبدلها بـ" required>
+                <button type="submit">إضافة</button>
+            </form>
+            <div class="word-filter-list" id="wordFilterList"></div>
+        </div>
     </div>
 
     <div class="reader-container">
@@ -711,6 +833,115 @@
             panel.classList.toggle('show');
             toggle.classList.toggle('active');
         }
+
+        /* ==================== Word Filters (per-reader, stored locally) ==================== */
+        const WORD_FILTER_KEY = 'riwaq_word_filters';
+
+        function getWordFilters() {
+            try {
+                const raw = JSON.parse(localStorage.getItem(WORD_FILTER_KEY) || '[]');
+                return Array.isArray(raw) ? raw : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveWordFilters(filters) {
+            localStorage.setItem(WORD_FILTER_KEY, JSON.stringify(filters));
+        }
+
+        function escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        // Applies the reader's own word substitutions to raw chapter text.
+        // Runs BEFORE escapeHtml, so replacement text is escaped just like the rest of the chapter.
+        function applyWordFilters(text) {
+            if (!text) return text;
+            const filters = getWordFilters();
+            if (!filters.length) return text;
+
+            let result = text;
+            filters.forEach(f => {
+                if (!f || !f.from) return;
+                try {
+                    // Unicode-aware word boundaries so it works correctly with Arabic text too.
+                    const pattern = new RegExp(`(?<![\\p{L}\\p{N}])${escapeRegex(f.from)}(?![\\p{L}\\p{N}])`, 'gu');
+                    result = result.replace(pattern, f.to);
+                } catch (e) {
+                    // Skip a bad pattern rather than break the whole chapter render.
+                    console.error('Word filter error:', e);
+                }
+            });
+            return result;
+        }
+
+        function renderWordFiltersUI() {
+            const listEl = document.getElementById('wordFilterList');
+            const filters = getWordFilters();
+
+            if (!filters.length) {
+                listEl.innerHTML = `<div class="word-filter-empty">لم تُضِف أي استبدال بعد</div>`;
+                return;
+            }
+
+            listEl.innerHTML = filters.map((f, i) => `
+                <div class="word-filter-item">
+                    <div class="wf-pair">
+                        <span class="wf-from">${escapeHtml(f.from)}</span>
+                        <i class="fas fa-arrow-left" style="font-size:0.7rem;color:var(--text-muted);"></i>
+                        <span class="wf-to">${escapeHtml(f.to)}</span>
+                    </div>
+                    <button class="word-filter-remove" onclick="removeWordFilter(${i})" aria-label="حذف">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function addWordFilter(from, to) {
+            from = from.trim();
+            to = to.trim();
+            if (!from || !to) return;
+
+            const filters = getWordFilters();
+            const existingIdx = filters.findIndex(f => f.from === from);
+            if (existingIdx >= 0) {
+                filters[existingIdx].to = to;
+            } else {
+                filters.push({ from, to });
+            }
+            saveWordFilters(filters);
+            renderWordFiltersUI();
+            rerenderChapterContent();
+        }
+
+        function removeWordFilter(index) {
+            const filters = getWordFilters();
+            filters.splice(index, 1);
+            saveWordFilters(filters);
+            renderWordFiltersUI();
+            rerenderChapterContent();
+        }
+
+        // Re-applies filters to the already-loaded chapter without a full reload.
+        function rerenderChapterContent() {
+            if (!currentChapter) return;
+            const contentEl = document.querySelector('.reader-content');
+            if (contentEl) {
+                contentEl.innerHTML = escapeHtml(applyWordFilters(currentChapter.content));
+            }
+        }
+
+        document.getElementById('wordFilterForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const fromInput = document.getElementById('wfFromInput');
+            const toInput = document.getElementById('wfToInput');
+            addWordFilter(fromInput.value, toInput.value);
+            fromInput.value = '';
+            toInput.value = '';
+            fromInput.focus();
+        });
 
         /* ==================== XP Toast ==================== */
         let xpToastTimer = null;
@@ -941,7 +1172,7 @@
                     <div class="chapter-label">${currentNovel ? escapeHtml(currentNovel.title_ar) : ''}</div>
                     <h1>الفصل ${currentChapter.chapter_number}: ${escapeHtml(currentChapter.title)}</h1>
                 </div>
-                <div class="reader-content">${escapeHtml(currentChapter.content)}</div>
+                <div class="reader-content">${escapeHtml(applyWordFilters(currentChapter.content))}</div>
                 <div class="chapter-nav">
                     <a class="chapter-nav-btn prev ${prevChapter ? '' : 'disabled'}" ${prevChapter ? `onclick="goToChapter('${prevChapter.id}')"` : ''}>
                         <i class="fas fa-arrow-right"></i> <span>الفصل السابق</span>
@@ -970,6 +1201,7 @@
         }
 
         loadFontPrefs();
+        renderWordFiltersUI();
         refreshAuthUI();
         loadReader();
     </script>
