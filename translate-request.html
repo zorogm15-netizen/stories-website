@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اطلب ترجمة رواية | رِواق</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f1419;
+            --bg-card: #1a1f2e;
+            --bg-hover: #242d3d;
+            --primary-gold: #d4af37;
+            --primary-gold-light: #e6c547;
+            --text-primary: #f5f1e8;
+            --text-secondary: #b8b4a8;
+            --text-muted: #7a7a7a;
+            --border-color: #2a3344;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Lora', serif; background-color: var(--bg-dark); color: var(--text-primary); line-height: 1.8; min-height: 100vh; }
+
+        .topbar {
+            background: rgba(15, 20, 25, 0.97);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.9rem 1.2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .back-link { color: var(--primary-gold); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
+        .points-pill { display: flex; align-items: center; gap: 0.4rem; background: var(--bg-card); border: 1px solid var(--primary-gold); color: var(--primary-gold); padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
+
+        .container { max-width: 720px; margin: 0 auto; padding: 2rem 1.2rem 4rem; }
+
+        .page-header { text-align: center; margin-bottom: 2.5rem; }
+        .page-header h1 { font-family: 'Playfair Display', serif; color: var(--primary-gold); font-size: 1.8rem; margin-bottom: 0.6rem; }
+        .page-header p { color: var(--text-secondary); font-size: 0.95rem; }
+
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.6rem; margin-bottom: 2rem; }
+        .card h2 { font-family: 'Playfair Display', serif; color: var(--primary-gold); font-size: 1.2rem; margin-bottom: 1.2rem; }
+
+        .packages-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+        .package-card { background: var(--bg-dark); border: 1.5px solid var(--border-color); border-radius: 8px; padding: 1.2rem 1rem; text-align: center; cursor: pointer; transition: all 0.2s ease; }
+        .package-card:hover, .package-card.selected { border-color: var(--primary-gold); background: rgba(212, 175, 55, 0.06); }
+        .package-points { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--text-primary); }
+        .package-price { color: var(--primary-gold); font-weight: 700; margin-top: 0.3rem; }
+
+        #paypalButtonContainer { margin-top: 1rem; min-height: 45px; }
+        .paypal-hint { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.6rem; text-align: center; }
+
+        .request-type-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.8rem; margin-bottom: 1.2rem; }
+        .type-option { background: var(--bg-dark); border: 1.5px solid var(--border-color); border-radius: 8px; padding: 1rem 0.8rem; text-align: center; cursor: pointer; font-size: 0.88rem; transition: all 0.2s ease; }
+        .type-option:hover, .type-option.selected { border-color: var(--primary-gold); color: var(--primary-gold); }
+        .type-option .type-icon { font-size: 1.4rem; margin-bottom: 0.4rem; display: block; }
+
+        .form-group { margin-bottom: 1.1rem; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.4rem; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 0.7rem 0.9rem; border-radius: 6px; border: 1px solid var(--border-color);
+            background: var(--bg-dark); color: var(--text-primary); font-family: inherit; font-size: 0.92rem;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--primary-gold); }
+        .form-group textarea { min-height: 90px; resize: vertical; }
+
+        .price-line { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1rem; background: var(--bg-dark); border-radius: 8px; margin-bottom: 1.2rem; border: 1px dashed var(--border-color); }
+        .price-line .label { color: var(--text-secondary); font-size: 0.9rem; }
+        .price-line .amount { color: var(--primary-gold); font-weight: 700; font-size: 1.1rem; }
+
+        .btn-primary { width: 100%; padding: 0.85rem; border: none; border-radius: 6px; background: var(--primary-gold); color: var(--bg-dark); font-weight: 700; cursor: pointer; font-size: 0.95rem; transition: all 0.2s ease; }
+        .btn-primary:hover { background: var(--primary-gold-light); }
+        .btn-primary:disabled { opacity: 0.5; cursor: default; }
+
+        .form-message { margin-top: 0.9rem; font-size: 0.85rem; text-align: center; min-height: 1.2em; }
+        .form-message.error { color: #ff8787; }
+        .form-message.success { color: #7ee787; }
+
+        .requests-list { display: flex; flex-direction: column; gap: 0.7rem; }
+        .request-item { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.9rem 1rem; }
+        .request-item-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.4rem; }
+        .request-title { font-weight: 600; color: var(--text-primary); font-size: 0.92rem; }
+        .status-badge { font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 10px; white-space: nowrap; }
+        .status-pending_review { background: rgba(255, 193, 7, 0.15); color: #ffb300; }
+        .status-approved, .status-in_progress { background: rgba(33, 150, 243, 0.15); color: #64b5f6; }
+        .status-completed { background: rgba(76, 175, 80, 0.15); color: #81c784; }
+        .status-rejected { background: rgba(255, 107, 107, 0.15); color: #ff8787; }
+        .request-meta { font-size: 0.78rem; color: var(--text-muted); }
+
+        .login-gate { text-align: center; padding: 3rem 1.5rem; color: var(--text-secondary); }
+        .login-gate .btn-primary { max-width: 220px; margin: 1rem auto 0; }
+
+        .empty-note { text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 1rem 0; }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> الرئيسية</a>
+        <div class="points-pill"><i class="fas fa-coins"></i> <span id="pointsBalance">0</span> نقطة</div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>🌐 اطلب ترجمة رواية</h1>
+            <p>رواية كاملة، عدد فصول معيّن، أو استعجال ترجمة رواية موجودة — كله ممكن هون</p>
+        </div>
+
+        <div id="pageBody">
+            <div class="login-gate">
+                <p>سجّل الدخول أولاً لشراء نقاط وتقديم طلب ترجمة</p>
+                <button class="btn-primary" onclick="location.href='index.html'">الذهاب لتسجيل الدخول</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js?v=6"></script>
+
+    <script>
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        let pricing = null;
+        let selectedPackage = null;
+        let selectedType = 'full_novel';
+        let myBalance = 0;
+
+        const statusLabels = {
+            pending_review: 'قيد المراجعة',
+            approved: 'تمت الموافقة',
+            in_progress: 'جاري التنفيذ',
+            completed: 'مكتمل',
+            rejected: 'مرفوض'
+        };
+
+        const typeLabels = {
+            full_novel: 'رواية كاملة',
+            chapters: 'عدد فصول',
+            priority_rush: 'استعجال ترجمة'
+        };
+
+        function calcPrice() {
+            if (!pricing) return 0;
+            if (selectedType === 'full_novel') return pricing.priceFullNovel;
+            if (selectedType === 'priority_rush') return pricing.pricePriorityRush;
+            if (selectedType === 'chapters') {
+                const count = parseInt(document.getElementById('chaptersCountInput')?.value || '1', 10) || 1;
+                return pricing.pricePerChapter * count;
+            }
+            return 0;
+        }
+
+        function updatePriceDisplay() {
+            const priceEl = document.getElementById('calculatedPrice');
+            if (priceEl) priceEl.textContent = `${calcPrice()} نقطة`;
+        }
+
+        function selectType(type) {
+            selectedType = type;
+            document.querySelectorAll('.type-option').forEach(el => el.classList.toggle('selected', el.dataset.type === type));
+            document.getElementById('chaptersCountGroup').style.display = type === 'chapters' ? 'block' : 'none';
+            document.getElementById('novelSelectGroup').style.display = type === 'priority_rush' ? 'block' : 'none';
+            document.getElementById('novelTitleGroup').style.display = type === 'priority_rush' ? 'none' : 'block';
+            updatePriceDisplay();
+        }
+
+        async function renderPage() {
+            const body = document.getElementById('pageBody');
+
+            const pricingResult = await getTranslationPricing();
+            const balanceResult = await getMyCredits();
+            const requestsResult = await getMyTranslationRequests();
+            const novelsResult = await getNovels(true);
+
+            pricing = pricingResult.success ? pricingResult.data : { priceFullNovel: 500, pricePerChapter: 15, pricePriorityRush: 80, packages: [], paypalClientId: '', paypalMode: 'sandbox' };
+            myBalance = balanceResult.success ? balanceResult.data : 0;
+            document.getElementById('pointsBalance').textContent = myBalance;
+
+            const myNovels = novelsResult.success ? novelsResult.data : [];
+            const myRequests = requestsResult.success ? requestsResult.data : [];
+
+            body.innerHTML = `
+                <div class="card">
+                    <h2><i class="fas fa-coins"></i> رصيدك: ${myBalance} نقطة</h2>
+                    <p style="color:var(--text-secondary); font-size:0.88rem; margin-bottom:1rem;">اشترِ نقاطاً لاستخدامها بطلبات الترجمة</p>
+                    <div class="packages-grid" id="packagesGrid"></div>
+                    <div id="paypalButtonContainer"></div>
+                    <p class="paypal-hint" id="paypalHint"></p>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-language"></i> طلب ترجمة جديد</h2>
+                    <div class="request-type-grid">
+                        <div class="type-option" data-type="full_novel" onclick="selectType('full_novel')">
+                            <span class="type-icon">📚</span> رواية كاملة
+                        </div>
+                        <div class="type-option" data-type="chapters" onclick="selectType('chapters')">
+                            <span class="type-icon">📄</span> عدد فصول
+                        </div>
+                        <div class="type-option" data-type="priority_rush" onclick="selectType('priority_rush')">
+                            <span class="type-icon">⚡</span> استعجال ترجمة
+                        </div>
+                    </div>
+
+                    <form id="requestForm">
+                        <div class="form-group" id="novelTitleGroup">
+                            <label>اسم الرواية</label>
+                            <input type="text" id="novelTitleInput" placeholder="اسم الرواية التي تريد ترجمتها">
+                        </div>
+                        <div class="form-group" id="novelSelectGroup" style="display:none;">
+                            <label>اختر الرواية الموجودة بالموقع</label>
+                            <select id="novelSelectInput">
+                                <option value="">اختر رواية...</option>
+                                ${myNovels.map(n => `<option value="${n.id}">${escapeHtml(n.title_ar)}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group" id="chaptersCountGroup" style="display:none;">
+                            <label>عدد الفصول المطلوبة</label>
+                            <input type="number" id="chaptersCountInput" min="1" value="1" oninput="updatePriceDisplay()">
+                        </div>
+                        <div class="form-group">
+                            <label>رابط المصدر (اختياري)</label>
+                            <input type="url" id="sourceUrlInput" placeholder="رابط الرواية بلغتها الأصلية إن وجد">
+                        </div>
+                        <div class="form-group">
+                            <label>ملاحظات إضافية (اختياري)</label>
+                            <textarea id="notesInput" placeholder="أي تفاصيل تساعدنا بتنفيذ طلبك..."></textarea>
+                        </div>
+
+                        <div class="price-line">
+                            <span class="label">السعر</span>
+                            <span class="amount" id="calculatedPrice">${pricing.priceFullNovel} نقطة</span>
+                        </div>
+
+                        <button type="submit" class="btn-primary" id="submitRequestBtn">
+                            <i class="fas fa-paper-plane"></i> إرسال الطلب وخصم النقاط
+                        </button>
+                        <div class="form-message" id="requestMessage"></div>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-list"></i> طلباتي</h2>
+                    <div class="requests-list" id="myRequestsList">
+                        ${myRequests.length === 0
+                            ? '<p class="empty-note">لا توجد طلبات بعد</p>'
+                            : myRequests.map(r => `
+                                <div class="request-item">
+                                    <div class="request-item-top">
+                                        <span class="request-title">${escapeHtml(typeLabels[r.request_type] || r.request_type)}${r.novel_title ? ' — ' + escapeHtml(r.novel_title) : ''}</span>
+                                        <span class="status-badge status-${r.status}">${statusLabels[r.status] || r.status}</span>
+                                    </div>
+                                    <div class="request-meta">
+                                        ${r.chapters_count ? `عدد الفصول: ${r.chapters_count} · ` : ''}
+                                        ${r.price_points} نقطة · ${new Date(r.created_at).toLocaleDateString('ar-EG')}
+                                        ${r.admin_notes ? `<br>ملاحظة الإدارة: ${escapeHtml(r.admin_notes)}` : ''}
+                                    </div>
+                                </div>
+                            `).join('')
+                        }
+                    </div>
+                </div>
+            `;
+
+            renderPackages(pricing.packages);
+            selectType('full_novel');
+            setupPayPalButtons(pricing);
+
+            document.getElementById('requestForm').addEventListener('submit', handleSubmitRequest);
+        }
+
+        function renderPackages(packages) {
+            const grid = document.getElementById('packagesGrid');
+            if (!packages || packages.length === 0) {
+                grid.innerHTML = '<p class="empty-note">لا توجد باقات نقاط متاحة حالياً</p>';
+                return;
+            }
+            grid.innerHTML = packages.map(pkg => `
+                <div class="package-card" data-id="${pkg.id}" onclick="selectPackage('${pkg.id}')">
+                    <div class="package-points">${pkg.points}</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted);">نقطة</div>
+                    <div class="package-price">$${pkg.price_usd}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectPackage(id) {
+            selectedPackage = id;
+            document.querySelectorAll('.package-card').forEach(el => el.classList.toggle('selected', el.dataset.id === id));
+        }
+
+        function setupPayPalButtons(pricingData) {
+            const container = document.getElementById('paypalButtonContainer');
+            const hint = document.getElementById('paypalHint');
+
+            if (!pricingData.paypalClientId) {
+                hint.textContent = 'الدفع عبر PayPal غير مُفعّل حالياً من إدارة الموقع.';
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(pricingData.paypalClientId)}&currency=USD`;
+            script.onload = () => renderPayPalButtons(pricingData);
+            script.onerror = () => { hint.textContent = 'تعذر تحميل خدمة الدفع، حاول لاحقاً.'; };
+            document.body.appendChild(script);
+        }
+
+        function renderPayPalButtons(pricingData) {
+            if (!window.paypal) return;
+            const hint = document.getElementById('paypalHint');
+            hint.textContent = 'اختر باقة نقاط أولاً، ثم أكمل الدفع بأمان عبر PayPal.';
+
+            paypal.Buttons({
+                createOrder: function (data, actions) {
+                    if (!selectedPackage) {
+                        hint.textContent = 'اختر باقة نقاط أولاً قبل الدفع.';
+                        hint.className = 'paypal-hint';
+                        hint.style.color = '#ff8787';
+                        return Promise.reject(new Error('no package selected'));
+                    }
+                    const pkg = pricingData.packages.find(p => p.id === selectedPackage);
+                    return actions.order.create({
+                        purchase_units: [{ amount: { value: pkg.price_usd.toFixed(2), currency_code: 'USD' } }]
+                    });
+                },
+                onApprove: async function (data, actions) {
+                    await actions.order.capture();
+                    hint.textContent = 'جاري تأكيد الدفع...';
+                    const result = await capturePointsPurchase(data.orderID, selectedPackage);
+                    if (result.success) {
+                        myBalance = result.data.balance;
+                        document.getElementById('pointsBalance').textContent = myBalance;
+                        hint.textContent = `تمت إضافة ${result.data.credited} نقطة لرصيدك بنجاح!`;
+                        hint.style.color = '#7ee787';
+                        renderPage();
+                    } else {
+                        hint.textContent = 'تم الدفع لكن تعذر تأكيده تلقائياً: ' + result.error + '. تواصل معنا مع رقم العملية: ' + data.orderID;
+                        hint.style.color = '#ff8787';
+                    }
+                },
+                onError: function (err) {
+                    hint.textContent = 'حدث خطأ أثناء الدفع، حاول مرة أخرى.';
+                    hint.style.color = '#ff8787';
+                }
+            }).render('#paypalButtonContainer');
+        }
+
+        async function handleSubmitRequest(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitRequestBtn');
+            const msg = document.getElementById('requestMessage');
+            const price = calcPrice();
+
+            if (price > myBalance) {
+                msg.textContent = `رصيدك غير كافٍ. تحتاج ${price} نقطة وعندك ${myBalance} فقط. اشترِ نقاط أولاً من الأعلى.`;
+                msg.className = 'form-message error';
+                return;
+            }
+
+            let novelId = null, novelTitle = null, chaptersCount = null;
+            if (selectedType === 'priority_rush') {
+                novelId = document.getElementById('novelSelectInput').value || null;
+                if (!novelId) {
+                    msg.textContent = 'اختر الرواية التي تريد استعجال ترجمتها.';
+                    msg.className = 'form-message error';
+                    return;
+                }
+                const opt = document.getElementById('novelSelectInput');
+                novelTitle = opt.options[opt.selectedIndex].text;
+            } else {
+                novelTitle = document.getElementById('novelTitleInput').value.trim();
+                if (!novelTitle) {
+                    msg.textContent = 'اكتب اسم الرواية.';
+                    msg.className = 'form-message error';
+                    return;
+                }
+                if (selectedType === 'chapters') {
+                    chaptersCount = parseInt(document.getElementById('chaptersCountInput').value, 10) || 1;
+                }
+            }
+
+            const sourceUrl = document.getElementById('sourceUrlInput').value.trim();
+            const notes = document.getElementById('notesInput').value.trim();
+
+            btn.disabled = true;
+            btn.textContent = 'جاري الإرسال...';
+
+            const result = await submitTranslationRequest({
+                requestType: selectedType,
+                novelId,
+                novelTitle,
+                chaptersCount,
+                sourceUrl,
+                notes,
+                priceAmount: price
+            });
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الطلب وخصم النقاط';
+
+            if (result.success) {
+                msg.textContent = 'تم إرسال طلبك بنجاح! سيتم مراجعته من الإدارة قريباً.';
+                msg.className = 'form-message success';
+                renderPage();
+            } else {
+                msg.textContent = 'خطأ: ' + result.error;
+                msg.className = 'form-message error';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const session = await checkAuth();
+            if (session) {
+                await renderPage();
+            }
+        });
+    </script>
+</body>
+</html>
