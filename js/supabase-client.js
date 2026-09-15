@@ -654,3 +654,183 @@ async function getMyReaderStatus() {
         return { success: false, error: error.message };
     }
 }
+
+/* ==================== Translation Requests & Points ==================== */
+
+// Get pricing + points-package settings needed by the "request a translation" page
+async function getTranslationPricing() {
+    try {
+        const result = await getSettings();
+        if (!result.success) throw new Error(result.error);
+        const s = result.data;
+
+        let packages = [];
+        try { packages = JSON.parse(s.points_packages || '[]'); } catch (e) { packages = []; }
+
+        return {
+            success: true,
+            data: {
+                priceFullNovel: parseInt(s.translation_price_full_novel || '500', 10),
+                pricePerChapter: parseInt(s.translation_price_per_chapter || '15', 10),
+                pricePriorityRush: parseInt(s.translation_price_priority_rush || '80', 10),
+                packages,
+                paypalClientId: s.paypal_client_id || '',
+                paypalMode: s.paypal_mode || 'sandbox'
+            }
+        };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Get the logged-in reader's points balance
+async function getMyCredits() {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return { success: true, data: 0 };
+
+        const { data, error } = await supabaseClient
+            .from('profiles')
+            .select('credits')
+            .eq('id', user.id)
+            .single();
+
+        if (error) throw error;
+        return { success: true, data: data.credits || 0 };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// After a PayPal order is approved & captured client-side, send it here.
+// The server independently re-verifies the payment with PayPal before crediting points.
+async function capturePointsPurchase(orderID, packageId) {
+    try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) return { success: false, error: 'يجب تسجيل الدخول' };
+
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/paypal-capture-credits`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.access_token}`
+            },
+            body: JSON.stringify({ orderID, packageId })
+        });
+
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+            throw new Error(data.error || 'تعذر تأكيد الدفع');
+        }
+        return { success: true, data };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Submit a translation request, paying with the reader's points balance.
+// Runs through a single atomic database function so the balance and the
+// request are always created together (never one without the other).
+async function submitTranslationRequest({ requestType, novelId, novelTitle, chaptersCount, sourceUrl, notes, priceAmount }) {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return { success: false, error: 'يجب تسجيل الدخول لتقديم طلب' };
+
+        const { data, error } = await supabaseClient.rpc('spend_credits_for_request', {
+            p_amount: priceAmount,
+            p_request_type: requestType,
+            p_novel_id: novelId || null,
+            p_novel_title: novelTitle || null,
+            p_chapters_count: chaptersCount || null,
+            p_source_url: sourceUrl || null,
+            p_notes: notes || null
+        });
+
+        if (error) throw error;
+        return { success: true, data };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Get the logged-in reader's own translation requests
+async function getMyTranslationRequests() {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return { success: true, data: [] };
+
+        const { data, error } = await supabaseClient
+            .from('translation_requests')
+            .select('*')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return { success: true, data };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+/* ---- Admin-only: managing all translation requests ---- */
+
+// Get every translation request (admin only — enforced by RLS on the table)
+async function getAllTranslationRequests() {
+    try {
+        const { data, error } = await supabaseClient
+            .from('translation_requests')
+            .select('*, profiles ( username, email )')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return { success: true, data };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Update a translation request's status / admin notes (admin only — enforced by RLS)
+async function updateTranslationRequest(requestId, updates) {
+    try {
+        const { data, error } = await supabaseClient
+            .from('translation_requests')
+            .update({ ...updates, updated_at: new Date() })
+            .eq('id', requestId)
+            .select();
+
+        if (error) throw error;
+        return { success: true, data: data[0] };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Grant points to a user manually (admin only) — e.g. compensation, promo, or
+// bootstrapping the system before PayPal is fully wired up. Logs a transaction too.
+async function adminGrantCredits(userId, amount, note) {
+    try {
+        const { data: profile, error: fetchErr } = await supabaseClient
+            .from('profiles')
+            .select('credits')
+            .eq('id', userId)
+            .single();
+        if (fetchErr) throw fetchErr;
+
+        const newBalance = (profile.credits || 0) + amount;
+
+        const { error: updateErr } = await supabaseClient
+            .from('profiles')
+            .update({ credits: newBalance })
+            .eq('id', userId);
+        if (updateErr) throw updateErr;
+
+        const { error: txErr } = await supabaseClient
+            .from('credit_transactions')
+            .insert([{ user_id: userId, amount, type: 'admin_grant', reference: note || null }]);
+        if (txErr) throw txErr;
+
+        return { success: true, data: { balance: newBalance } };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
