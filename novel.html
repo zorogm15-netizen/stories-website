@@ -6,25 +6,71 @@
 <title>رِواق | تفاصيل الرواية</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-:root{--bg-dark:#0f1419;--bg-card:#1a1f2e;--bg-hover:#242d3d;--primary-gold:#d4af37;--primary-gold-light:#e6c547;--text-primary:#f5f1e8;--text-secondary:#b8b4a8;--text-muted:#7a7a7a;--border-color:#2a3344;--accent-purple:#6b5b95;--accent-blue:#1e3c72;}
+:root{
+    --bg-dark:#0f1419;
+    --bg-card:#1a1f2e;
+    --bg-hover:#242d3d;
+    --primary-gold:#d4af37;
+    --primary-gold-light:#e6c547;
+    --text-primary:#f5f1e8;
+    --text-secondary:#b8b4a8;
+    --text-muted:#7a7a7a;
+    --border-color:#2a3344;
+    --accent-purple:#6b5b95;
+    --accent-blue:#1e3c72;
+    --status-ongoing:#2f9e5f;
+    --status-complete:#4a6fd4;
+}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Lora',serif;background:var(--bg-dark);color:var(--text-primary);line-height:1.8;}
 .topbar{background:rgba(15,20,25,0.97);border-bottom:1px solid var(--border-color);padding:0.9rem 1.2rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
 .back-btn{color:var(--primary-gold);cursor:pointer;font-size:0.95rem;white-space:nowrap;}
 .back-btn:hover{text-decoration:underline;}
 .topbar h1{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--primary-gold);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.container{max-width:800px;margin:0 auto;padding:2rem 1.2rem 4rem;}
-.cover{height:220px;border-radius:12px;background:linear-gradient(135deg,var(--accent-purple),var(--accent-blue));display:flex;align-items:center;justify-content:center;font-size:4rem;background-size:cover;background-position:center;margin-bottom:1.5rem;}
-.title{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--text-primary);margin-bottom:0.4rem;}
-.author{color:var(--text-muted);font-size:0.95rem;margin-bottom:1rem;}
-.category{display:inline-block;background:rgba(212,175,55,0.15);color:var(--primary-gold);font-size:0.78rem;padding:0.25rem 0.8rem;border-radius:12px;margin-bottom:1.2rem;}
-.desc{color:var(--text-secondary);line-height:1.8;margin-bottom:2rem;}
-.chapters-title{font-family:'Playfair Display',serif;color:var(--primary-gold);font-size:1.2rem;margin-bottom:1rem;}
+
+.container{max-width:800px;margin:0 auto;padding:0 0 4rem;}
+
+/* Hero banner */
+.hero{position:relative;height:260px;background-size:cover;background-position:center;background-color:var(--bg-card);}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,20,25,0.15) 0%,rgba(15,20,25,0.95) 100%);}
+.hero-empty{display:flex;align-items:center;justify-content:center;font-size:4rem;}
+.status-badge{position:absolute;top:1rem;right:1rem;z-index:2;font-size:0.75rem;padding:0.3rem 0.9rem;border-radius:20px;font-weight:600;color:#fff;background:var(--status-ongoing);}
+.status-badge.complete{background:var(--status-complete);}
+
+.info-wrap{padding:0 1.2rem;margin-top:-3.5rem;position:relative;z-index:3;}
+.title-box{background:var(--bg-card);border:1px solid var(--border-color);border-radius:14px;padding:1.3rem 1.3rem 1.1rem;}
+.title{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--text-primary);margin-bottom:0.6rem;}
+
+.meta-row{display:flex;flex-wrap:wrap;gap:0.5rem 0.9rem;margin-bottom:0.9rem;}
+.meta-item{font-size:0.85rem;color:var(--text-secondary);display:flex;align-items:center;gap:0.35rem;}
+.meta-item b{color:var(--text-primary);font-weight:600;}
+
+.tags-row{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem;}
+.tag{display:inline-block;background:rgba(212,175,55,0.15);color:var(--primary-gold);font-size:0.78rem;padding:0.3rem 0.85rem;border-radius:12px;}
+
+.quick-actions{display:flex;gap:0.7rem;margin-bottom:0.4rem;}
+.quick-btn{flex:1;text-align:center;padding:0.7rem 0.5rem;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;transition:opacity .2s;text-decoration:none;}
+.quick-btn:active{opacity:0.8;}
+.quick-btn.primary{background:var(--primary-gold);color:#1a1305;}
+.quick-btn.secondary{background:var(--bg-hover);color:var(--text-primary);border:1px solid var(--border-color);}
+
+.section{padding:1.6rem 1.2rem 0;}
+.section-title{font-family:'Playfair Display',serif;color:var(--primary-gold);font-size:1.15rem;margin-bottom:0.9rem;display:flex;align-items:center;gap:0.4rem;}
+.desc{color:var(--text-secondary);line-height:1.9;font-size:0.96rem;}
+
+.share-row{display:flex;gap:0.6rem;margin-top:1.2rem;flex-wrap:wrap;}
+.share-btn{width:38px;height:38px;border-radius:50%;background:var(--bg-hover);border:1px solid var(--border-color);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);text-decoration:none;font-size:0.95rem;transition:all .2s;}
+.share-btn:hover{border-color:var(--primary-gold);color:var(--primary-gold);}
+
 .chapters-list{list-style:none;}
-.chapters-list li{background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;padding:1rem 1.2rem;margin-bottom:0.7rem;cursor:pointer;transition:all 0.2s ease;display:flex;justify-content:space-between;align-items:center;}
+.chapters-list li{background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;padding:0.9rem 1.1rem;margin-bottom:0.6rem;cursor:pointer;transition:all 0.2s ease;display:flex;justify-content:space-between;align-items:center;gap:0.8rem;}
 .chapters-list li:hover{border-color:var(--primary-gold);background:var(--bg-hover);}
-.chapters-list .chnum{color:var(--text-muted);font-size:0.8rem;}
-.empty-state{text-align:center;color:var(--text-muted);padding:2rem;border:2px dashed var(--border-color);border-radius:10px;}
+.ch-title{font-size:0.92rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ch-meta{display:flex;flex-direction:column;align-items:flex-end;gap:0.15rem;flex-shrink:0;}
+.ch-date{color:var(--text-muted);font-size:0.72rem;white-space:nowrap;}
+.ch-arrow{color:var(--text-muted);font-size:1rem;}
+
+.empty-state{text-align:center;color:var(--text-muted);padding:2rem;border:2px dashed var(--border-color);border-radius:10px;margin:0 1.2rem;}
 .loading{text-align:center;color:var(--text-secondary);padding:3rem;}
 </style>
 </head>
@@ -43,6 +89,14 @@ body{font-family:'Lora',serif;background:var(--bg-dark);color:var(--text-primary
 function escapeHtml(str){
     if(str===null||str===undefined) return '';
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function formatArabicDate(dateStr){
+    if(!dateStr) return '';
+    try{
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('ar-EG', { year:'numeric', month:'long', day:'numeric' });
+    }catch(e){ return ''; }
 }
 
 function getNovelIdFromUrl(){
@@ -74,25 +128,68 @@ async function loadNovelPage(){
     document.getElementById('topbarTitle').textContent = novel.title_ar;
     document.title = `رِواق | ${novel.title_ar}`;
 
+    const isComplete = novel.status === 'complete' || novel.is_completed === true;
+    const statusLabel = isComplete ? 'مكتملة' : 'مستمرة';
+
+    const firstChapter = chapters.length ? chapters[0] : null;
+    const lastChapter = chapters.length ? chapters[chapters.length - 1] : null;
+
+    const quickActionsHtml = chapters.length > 0 ? `
+        <div class="quick-actions">
+            <a class="quick-btn primary" href="reader.html?novel=${novelId}&chapter=${firstChapter.id}">ابدأ من الفصل الأول</a>
+            <a class="quick-btn secondary" href="reader.html?novel=${novelId}&chapter=${lastChapter.id}">آخر فصل</a>
+        </div>
+    ` : '';
+
     const chaptersHtml = chapters.length > 0
-        ? `<ul class="chapters-list">${chapters.map(ch => `
+        ? `<ul class="chapters-list">${chapters.slice().reverse().map(ch => `
             <li onclick="location.href='reader.html?novel=${novelId}&chapter=${ch.id}'">
-                <span>الفصل ${ch.chapter_number}: ${escapeHtml(ch.title)}</span>
-                <span class="chnum">›</span>
+                <span class="ch-title">الفصل ${ch.chapter_number}: ${escapeHtml(ch.title)}</span>
+                <span class="ch-meta">
+                    <span class="ch-date">${formatArabicDate(ch.created_at)}</span>
+                    <span class="ch-arrow">‹</span>
+                </span>
             </li>
         `).join('')}</ul>`
         : `<div class="empty-state">لا توجد فصول منشورة بعد لهذه الرواية.</div>`;
 
+    const shareUrl = encodeURIComponent(window.location.href);
+    const shareTitle = encodeURIComponent(novel.title_ar);
+
     body.innerHTML = `
-        <div class="cover" style="${novel.cover_url ? `background-image:url('${novel.cover_url}')` : ''}">
-            ${novel.cover_url ? '' : '📖'}
+        <div class="hero" style="${novel.cover_url ? `background-image:url('${novel.cover_url}')` : ''}">
+            ${novel.cover_url ? '' : '<div class="hero-empty">📖</div>'}
+            <span class="status-badge ${isComplete ? 'complete' : ''}">${statusLabel}</span>
         </div>
-        <div class="title">${escapeHtml(novel.title_ar)}</div>
-        <div class="author">✍️ بقلم: ${escapeHtml(novel.author)}</div>
-        <span class="category">${escapeHtml(novel.category_name || 'رواية')}</span>
-        <p class="desc">${escapeHtml(novel.description || '')}</p>
-        <div class="chapters-title">📖 الفصول</div>
-        ${chaptersHtml}
+        <div class="info-wrap">
+            <div class="title-box">
+                <div class="title">${escapeHtml(novel.title_ar)}</div>
+                <div class="meta-row">
+                    <span class="meta-item">✍️ <b>${escapeHtml(novel.author || 'غير معروف')}</b></span>
+                    <span class="meta-item">📚 <b>${chapters.length}</b> فصل</span>
+                </div>
+                <div class="tags-row">
+                    <span class="tag">${escapeHtml(novel.category_name || 'رواية')}</span>
+                </div>
+                ${quickActionsHtml}
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">📖 القصة</div>
+            <p class="desc">${escapeHtml(novel.description || 'لا يوجد وصف لهذه الرواية بعد.')}</p>
+            <div class="share-row">
+                <a class="share-btn" title="فيسبوك" target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}">f</a>
+                <a class="share-btn" title="تويتر" target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareTitle}">X</a>
+                <a class="share-btn" title="واتساب" target="_blank" rel="noopener" href="https://wa.me/?text=${shareTitle}%20${shareUrl}">W</a>
+                <a class="share-btn" title="تيليجرام" target="_blank" rel="noopener" href="https://t.me/share/url?url=${shareUrl}&text=${shareTitle}">T</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">📑 الفصول (${chapters.length})</div>
+            ${chaptersHtml}
+        </div>
     `;
 }
 
