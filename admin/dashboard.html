@@ -1182,14 +1182,21 @@
             return chunks;
         }
 
-        async function translateChunk(text, sourceLang, attempt = 0) {
-            if (!text || !text.trim()) return '';
+        /* ---- Translation providers ----
+           1) MyMemory (مع بريد تواصل لرفع الحصة اليومية من 5,000 إلى 50,000 حرف)
+           2) Lingva Translate (احتياطية بلا حد يومي صارم) — تعمل فقط عند فشل الأولى */
+        const TRANSLATE_CONTACT_EMAIL = 'Zorogm15@gmail.com';
+        const LINGVA_INSTANCES = [
+            'https://lingva.garudalinux.org',
+            'https://translate.plausibility.cloud'
+        ];
 
-            // MyMemory يستخدم zh بدلاً من zh-CN في بعض نقاط الخدمة.
+        async function translateViaMyMemory(text, sourceLang, attempt = 0) {
             const normalizedSourceLang = sourceLang === 'zh-CN' ? 'zh' : sourceLang;
             const params = new URLSearchParams({
                 q: text,
-                langpair: `${normalizedSourceLang}|ar`
+                langpair: `${normalizedSourceLang}|ar`,
+                de: TRANSLATE_CONTACT_EMAIL
             });
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 20000);
@@ -1208,19 +1215,61 @@
                 }
 
                 const serviceMessage = data?.responseDetails || `HTTP ${res.status}`;
-                throw new Error(`خدمة الترجمة: ${serviceMessage}`);
+                throw new Error(`MyMemory: ${serviceMessage}`);
             } catch (err) {
-                // إعادة المحاولة تفيد عند 429 أو انقطاع الشبكة المؤقت.
-                if (attempt < 2) {
-                    await new Promise(resolve => setTimeout(resolve, 1200 * (attempt + 1)));
-                    return translateChunk(text, sourceLang, attempt + 1);
+                // إعادة محاولة واحدة تفيد عند 429 أو انقطاع شبكة مؤقت،
+                // قبل الانتقال لخدمة Lingva الاحتياطية.
+                if (attempt < 1) {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    return translateViaMyMemory(text, sourceLang, attempt + 1);
                 }
                 if (err.name === 'AbortError') {
-                    throw new Error('انتهت مهلة الاتصال بخدمة الترجمة');
+                    throw new Error('MyMemory: انتهت مهلة الاتصال');
                 }
                 throw err;
             } finally {
                 clearTimeout(timeoutId);
+            }
+        }
+
+        async function translateViaLingva(text, sourceLang) {
+            const encodedText = encodeURIComponent(text);
+            let lastError;
+
+            for (const instance of LINGVA_INSTANCES) {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 15000);
+                try {
+                    const res = await fetch(`${instance}/api/v1/${sourceLang}/ar/${encodedText}`, {
+                        signal: controller.signal
+                    });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    const data = await res.json().catch(() => null);
+                    if (data && data.translation) return data.translation;
+                    throw new Error(data?.errorMsg || 'استجابة غير صالحة');
+                } catch (err) {
+                    lastError = new Error(`Lingva (${instance}): ${err.message}`);
+                    continue;
+                } finally {
+                    clearTimeout(timeoutId);
+                }
+            }
+            throw lastError || new Error('Lingva: تعذر الاتصال بأي نسخة متاحة');
+        }
+
+        async function translateChunk(text, sourceLang) {
+            if (!text || !text.trim()) return '';
+
+            try {
+                // المحاولة الأساسية: MyMemory (بريد التواصل يرفع الحصة اليومية)
+                return await translateViaMyMemory(text, sourceLang);
+            } catch (myMemoryErr) {
+                try {
+                    // خط الدفاع الثاني: Lingva عند فشل أو استنفاد حصة MyMemory
+                    return await translateViaLingva(text, sourceLang);
+                } catch (lingvaErr) {
+                    throw new Error(`${myMemoryErr.message} | ${lingvaErr.message}`);
+                }
             }
         }
 
@@ -1246,8 +1295,8 @@
                     translatedParts.push(chunks[i]);
                     errors.push(err.message || 'خطأ غير معروف');
                 }
-                // تأخير أطول قليلاً لتفادي 429 في الخدمة المجانية.
-                await new Promise(r => setTimeout(r, 700));
+                // تأخير قصير لتفادي 429 في خدمة MyMemory المجانية.
+                await new Promise(r => setTimeout(r, 500));
             }
 
             return { text: translatedParts.join('\n\n'), failedCount, errors };
