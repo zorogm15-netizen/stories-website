@@ -1135,7 +1135,9 @@
         /* ==================== Auto Translate ==================== */
         // يقسّم النص إلى مقاطع صغيرة (بحسب الفقرات) لأن خدمة الترجمة المجانية
         // تفرض حداً أقصى على طول كل طلب
-        function splitTextForTranslation(text, maxLen = 450) {
+        // نستخدم 300 حرفاً لأن MyMemory يحسب طول query بعد ترميز URL،
+        // وقد يعيد 403 حتى مع نص أقل من 500 حرفاً.
+        function splitTextForTranslation(text, maxLen = 300) {
             const paragraphs = text.split(/\n+/).filter(p => p.trim().length > 0);
             const chunks = [];
             let current = '';
@@ -1229,6 +1231,7 @@
             const chunks = splitTextForTranslation(text);
             const translatedParts = [];
             let failedCount = 0;
+            const errors = [];
 
             if (chunks.length === 0) return { text: '', failedCount: 0 };
 
@@ -1239,13 +1242,15 @@
                     translatedParts.push(translated);
                 } catch (err) {
                     failedCount++;
-                    translatedParts.push(`[تعذرت ترجمة هذا المقطع: ${chunks[i].slice(0, 40)}...]`);
+                    // لا نضع رسالة الخطأ داخل محتوى الفصل؛ نُبقي النص الأصلي.
+                    translatedParts.push(chunks[i]);
+                    errors.push(err.message || 'خطأ غير معروف');
                 }
-                // تأخير بسيط لتفادي حد الطلبات بخدمة الترجمة المجانية
-                await new Promise(r => setTimeout(r, 350));
+                // تأخير أطول قليلاً لتفادي 429 في الخدمة المجانية.
+                await new Promise(r => setTimeout(r, 700));
             }
 
-            return { text: translatedParts.join('\n\n'), failedCount };
+            return { text: translatedParts.join('\n\n'), failedCount, errors };
         }
 
         async function runAutoTranslate() {
@@ -1273,8 +1278,9 @@
                     : result.text;
 
                 if (result.failedCount > 0) {
-                    statusEl.textContent = `تمت الترجمة مع ${result.failedCount} مقطع لم تنجح ترجمته — راجعها يدوياً.`;
-                    showAlert('تمت الترجمة جزئياً، راجع المحتوى وعدّل ما يلزم', 'warning');
+                    const reason = result.errors?.[0] || 'حدود خدمة الترجمة';
+                    statusEl.textContent = `تمت الترجمة جزئياً: ${result.failedCount} مقطع أُبقي نصه الأصلي. السبب: ${reason}`;
+                    showAlert('تعذرت ترجمة بعض المقاطع، وتم إبقاء النص الأصلي بدون إضافة رسائل خطأ للمحتوى', 'warning');
                 } else {
                     statusEl.textContent = 'تمت الترجمة بنجاح. راجع النص قبل النشر فالترجمة الآلية قد تحتاج تحسين.';
                     showAlert('تمت الترجمة، راجع النص قبل الحفظ');
