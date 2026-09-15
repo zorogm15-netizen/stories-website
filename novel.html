@@ -62,6 +62,17 @@ body{font-family:'Lora',serif;background:var(--bg-dark);color:var(--text-primary
 .share-btn{width:38px;height:38px;border-radius:50%;background:var(--bg-hover);border:1px solid var(--border-color);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);text-decoration:none;font-size:0.95rem;transition:all .2s;}
 .share-btn:hover{border-color:var(--primary-gold);color:var(--primary-gold);}
 
+.chapters-toolbar{display:flex;gap:0.6rem;margin-bottom:1rem;}
+.search-box{flex:1;position:relative;}
+.search-box input{width:100%;background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;padding:0.65rem 2.4rem 0.65rem 0.9rem;color:var(--text-primary);font-family:'Lora',serif;font-size:0.88rem;outline:none;transition:border-color .2s;}
+.search-box input:focus{border-color:var(--primary-gold);}
+.search-box input::placeholder{color:var(--text-muted);}
+.search-icon{position:absolute;right:0.8rem;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:0.9rem;pointer-events:none;}
+.sort-btn{background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;padding:0.65rem 0.9rem;color:var(--text-primary);font-size:0.85rem;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:0.35rem;transition:border-color .2s;}
+.sort-btn:hover{border-color:var(--primary-gold);}
+.sort-btn .arrow{transition:transform .2s;display:inline-block;}
+.sort-btn.asc .arrow{transform:rotate(180deg);}
+.chapters-count-empty{text-align:center;color:var(--text-muted);padding:1.5rem;font-size:0.88rem;}
 .chapters-list{list-style:none;}
 .chapters-list li{background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;padding:0.9rem 1.1rem;margin-bottom:0.6rem;cursor:pointer;transition:all 0.2s ease;display:flex;justify-content:space-between;align-items:center;gap:0.8rem;}
 .chapters-list li:hover{border-color:var(--primary-gold);background:var(--bg-hover);}
@@ -104,6 +115,53 @@ function getNovelIdFromUrl(){
     return params.get('id');
 }
 
+let allChapters = [];
+let currentNovelId = null;
+let sortDescending = true; // true = الأحدث أولاً (رقم فصل أكبر أولاً)
+
+function renderChapterList(){
+    const listWrap = document.getElementById('chaptersListWrap');
+    if(!listWrap) return;
+
+    const query = (document.getElementById('chapterSearch')?.value || '').trim().toLowerCase();
+
+    let list = allChapters.slice();
+    list.sort((a, b) => sortDescending ? b.chapter_number - a.chapter_number : a.chapter_number - b.chapter_number);
+
+    if(query){
+        list = list.filter(ch => {
+            const title = (ch.title || '').toLowerCase();
+            const num = String(ch.chapter_number);
+            return title.includes(query) || num.includes(query);
+        });
+    }
+
+    if(list.length === 0){
+        listWrap.innerHTML = `<div class="chapters-count-empty">${query ? 'لا توجد فصول مطابقة لبحثك.' : 'لا توجد فصول منشورة بعد لهذه الرواية.'}</div>`;
+        return;
+    }
+
+    listWrap.innerHTML = `<ul class="chapters-list">${list.map(ch => `
+        <li onclick="location.href='reader.html?novel=${currentNovelId}&chapter=${ch.id}'">
+            <span class="ch-title">الفصل ${ch.chapter_number}: ${escapeHtml(ch.title)}</span>
+            <span class="ch-meta">
+                <span class="ch-date">${formatArabicDate(ch.created_at)}</span>
+                <span class="ch-arrow">‹</span>
+            </span>
+        </li>
+    `).join('')}</ul>`;
+}
+
+function toggleChapterSort(){
+    sortDescending = !sortDescending;
+    const btn = document.getElementById('sortToggleBtn');
+    if(btn){
+        btn.classList.toggle('asc', !sortDescending);
+        btn.querySelector('.sort-label').textContent = sortDescending ? 'الأحدث أولاً' : 'الأقدم أولاً';
+    }
+    renderChapterList();
+}
+
 async function loadNovelPage(){
     const novelId = getNovelIdFromUrl();
     const body = document.getElementById('pageBody');
@@ -124,6 +182,8 @@ async function loadNovelPage(){
 
     const novel = novelResult.data;
     const chapters = chaptersResult.success ? chaptersResult.data : [];
+    allChapters = chapters;
+    currentNovelId = novelId;
 
     document.getElementById('topbarTitle').textContent = novel.title_ar;
     document.title = `رِواق | ${novel.title_ar}`;
@@ -141,17 +201,19 @@ async function loadNovelPage(){
         </div>
     ` : '';
 
-    const chaptersHtml = chapters.length > 0
-        ? `<ul class="chapters-list">${chapters.slice().reverse().map(ch => `
-            <li onclick="location.href='reader.html?novel=${novelId}&chapter=${ch.id}'">
-                <span class="ch-title">الفصل ${ch.chapter_number}: ${escapeHtml(ch.title)}</span>
-                <span class="ch-meta">
-                    <span class="ch-date">${formatArabicDate(ch.created_at)}</span>
-                    <span class="ch-arrow">‹</span>
-                </span>
-            </li>
-        `).join('')}</ul>`
-        : `<div class="empty-state">لا توجد فصول منشورة بعد لهذه الرواية.</div>`;
+    const chaptersToolbarHtml = chapters.length > 0 ? `
+        <div class="chapters-toolbar">
+            <div class="search-box">
+                <input type="text" id="chapterSearch" placeholder="ابحث برقم الفصل أو اسمه..." oninput="renderChapterList()">
+                <span class="search-icon">🔍</span>
+            </div>
+            <button class="sort-btn" id="sortToggleBtn" onclick="toggleChapterSort()">
+                <span class="sort-label">الأحدث أولاً</span>
+                <span class="arrow">↓</span>
+            </button>
+        </div>
+        <div id="chaptersListWrap"></div>
+    ` : `<div class="empty-state">لا توجد فصول منشورة بعد لهذه الرواية.</div>`;
 
     const shareUrl = encodeURIComponent(window.location.href);
     const shareTitle = encodeURIComponent(novel.title_ar);
@@ -188,9 +250,11 @@ async function loadNovelPage(){
 
         <div class="section">
             <div class="section-title">📑 الفصول (${chapters.length})</div>
-            ${chaptersHtml}
+            ${chaptersToolbarHtml}
         </div>
     `;
+
+    renderChapterList();
 }
 
 document.addEventListener('DOMContentLoaded', loadNovelPage);
