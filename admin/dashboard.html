@@ -974,6 +974,28 @@
                     <label>عنوان الفصل *</label>
                     <input type="text" id="chapterTitle" required>
                 </div>
+                <div class="form-group" style="background: var(--bg-dark); border: 1px dashed var(--border-color); border-radius: 8px; padding: 0.9rem;">
+                    <label style="color: var(--primary-gold); margin-bottom: 0.6rem;">🌐 ترجمة تلقائية (اختياري)</label>
+                    <div class="form-group">
+                        <label>لغة النص الأصلي</label>
+                        <select id="translateSourceLang" style="width:100%; padding:0.7rem; border:1px solid var(--border-color); border-radius:6px; background: var(--bg-card); color: var(--text-primary); font-family: 'Lora', serif;">
+                            <option value="en">الإنجليزية</option>
+                            <option value="zh-CN">الصينية</option>
+                            <option value="ko">الكورية</option>
+                            <option value="ja">اليابانية</option>
+                            <option value="fr">الفرنسية</option>
+                            <option value="es">الإسبانية</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>الصق النص الأصلي هنا (يجب أن تملك حق ترجمته ونشره)</label>
+                        <textarea id="translateSourceText" placeholder="الصق نص الفصل بلغته الأصلية هنا..." style="min-height: 140px;"></textarea>
+                    </div>
+                    <button type="button" class="btn-secondary" id="translateBtn" onclick="runAutoTranslate()" style="width:100%;">
+                        <i class="fas fa-language"></i> ترجمة إلى العربية ونقلها للمحتوى
+                    </button>
+                    <p id="translateStatus" style="font-size:0.78rem; color: var(--text-muted); margin-top:0.5rem;"></p>
+                </div>
                 <div class="form-group">
                     <label>محتوى الفصل *</label>
                     <textarea id="chapterContent" style="min-height: 220px;" required></textarea>
@@ -1088,6 +1110,99 @@
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;');
+        }
+
+        /* ==================== Auto Translate ==================== */
+        // يقسّم النص إلى مقاطع صغيرة (بحسب الفقرات) لأن خدمة الترجمة المجانية
+        // تفرض حداً أقصى على طول كل طلب
+        function splitTextForTranslation(text, maxLen = 450) {
+            const paragraphs = text.split(/\n+/).filter(p => p.trim().length > 0);
+            const chunks = [];
+            let current = '';
+
+            for (const para of paragraphs) {
+                if (para.length > maxLen) {
+                    // فقرة طويلة جداً: نقسمها على الجمل
+                    const sentences = para.match(/[^.!?؟]+[.!?؟]*/g) || [para];
+                    for (const sentence of sentences) {
+                        if ((current + sentence).length > maxLen) {
+                            if (current) chunks.push(current.trim());
+                            current = sentence;
+                        } else {
+                            current += sentence;
+                        }
+                    }
+                    if (current) { chunks.push(current.trim()); current = ''; }
+                } else if ((current + '\n' + para).length > maxLen) {
+                    chunks.push(current.trim());
+                    current = para;
+                } else {
+                    current = current ? current + '\n' + para : para;
+                }
+            }
+            if (current.trim()) chunks.push(current.trim());
+            return chunks;
+        }
+
+        async function translateChunk(text, sourceLang) {
+            const langpair = `${sourceLang}|ar`;
+            const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langpair}`;
+            const res = await fetch(url);
+            if (!res.ok) throw new Error('فشل الاتصال بخدمة الترجمة');
+            const data = await res.json();
+            if (data && data.responseData && data.responseData.translatedText) {
+                return data.responseData.translatedText;
+            }
+            throw new Error('لم يتم إرجاع ترجمة صالحة');
+        }
+
+        async function runAutoTranslate() {
+            const sourceText = document.getElementById('translateSourceText').value.trim();
+            const sourceLang = document.getElementById('translateSourceLang').value;
+            const statusEl = document.getElementById('translateStatus');
+            const btn = document.getElementById('translateBtn');
+
+            if (!sourceText) {
+                showAlert('الصق النص الأصلي أولاً', 'error');
+                return;
+            }
+
+            const chunks = splitTextForTranslation(sourceText);
+            btn.disabled = true;
+            btn.textContent = 'جاري الترجمة...';
+
+            const translatedParts = [];
+            let failedCount = 0;
+
+            for (let i = 0; i < chunks.length; i++) {
+                statusEl.textContent = `جاري ترجمة المقطع ${i + 1} من ${chunks.length}...`;
+                try {
+                    const translated = await translateChunk(chunks[i], sourceLang);
+                    translatedParts.push(translated);
+                } catch (err) {
+                    failedCount++;
+                    translatedParts.push(`[تعذرت ترجمة هذا المقطع: ${chunks[i].slice(0, 40)}...]`);
+                }
+                // تأخير بسيط لتفادي حد الطلبات بخدمة الترجمة المجانية
+                await new Promise(r => setTimeout(r, 350));
+            }
+
+            const finalText = translatedParts.join('\n\n');
+            const contentField = document.getElementById('chapterContent');
+            contentField.value = contentField.value.trim()
+                ? contentField.value.trim() + '\n\n' + finalText
+                : finalText;
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-language"></i> ترجمة إلى العربية ونقلها للمحتوى';
+
+            if (failedCount > 0) {
+                statusEl.textContent = `تمت الترجمة مع ${failedCount} مقطع لم تنجح ترجمته — راجعها يدوياً.`;
+                showAlert('تمت الترجمة جزئياً، راجع المحتوى وعدّل ما يلزم', 'warning');
+            } else {
+                statusEl.textContent = 'تمت الترجمة بنجاح. راجع النص قبل النشر فالترجمة الآلية قد تحتاج تحسين.';
+                showAlert('تمت الترجمة، راجع النص قبل الحفظ');
+            }
         }
 
         /* ==================== Dashboard ==================== */
@@ -1316,6 +1431,8 @@
             document.getElementById('chapterId').value = '';
             document.getElementById('chapterNovelId').value = currentNovelIdForChapters || '';
             document.getElementById('chapterModalTitle').textContent = id ? 'تعديل الفصل' : 'إضافة فصل جديد';
+            document.getElementById('translateSourceText').value = '';
+            document.getElementById('translateStatus').textContent = '';
 
             if (id) {
                 const ch = (window._chaptersCache || []).find(c => String(c.id) === String(id));
