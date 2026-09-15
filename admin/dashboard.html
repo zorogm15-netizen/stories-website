@@ -1140,11 +1140,27 @@
             const chunks = [];
             let current = '';
 
+            // MyMemory يرفض الطلبات الأطول من الحد حتى لو كانت جملة واحدة.
+            // لذلك نقسم الجملة الطويلة إلى أجزاء آمنة قبل إرسالها.
+            const appendLongText = (value) => {
+                for (let start = 0; start < value.length; start += maxLen) {
+                    chunks.push(value.slice(start, start + maxLen).trim());
+                }
+            };
+
             for (const para of paragraphs) {
                 if (para.length > maxLen) {
                     // فقرة طويلة جداً: نقسمها على الجمل
                     const sentences = para.match(/[^.!?؟]+[.!?؟]*/g) || [para];
                     for (const sentence of sentences) {
+                        if (sentence.length > maxLen) {
+                            if (current.trim()) {
+                                chunks.push(current.trim());
+                                current = '';
+                            }
+                            appendLongText(sentence);
+                            continue;
+                        }
                         if ((current + sentence).length > maxLen) {
                             if (current) chunks.push(current.trim());
                             current = sentence;
@@ -1164,16 +1180,46 @@
             return chunks;
         }
 
-        async function translateChunk(text, sourceLang) {
-            const langpair = `${sourceLang}|ar`;
-            const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langpair}`;
-            const res = await fetch(url);
-            if (!res.ok) throw new Error('فشل الاتصال بخدمة الترجمة');
-            const data = await res.json();
-            if (data && data.responseData && data.responseData.translatedText) {
-                return data.responseData.translatedText;
+        async function translateChunk(text, sourceLang, attempt = 0) {
+            if (!text || !text.trim()) return '';
+
+            // MyMemory يستخدم zh بدلاً من zh-CN في بعض نقاط الخدمة.
+            const normalizedSourceLang = sourceLang === 'zh-CN' ? 'zh' : sourceLang;
+            const params = new URLSearchParams({
+                q: text,
+                langpair: `${normalizedSourceLang}|ar`
+            });
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 20000);
+
+            try {
+                const res = await fetch(`https://api.mymemory.translated.net/get?${params.toString()}`, {
+                    signal: controller.signal,
+                    headers: { 'Accept': 'application/json' }
+                });
+                const data = await res.json().catch(() => null);
+                const translated = data?.responseData?.translatedText;
+                const responseStatus = Number(data?.responseStatus);
+
+                if (res.ok && translated && (!responseStatus || responseStatus === 200)) {
+                    return translated;
+                }
+
+                const serviceMessage = data?.responseDetails || `HTTP ${res.status}`;
+                throw new Error(`خدمة الترجمة: ${serviceMessage}`);
+            } catch (err) {
+                // إعادة المحاولة تفيد عند 429 أو انقطاع الشبكة المؤقت.
+                if (attempt < 2) {
+                    await new Promise(resolve => setTimeout(resolve, 1200 * (attempt + 1)));
+                    return translateChunk(text, sourceLang, attempt + 1);
+                }
+                if (err.name === 'AbortError') {
+                    throw new Error('انتهت مهلة الاتصال بخدمة الترجمة');
+                }
+                throw err;
+            } finally {
+                clearTimeout(timeoutId);
             }
-            throw new Error('لم يتم إرجاع ترجمة صالحة');
         }
 
         // Translates a full block of text (splitting into chunks internally) and
@@ -1183,6 +1229,8 @@
             const chunks = splitTextForTranslation(text);
             const translatedParts = [];
             let failedCount = 0;
+
+            if (chunks.length === 0) return { text: '', failedCount: 0 };
 
             for (let i = 0; i < chunks.length; i++) {
                 if (onChunkProgress) onChunkProgress(i + 1, chunks.length);
@@ -1214,24 +1262,29 @@
             btn.disabled = true;
             btn.textContent = 'جاري الترجمة...';
 
-            const result = await translateFullText(sourceText, sourceLang, (chunkIdx, total) => {
-                statusEl.textContent = `جاري ترجمة المقطع ${chunkIdx} من ${total}...`;
-            });
+            try {
+                const result = await translateFullText(sourceText, sourceLang, (chunkIdx, total) => {
+                    statusEl.textContent = `جاري ترجمة المقطع ${chunkIdx} من ${total}...`;
+                });
 
-            const contentField = document.getElementById('chapterContent');
-            contentField.value = contentField.value.trim()
-                ? contentField.value.trim() + '\n\n' + result.text
-                : result.text;
+                const contentField = document.getElementById('chapterContent');
+                contentField.value = contentField.value.trim()
+                    ? contentField.value.trim() + '\n\n' + result.text
+                    : result.text;
 
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-language"></i> ترجمة إلى العربية ونقلها للمحتوى';
-
-            if (result.failedCount > 0) {
-                statusEl.textContent = `تمت الترجمة مع ${result.failedCount} مقطع لم تنجح ترجمته — راجعها يدوياً.`;
-                showAlert('تمت الترجمة جزئياً، راجع المحتوى وعدّل ما يلزم', 'warning');
-            } else {
-                statusEl.textContent = 'تمت الترجمة بنجاح. راجع النص قبل النشر فالترجمة الآلية قد تحتاج تحسين.';
-                showAlert('تمت الترجمة، راجع النص قبل الحفظ');
+                if (result.failedCount > 0) {
+                    statusEl.textContent = `تمت الترجمة مع ${result.failedCount} مقطع لم تنجح ترجمته — راجعها يدوياً.`;
+                    showAlert('تمت الترجمة جزئياً، راجع المحتوى وعدّل ما يلزم', 'warning');
+                } else {
+                    statusEl.textContent = 'تمت الترجمة بنجاح. راجع النص قبل النشر فالترجمة الآلية قد تحتاج تحسين.';
+                    showAlert('تمت الترجمة، راجع النص قبل الحفظ');
+                }
+            } catch (err) {
+                statusEl.textContent = 'تعذر إكمال الترجمة. حاول مرة أخرى لاحقاً.';
+                showAlert(`فشل الترجمة: ${err.message || 'خطأ غير معروف'}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-language"></i> ترجمة إلى العربية ونقلها للمحتوى';
             }
         }
 
@@ -1703,16 +1756,21 @@
                 let content = (item.content || '').trim();
 
                 if (translateEnabled && content) {
-                    const result = await translateFullText(content, translateSourceLang, (chunkIdx, total) => {
-                        progressDiv.innerHTML = `
-                            <p style="font-size:0.85rem; color: var(--text-secondary);">
-                                🌐 جاري ترجمة: ${escapeHtml(title)} — مقطع ${chunkIdx}/${total} (فصل ${i + 1}/${bulkChapterFilesData.length})
-                            </p>
-                            <div class="progress-bar-outer"><div class="progress-bar-inner" style="width:${overallPct}%"></div></div>
-                        `;
-                    });
-                    content = result.text;
-                    if (result.failedCount > 0) translateFailedFiles.push(item.filename);
+                    try {
+                        const result = await translateFullText(content, translateSourceLang, (chunkIdx, total) => {
+                            progressDiv.innerHTML = `
+                                <p style="font-size:0.85rem; color: var(--text-secondary);">
+                                    🌐 جاري ترجمة: ${escapeHtml(title)} — مقطع ${chunkIdx}/${total} (فصل ${i + 1}/${bulkChapterFilesData.length})
+                                </p>
+                                <div class="progress-bar-outer"><div class="progress-bar-inner" style="width:${overallPct}%"></div></div>
+                            `;
+                        });
+                        content = result.text;
+                        if (result.failedCount > 0) translateFailedFiles.push(item.filename);
+                    } catch (err) {
+                        // لا نلغي رفع بقية الفصول إذا تعذر اتصال الترجمة.
+                        translateFailedFiles.push(item.filename);
+                    }
 
                     // ترجمة العنوان أيضاً (يُتجاهل الخطأ ويُبقى العنوان الأصلي إن فشلت)
                     try {
@@ -1735,11 +1793,15 @@
                     is_published: publishAll
                 };
 
-                const result = await createChapter(payload);
-                if (result.success) {
-                    successCount++;
-                } else {
-                    errors.push(`${item.filename}: ${result.error}`);
+                try {
+                    const result = await createChapter(payload);
+                    if (result.success) {
+                        successCount++;
+                    } else {
+                        errors.push(`${item.filename}: ${result.error}`);
+                    }
+                } catch (err) {
+                    errors.push(`${item.filename}: ${err.message || 'تعذر رفع الفصل'}`);
                 }
             }
 
