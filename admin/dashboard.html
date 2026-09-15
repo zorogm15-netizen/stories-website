@@ -373,6 +373,28 @@
             background: rgba(212, 175, 55, 0.1);
         }
 
+        .btn-danger {
+            padding: 0.7rem 1.5rem;
+            background: transparent;
+            color: #ff8787;
+            border: 1px solid #ff6b6b;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 107, 107, 0.15);
+        }
+
+        .btn-danger:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .dashboard-actions {
             display: flex;
             gap: 1rem;
@@ -588,6 +610,44 @@
             transition: width 0.2s ease;
         }
 
+        /* ==================== Chapter Select (bulk delete) ==================== */
+        .chapter-select-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+            padding: 0.7rem 1rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .chapter-select-bar .select-all-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+
+        .chapter-select-bar .select-all-wrap input {
+            width: 17px;
+            height: 17px;
+        }
+
+        .chapter-checkbox {
+            width: 17px;
+            height: 17px;
+            margin-left: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .item-list li.chapter-row {
+            align-items: center;
+        }
+
         /* ==================== Responsive ==================== */
         @media (max-width: 1024px) {
             .admin-container {
@@ -682,6 +742,11 @@
                 align-items: flex-start;
             }
 
+            .item-list li.chapter-row {
+                flex-direction: row;
+                align-items: center;
+            }
+
             .item-actions {
                 margin-top: 0.8rem;
                 width: 100%;
@@ -702,6 +767,11 @@
 
             .modal-actions {
                 flex-direction: column;
+            }
+
+            .chapter-select-bar {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
     </style>
@@ -1505,9 +1575,11 @@
 
         /* ==================== Chapters ==================== */
         let currentNovelIdForChapters = null;
+        let selectedChapterIds = new Set();
 
         async function viewChapters(novelId) {
             currentNovelIdForChapters = novelId;
+            selectedChapterIds = new Set();
             goToPage('chapters', 'list');
             await renderChaptersPage();
         }
@@ -1527,9 +1599,13 @@
             const novelTitle = novelResult.success ? novelResult.data.title_ar : 'الرواية';
 
             let listHtml = '<li><div class="empty-state"><div class="empty-state-icon">📄</div><p>لا توجد فصول بعد</p></div></li>';
-            if (chaptersResult.success && chaptersResult.data.length > 0) {
+            const hasChapters = chaptersResult.success && chaptersResult.data.length > 0;
+            if (hasChapters) {
                 listHtml = chaptersResult.data.map(ch => `
-                    <li>
+                    <li class="chapter-row">
+                        <input type="checkbox" class="chapter-checkbox" value="${ch.id}"
+                            ${selectedChapterIds.has(String(ch.id)) ? 'checked' : ''}
+                            onchange="toggleChapterSelect('${ch.id}', this.checked)">
                         <div class="item-info">
                             <div class="item-title">
                                 الفصل ${ch.chapter_number}: ${escapeHtml(ch.title)}
@@ -1546,6 +1622,21 @@
                 `).join('');
             }
 
+            const selectBarHtml = hasChapters ? `
+                <div class="chapter-select-bar">
+                    <label class="select-all-wrap">
+                        <input type="checkbox" id="selectAllChapters" onchange="toggleSelectAllChapters(this.checked)">
+                        تحديد الكل
+                    </label>
+                    <span id="selectedChapterCount" style="font-size:0.85rem; color: var(--text-secondary);">
+                        ${selectedChapterIds.size > 0 ? `تم تحديد ${selectedChapterIds.size} فصل` : 'لم يتم تحديد أي فصل'}
+                    </span>
+                    <button class="btn-danger" id="bulkDeleteChaptersBtn" onclick="deleteSelectedChaptersConfirm()" ${selectedChapterIds.size === 0 ? 'disabled' : ''}>
+                        <i class="fas fa-trash"></i> حذف المحدد (${selectedChapterIds.size})
+                    </button>
+                </div>
+            ` : '';
+
             container.innerHTML = `
                 <div class="dashboard-actions">
                     <button class="btn-secondary" onclick="goBackToNovels()"><i class="fas fa-arrow-right"></i> رجوع للروايات</button>
@@ -1553,14 +1644,105 @@
                     <button class="btn-secondary" onclick="openBulkChapterModal()"><i class="fas fa-file-upload"></i> رفع فصول بالجملة</button>
                 </div>
                 <div class="section-title"><i class="fas fa-file-alt"></i> فصول: ${escapeHtml(novelTitle)}</div>
+                ${selectBarHtml}
                 <ul class="item-list">${listHtml}</ul>
             `;
 
             window._chaptersCache = chaptersResult.success ? chaptersResult.data : [];
+
+            // إزالة أي معرفات محددة لم تعد موجودة ضمن الفصول الحالية
+            if (window._chaptersCache) {
+                const validIds = new Set(window._chaptersCache.map(c => String(c.id)));
+                selectedChapterIds = new Set([...selectedChapterIds].filter(id => validIds.has(id)));
+            }
+        }
+
+        function toggleChapterSelect(id, checked) {
+            const strId = String(id);
+            if (checked) {
+                selectedChapterIds.add(strId);
+            } else {
+                selectedChapterIds.delete(strId);
+            }
+            updateChapterSelectUI();
+        }
+
+        function toggleSelectAllChapters(checked) {
+            const allIds = (window._chaptersCache || []).map(c => String(c.id));
+            if (checked) {
+                selectedChapterIds = new Set(allIds);
+            } else {
+                selectedChapterIds = new Set();
+            }
+            document.querySelectorAll('.chapter-checkbox').forEach(cb => {
+                cb.checked = checked;
+            });
+            updateChapterSelectUI();
+        }
+
+        function updateChapterSelectUI() {
+            const countEl = document.getElementById('selectedChapterCount');
+            const btn = document.getElementById('bulkDeleteChaptersBtn');
+            const selectAllBox = document.getElementById('selectAllChapters');
+            const total = (window._chaptersCache || []).length;
+
+            if (countEl) {
+                countEl.textContent = selectedChapterIds.size > 0
+                    ? `تم تحديد ${selectedChapterIds.size} فصل`
+                    : 'لم يتم تحديد أي فصل';
+            }
+            if (btn) {
+                btn.disabled = selectedChapterIds.size === 0;
+                btn.innerHTML = `<i class="fas fa-trash"></i> حذف المحدد (${selectedChapterIds.size})`;
+            }
+            if (selectAllBox) {
+                selectAllBox.checked = total > 0 && selectedChapterIds.size === total;
+                selectAllBox.indeterminate = selectedChapterIds.size > 0 && selectedChapterIds.size < total;
+            }
+        }
+
+        async function deleteSelectedChaptersConfirm() {
+            const count = selectedChapterIds.size;
+            if (count === 0) return;
+            if (!confirm(`هل أنت متأكد من حذف ${count} فصل؟ لا يمكن التراجع عن هذا الإجراء.`)) return;
+
+            const btn = document.getElementById('bulkDeleteChaptersBtn');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> جاري الحذف...`;
+            }
+
+            const idsToDelete = [...selectedChapterIds];
+            let successCount = 0;
+            const errors = [];
+
+            for (const id of idsToDelete) {
+                try {
+                    const result = await deleteChapter(id);
+                    if (result.success) {
+                        successCount++;
+                        selectedChapterIds.delete(id);
+                    } else {
+                        errors.push(result.error || 'خطأ غير معروف');
+                    }
+                } catch (err) {
+                    errors.push(err.message || 'خطأ غير معروف');
+                }
+            }
+
+            if (errors.length === 0) {
+                showAlert(`تم حذف ${successCount} فصل بنجاح`);
+            } else {
+                showAlert(`تم حذف ${successCount} من ${idsToDelete.length}. حدثت أخطاء: ${errors.join(' | ')}`, 'error');
+            }
+
+            renderChaptersPage();
+            loadDashboard();
         }
 
         function goBackToNovels() {
             currentNovelIdForChapters = null;
+            selectedChapterIds = new Set();
             goToPage('novels', 'list');
         }
 
