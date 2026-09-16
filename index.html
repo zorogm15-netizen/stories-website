@@ -10,8 +10,16 @@
     <meta property="og:description" content="اكتشف عالماً جديداً بين صفحات الروايات">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cairo:wght@300;400;600;700&family=Tajawal:wght@300;400;500;700&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('riwaq-theme');
+                if (saved) document.documentElement.setAttribute('data-theme', saved);
+            } catch (e) {}
+        })();
+    </script>
     <style>
-        :root {
+        :root, :root[data-theme="night-space"] {
             --bg-dark: #0f1419;
             --bg-card: #1a1f2e;
             --bg-hover: #242d3d;
@@ -23,14 +31,86 @@
             --border-color: #2a3344;
             --accent-purple: #6b5b95;
             --accent-blue: #1e3c72;
+            --theme-swatch: linear-gradient(135deg, #0f1419, #6b5b95);
+        }
+        :root[data-theme="pure-light"] {
+            --bg-dark: #faf8f4;
+            --bg-card: #ffffff;
+            --bg-hover: #f1ede4;
+            --primary-gold: #b8892f;
+            --primary-gold-light: #cf9e3f;
+            --text-primary: #241f18;
+            --text-secondary: #5b5648;
+            --text-muted: #8c8676;
+            --border-color: #e4ddcd;
+            --accent-purple: #8672b0;
+            --accent-blue: #4c6fa8;
+            --theme-swatch: linear-gradient(135deg, #ffffff, #d8cfae);
+        }
+        :root[data-theme="velvet-black"] {
+            --bg-dark: #000000;
+            --bg-card: #121212;
+            --bg-hover: #1c1c1c;
+            --primary-gold: #d4af37;
+            --primary-gold-light: #e6c547;
+            --text-primary: #f0f0f0;
+            --text-secondary: #a8a8a8;
+            --text-muted: #6e6e6e;
+            --border-color: #262626;
+            --accent-purple: #5a4a80;
+            --accent-blue: #16263f;
+            --theme-swatch: linear-gradient(135deg, #000000, #2a2a2a);
+        }
+        :root[data-theme="warm-paper"] {
+            --bg-dark: #f1e6ce;
+            --bg-card: #f8f0dc;
+            --bg-hover: #ecdec0;
+            --primary-gold: #9c6b2e;
+            --primary-gold-light: #b5813e;
+            --text-primary: #3a2d1c;
+            --text-secondary: #6b5a3f;
+            --text-muted: #93816e;
+            --border-color: #ddcca4;
+            --accent-purple: #8a6c9e;
+            --accent-blue: #5c7a9e;
+            --theme-swatch: linear-gradient(135deg, #f1e6ce, #c9a866);
+        }
+        :root[data-theme="moon-blossom"] {
+            --bg-dark: #221726;
+            --bg-card: #2e1c35;
+            --bg-hover: #3a2542;
+            --primary-gold: #e0a3c4;
+            --primary-gold-light: #edb8d3;
+            --text-primary: #f7ecf3;
+            --text-secondary: #cba7c0;
+            --text-muted: #8f7690;
+            --border-color: #40293f;
+            --accent-purple: #a370c2;
+            --accent-blue: #7c5ea8;
+            --theme-swatch: linear-gradient(135deg, #f4c9dd, #8a5ba0);
+        }
+        :root[data-theme="stillness"] {
+            --bg-dark: #201810;
+            --bg-card: #2b2116;
+            --bg-hover: #362a1c;
+            --primary-gold: #c99a4b;
+            --primary-gold-light: #d8ac60;
+            --text-primary: #ece2d2;
+            --text-secondary: #b6a689;
+            --text-muted: #7d715c;
+            --border-color: #3a2e1f;
+            --accent-purple: #6b5540;
+            --accent-blue: #4f4530;
+            --theme-swatch: linear-gradient(135deg, #201810, #6b4a2a);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        body { font-family: 'Lora', serif; background-color: var(--bg-dark); color: var(--text-primary); line-height: 1.8; }
+        body { font-family: 'Lora', serif; background-color: var(--bg-dark); color: var(--text-primary); line-height: 1.8; transition: background-color 0.3s ease, color 0.3s ease; }
 
         header {
             background: rgba(15, 20, 25, 0.97);
+            background: color-mix(in srgb, var(--bg-dark) 92%, transparent);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
             padding: 0.8rem 0;
@@ -40,33 +120,72 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .header-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .header-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+        .header-left { display: flex; align-items: center; gap: 1rem; }
+        .menu-btn { display: flex; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 0.4rem; }
+        .menu-btn span { width: 22px; height: 2px; background: var(--primary-gold); transition: all 0.3s ease; }
         .logo { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; color: var(--text-primary); transition: all 0.3s ease; }
         .logo-icon { font-size: 1.8rem; color: var(--primary-gold); }
         .logo-text h1 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; letter-spacing: 2px; color: var(--primary-gold); }
         .logo-text p { font-size: 0.7rem; color: var(--text-secondary); letter-spacing: 3px; margin-top: -0.3rem; }
         .logo:hover .logo-icon { color: var(--primary-gold-light); transform: scale(1.1); }
-        nav.desktop-nav { display: flex; gap: 2rem; align-items: center; }
-        nav.desktop-nav a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.3s ease; position: relative; }
-        nav.desktop-nav a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--primary-gold); transition: width 0.3s ease; }
-        nav.desktop-nav a:hover { color: var(--primary-gold); }
-        nav.desktop-nav a:hover::after { width: 100%; }
         .search-icon { color: var(--text-secondary); cursor: pointer; font-size: 1rem; transition: all 0.3s ease; }
         .search-icon:hover { color: var(--primary-gold); }
-        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
-        .hamburger span { width: 22px; height: 2px; background: var(--primary-gold); transition: all 0.3s ease; }
 
-        .mobile-menu { display: none; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 999; padding-top: 4rem; overflow-y: auto; }
-        .mobile-menu.active { display: flex; flex-direction: column; }
-        .mobile-menu a { color: var(--text-primary); text-decoration: none; padding: 1rem 2rem; border-bottom: 1px solid var(--border-color); transition: all 0.3s ease; font-size: 1rem; }
-        .mobile-menu a:hover { color: var(--primary-gold); background: var(--bg-card); }
+        .quick-nav { border-top: 1px solid var(--border-color); }
+        .quick-nav-inner { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; gap: 1.8rem; overflow-x: auto; scrollbar-width: none; }
+        .quick-nav-inner::-webkit-scrollbar { display: none; }
+        .quick-nav a { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; padding: 0.6rem 0; white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.25s ease; }
+        .quick-nav a:hover { color: var(--primary-gold); border-bottom-color: var(--primary-gold); }
+
+        /* ===== Sidebar Drawer ===== */
+        .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1998; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+        .sidebar-drawer {
+            position: fixed; top: 0; right: 0; width: 320px; max-width: 88vw; height: 100%;
+            background: var(--bg-card); border-left: 1px solid var(--border-color); z-index: 1999;
+            transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+            overflow-y: auto; display: flex; flex-direction: column;
+        }
+        .sidebar-drawer.active { transform: translateX(0); }
+        .sidebar-head { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 1.4rem; border-bottom: 1px solid var(--border-color); }
+        .sidebar-close { font-size: 1.6rem; color: var(--text-secondary); cursor: pointer; line-height: 1; background: none; border: none; }
+        .sidebar-close:hover { color: var(--primary-gold); }
+        .sidebar-block { padding: 1.2rem 1.4rem; border-bottom: 1px solid var(--border-color); }
+        .sidebar-block h4 { font-size: 0.78rem; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 0.8rem; text-transform: uppercase; }
+        .sidebar-auth-box { display: flex; flex-direction: column; gap: 0.6rem; }
+        .sidebar-btn { display: block; text-align: center; padding: 0.65rem; border-radius: 6px; text-decoration: none; font-size: 0.9rem; cursor: pointer; transition: all 0.25s ease; border: 1px solid var(--border-color); color: var(--text-primary); }
+        .sidebar-btn.primary { background: var(--primary-gold); color: var(--bg-dark); border-color: var(--primary-gold); font-weight: 700; }
+        .sidebar-btn.primary:hover { background: var(--primary-gold-light); }
+        .sidebar-btn:not(.primary):hover { border-color: var(--primary-gold); color: var(--primary-gold); }
+        .sidebar-user-row { display: flex; align-items: center; gap: 0.7rem; }
+        .sidebar-user-row .icon { font-size: 1.6rem; }
+        .sidebar-user-row .info .name { font-size: 0.95rem; color: var(--text-primary); }
+        .sidebar-user-row .info .xp { font-size: 0.78rem; color: var(--primary-gold); }
+        .sidebar-links { display: flex; flex-direction: column; gap: 0.2rem; }
+        .sidebar-links a { color: var(--text-secondary); text-decoration: none; padding: 0.55rem 0.2rem; font-size: 0.92rem; transition: all 0.2s ease; border-radius: 4px; }
+        .sidebar-links a:hover { color: var(--primary-gold); background: var(--bg-hover); padding-right: 0.6rem; }
+        .theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem; }
+        .theme-swatch-btn { border: 2px solid var(--border-color); border-radius: 10px; padding: 0.5rem; cursor: pointer; background: var(--bg-hover); text-align: center; transition: all 0.25s ease; }
+        .theme-swatch-btn.active { border-color: var(--primary-gold); box-shadow: 0 0 0 2px rgba(212,175,55,0.25); }
+        .theme-swatch-preview { width: 100%; height: 34px; border-radius: 6px; margin-bottom: 0.4rem; }
+        .theme-swatch-btn span { font-size: 0.68rem; color: var(--text-secondary); display: block; line-height: 1.3; }
+        .sidebar-socials { display: flex; gap: 0.6rem; }
+        .sidebar-socials a { display: inline-flex; align-items: center; justify-content: center; color: var(--primary-gold); text-decoration: none; width: 34px; height: 34px; border-radius: 6px; background: rgba(212,175,55,0.08); transition: all 0.25s ease; }
+        .sidebar-socials a:hover { background: rgba(212,175,55,0.18); transform: translateY(-2px); }
 
         .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
         .section { padding: 4rem 0; }
         .section-header { text-align: center; margin-bottom: 2.5rem; }
+        .section-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
         .section-header h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--primary-gold); margin-bottom: 0.8rem; position: relative; display: inline-block; }
         .section-header h2::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 50px; height: 2px; background: var(--primary-gold); }
         .section-header p { color: var(--text-secondary); font-size: 1rem; margin-top: 1.5rem; }
+        .section-header-row h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.4rem, 3vw, 1.9rem); color: var(--primary-gold); margin: 0; }
+
+        .view-toggle { display: flex; gap: 0.4rem; background: var(--bg-hover); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.25rem; }
+        .view-toggle button { border: none; background: transparent; color: var(--text-secondary); padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s ease; }
+        .view-toggle button.active { background: var(--primary-gold); color: var(--bg-dark); }
 
         .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 320px; background: linear-gradient(135deg, rgba(26, 31, 46, 0.6) 0%, rgba(36, 45, 61, 0.4) 100%); border: 2px dashed var(--border-color); border-radius: 10px; padding: 2.5rem; text-align: center; animation: fadeIn 0.8s ease-out; }
         .empty-state-icon { font-size: 3.5rem; margin-bottom: 1rem; opacity: 0.5; }
@@ -90,6 +209,17 @@
         .trending-dot.active { background: var(--primary-gold); width: 24px; border-radius: 5px; }
         @media (max-width: 767px) { .trending-carousel-wrap { padding: 0 1.2rem; } .trending-carousel { aspect-ratio: 4 / 5; } }
 
+        /* ===== Ranked "most read" list (cenele-style) ===== */
+        .ranked-list { display: flex; flex-direction: column; gap: 0.9rem; max-width: 760px; margin: 0 auto; }
+        .ranked-item { display: flex; align-items: center; gap: 1rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.7rem 1rem; cursor: pointer; transition: all 0.25s ease; }
+        .ranked-item:hover { border-color: var(--primary-gold); transform: translateX(-3px); }
+        .ranked-num { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 1.3rem; color: var(--primary-gold); width: 28px; text-align: center; flex-shrink: 0; }
+        .ranked-thumb { width: 46px; height: 46px; border-radius: 8px; background-size: cover; background-position: center; background-color: var(--bg-hover); flex-shrink: 0; }
+        .ranked-info { flex: 1; min-width: 0; }
+        .ranked-title { font-size: 0.95rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ranked-sub { font-size: 0.78rem; color: var(--text-muted); }
+        .ranked-count { font-size: 0.8rem; color: var(--primary-gold); font-weight: 600; white-space: nowrap; }
+
         .stories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.5rem; }
         .story-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; cursor: pointer; transition: all 0.3s ease; display: flex; flex-direction: column; }
         .story-card:hover { border-color: var(--primary-gold); transform: translateY(-5px); box-shadow: 0 12px 30px rgba(212, 175, 55, 0.15); }
@@ -99,6 +229,24 @@
         .story-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--text-primary); margin-bottom: 0.4rem; }
         .story-author { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.6rem; }
         .story-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; flex: 1; }
+        .story-chapters { list-style: none; margin-top: 0.8rem; padding-top: 0.7rem; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 0.35rem; }
+        .story-chapters li { display: flex; justify-content: space-between; gap: 0.5rem; font-size: 0.78rem; }
+        .story-chapters a { color: var(--text-secondary); text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .story-chapters a:hover { color: var(--primary-gold); }
+        .story-chapters .chap-time { color: var(--text-muted); flex-shrink: 0; font-size: 0.72rem; }
+
+        /* ===== New releases: grid & list views ===== */
+        .releases-list { display: flex; flex-direction: column; gap: 1rem; }
+        .release-row { display: flex; gap: 1rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.9rem; align-items: flex-start; transition: all 0.25s ease; }
+        .release-row:hover { border-color: var(--primary-gold); }
+        .release-cover { width: 64px; height: 90px; border-radius: 6px; background-size: cover; background-position: center; background-color: var(--bg-hover); flex-shrink: 0; cursor: pointer; }
+        .release-body { flex: 1; min-width: 0; }
+        .release-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--text-primary); margin-bottom: 0.5rem; cursor: pointer; }
+        .release-title:hover { color: var(--primary-gold); }
+        .release-chapters { display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; }
+        .release-chapters a { color: var(--text-secondary); text-decoration: none; font-size: 0.82rem; }
+        .release-chapters a:hover { color: var(--primary-gold); }
+        .release-chapters .chap-time { color: var(--text-muted); font-size: 0.72rem; margin-right: 0.3rem; }
 
         .riwaq-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; padding: 1rem; }
         .riwaq-modal-overlay.show { display: flex; }
@@ -177,7 +325,7 @@
         .about-card p:last-child { margin-bottom: 0; }
         .about-card strong { color: var(--primary-gold); }
 
-        footer { background: rgba(15, 20, 25, 0.97); border-top: 1px solid var(--border-color); padding: 2.5rem 0 1rem; margin-top: 4rem; }
+        footer { background: rgba(15, 20, 25, 0.97); background: color-mix(in srgb, var(--bg-dark) 92%, transparent); border-top: 1px solid var(--border-color); padding: 2.5rem 0 1rem; margin-top: 4rem; }
         .footer-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; }
         .footer-section h3 { color: var(--primary-gold); font-size: 0.95rem; margin-bottom: 0.8rem; font-weight: 600; letter-spacing: 0.5px; }
@@ -198,8 +346,6 @@
 
         @media (max-width: 768px) {
             .header-container { padding: 0 1.2rem; }
-            .desktop-nav { display: none; }
-            .hamburger { display: flex; }
             .logo-text h1 { font-size: 1.4rem; }
             .section { padding: 3rem 0; }
             .section-header { margin-bottom: 2rem; }
@@ -217,6 +363,7 @@
             .footer-content { gap: 1.2rem; margin-bottom: 1.2rem; }
             .footer-section h3 { font-size: 0.9rem; margin-bottom: 0.6rem; }
             .footer-section a { font-size: 0.85rem; margin-bottom: 0.5rem; }
+            .release-cover { width: 54px; height: 76px; }
         }
 
         @media (max-width: 480px) {
@@ -246,49 +393,104 @@
 <body>
     <header>
         <div class="header-container">
-            <a href="#" class="logo">
-                <div class="logo-icon">📖</div>
-                <div class="logo-text">
-                    <h1>رِواق</h1>
-                    <p>RIWAQ</p>
-                </div>
-            </a>
-            <nav class="desktop-nav">
-                <a href="#home">الرئيسية</a>
-                <a href="#stories">الروايات</a>
-                <a href="#levels">المستويات</a>
-                <a href="translate-request.html">🌐 اطلب ترجمة</a>
-                <a href="#about">عن الموقع</a>
-                <i class="fas fa-search search-icon"></i>
-            </nav>
+            <div class="header-left">
+                <button class="menu-btn" onclick="toggleSidebar()" aria-label="القائمة">
+                    <span></span><span></span><span></span>
+                </button>
+                <a href="#home" class="logo">
+                    <div class="logo-icon">📖</div>
+                    <div class="logo-text">
+                        <h1>رِواق</h1>
+                        <p>RIWAQ</p>
+                    </div>
+                </a>
+            </div>
             <div class="auth-area" id="authArea">
                 <span class="auth-link" onclick="openAuthModal('login')">دخول</span>
             </div>
-            <button class="hamburger" onclick="toggleMenu()">
-                <span></span><span></span><span></span>
-            </button>
+        </div>
+        <div class="quick-nav">
+            <div class="quick-nav-inner">
+                <a href="#home">الرئيسية</a>
+                <a href="#stories">المكتبة</a>
+                <a href="#new-releases">إصدارات جديدة</a>
+                <a href="#levels">المستويات</a>
+                <a href="translate-request.html">🌐 اطلب ترجمة</a>
+                <a href="#about">عن الموقع</a>
+            </div>
         </div>
     </header>
 
-    <nav class="mobile-menu" id="mobileMenu">
-        <a href="#home" onclick="toggleMenu()">الرئيسية</a>
-        <a href="#stories" onclick="toggleMenu()">الروايات</a>
-        <a href="#levels" onclick="toggleMenu()">المستويات</a>
-        <a href="translate-request.html">🌐 اطلب ترجمة</a>
-        <a href="#about" onclick="toggleMenu()">عن الموقع</a>
-        <a href="#contact" onclick="toggleMenu()">تواصل معنا</a>
-    </nav>
+    <!-- ===== Sidebar Drawer (cenele-style) ===== -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar-drawer" id="sidebarDrawer">
+        <div class="sidebar-head">
+            <a href="#home" class="logo" onclick="toggleSidebar()">
+                <div class="logo-icon">📖</div>
+                <div class="logo-text"><h1 style="font-size:1.2rem;">رِواق</h1></div>
+            </a>
+            <button class="sidebar-close" onclick="toggleSidebar()">&times;</button>
+        </div>
+
+        <div class="sidebar-block">
+            <h4>حسابك</h4>
+            <div class="sidebar-auth-box" id="sidebarAuthBox">
+                <button class="sidebar-btn primary" onclick="openAuthModal('login')">تسجيل الدخول</button>
+                <button class="sidebar-btn" onclick="openAuthModal('signup')">إنشاء حساب جديد</button>
+            </div>
+        </div>
+
+        <div class="sidebar-block">
+            <h4>المظهر</h4>
+            <div class="theme-grid" id="themeGrid">
+                <!-- populated by JS -->
+            </div>
+        </div>
+
+        <div class="sidebar-block">
+            <h4>روابط سريعة</h4>
+            <div class="sidebar-links">
+                <a href="#home" onclick="closeSidebarNav()">الرئيسية</a>
+                <a href="#stories" onclick="closeSidebarNav()">مكتبة الروايات</a>
+                <a href="#new-releases" onclick="closeSidebarNav()">إصدارات جديدة</a>
+                <a href="#levels" onclick="closeSidebarNav()">مستويات القراء</a>
+                <a href="translate-request.html">🌐 اطلب ترجمة رواية</a>
+                <a href="#about" onclick="closeSidebarNav()">عن الموقع</a>
+                <a href="#contact" onclick="closeSidebarNav()">تواصل معنا</a>
+            </div>
+        </div>
+
+        <div class="sidebar-block" style="border-bottom:none; margin-top:auto;">
+            <h4>تابعنا</h4>
+            <div class="sidebar-socials">
+                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" title="Discord"><i class="fab fa-discord"></i></a>
+            </div>
+        </div>
+    </aside>
 
     <section class="trending-section" id="home" style="padding-top: 2rem;">
         <div class="container">
             <div class="section-header">
-                <h2>🔥 أشهر الروايات</h2>
+                <h2>🔥 الأكثر مشاهدة</h2>
                 <p>الروايات الأكثر تفاعلاً على رِواق</p>
             </div>
         </div>
         <div class="trending-carousel-wrap" id="trendingCarouselWrap" style="display:none;">
             <div class="trending-carousel" id="trendingCarousel"></div>
             <div class="trending-dots" id="trendingDots"></div>
+        </div>
+    </section>
+
+    <section class="section" id="ranked-section" style="display:none; padding-top:0;">
+        <div class="container">
+            <div class="section-header">
+                <h2>📈 الأكثر قراءة في الموقع</h2>
+                <p>ترتيب الروايات الأكثر مشاهدة حسب عدد القراءات</p>
+            </div>
+            <div class="ranked-list" id="rankedList"></div>
         </div>
     </section>
 
@@ -306,6 +508,19 @@
                     <p class="empty-state-submessage">ترقب التحديثات القادمة</p>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <section class="section" id="new-releases" style="display:none;">
+        <div class="container">
+            <div class="section-header-row">
+                <h2>🆕 إصدارات جديدة</h2>
+                <div class="view-toggle">
+                    <button id="viewListBtn" class="active" onclick="setReleasesView('list')"><i class="fas fa-list"></i> قائمة</button>
+                    <button id="viewGridBtn" onclick="setReleasesView('grid')"><i class="fas fa-th-large"></i> مربعة</button>
+                </div>
+            </div>
+            <div id="releasesContainer"></div>
         </div>
     </section>
 
@@ -404,33 +619,96 @@
     <div class="xp-toast" id="xpToast"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase-client.js?v=5"></script>
+    <script src="js/supabase-client.js?v=6"></script>
 
     <script>
-        function toggleMenu() {
-            document.getElementById('mobileMenu').classList.toggle('active');
+        /* ===================== Sidebar Drawer ===================== */
+        function toggleSidebar() {
+            document.getElementById('sidebarDrawer').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+        function closeSidebarNav() {
+            document.getElementById('sidebarDrawer').classList.remove('active');
+            document.getElementById('sidebarOverlay').classList.remove('active');
+        }
+
+        /* ===================== Theme Switcher ===================== */
+        const RIWAQ_THEMES = [
+            { id: 'night-space', name: 'ليل فضاء', desc: 'الداكن الأصلي' },
+            { id: 'pure-light', name: 'نور صافي', desc: 'أبيض هادئ وواضح' },
+            { id: 'velvet-black', name: 'أسود مخملي', desc: 'أسود أخف وأقل زرقة' },
+            { id: 'warm-paper', name: 'ورق دافئ', desc: 'بيج مريح للعين' },
+            { id: 'moon-blossom', name: 'زهرة القمر', desc: 'وردي وليلكي ناعم' },
+            { id: 'stillness', name: 'سكون', desc: 'دافئ منخفض الوهج' }
+        ];
+
+        function getSavedTheme() {
+            try { return localStorage.getItem('riwaq-theme') || 'night-space'; } catch (e) { return 'night-space'; }
+        }
+
+        function applyTheme(themeId, persist) {
+            document.documentElement.setAttribute('data-theme', themeId);
+            if (persist) {
+                try { localStorage.setItem('riwaq-theme', themeId); } catch (e) {}
+            }
+            document.querySelectorAll('.theme-swatch-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === themeId);
+            });
+        }
+
+        // inline swatch gradients (matches the CSS custom properties per theme)
+        const THEME_PREVIEW_GRADIENTS = {
+            'night-space': 'linear-gradient(135deg,#0f1419,#6b5b95)',
+            'pure-light': 'linear-gradient(135deg,#ffffff,#d8cfae)',
+            'velvet-black': 'linear-gradient(135deg,#000000,#2a2a2a)',
+            'warm-paper': 'linear-gradient(135deg,#f1e6ce,#c9a866)',
+            'moon-blossom': 'linear-gradient(135deg,#f4c9dd,#8a5ba0)',
+            'stillness': 'linear-gradient(135deg,#201810,#6b4a2a)'
+        };
+
+        function renderThemeGridFixed() {
+            const grid = document.getElementById('themeGrid');
+            const current = getSavedTheme();
+            grid.innerHTML = RIWAQ_THEMES.map(t => `
+                <div class="theme-swatch-btn${t.id === current ? ' active' : ''}" data-theme="${t.id}" onclick="applyTheme('${t.id}', true)">
+                    <div class="theme-swatch-preview" style="background:${THEME_PREVIEW_GRADIENTS[t.id]};"></div>
+                    <span>${t.name}</span>
+                </div>
+            `).join('');
         }
 
         function scrollToSection(sectionId) {
             const section = document.getElementById(sectionId);
-            if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-                const menu = document.getElementById('mobileMenu');
-                if (menu.classList.contains('active')) toggleMenu();
-            }
+            if (section) section.scrollIntoView({ behavior: 'smooth' });
         }
-
-        document.addEventListener('click', function(event) {
-            const menu = document.getElementById('mobileMenu');
-            const hamburger = document.querySelector('.hamburger');
-            if (menu && hamburger && !menu.contains(event.target) && !hamburger.contains(event.target)) {
-                menu.classList.remove('active');
-            }
-        });
 
         function escapeHtml(str) {
             if (str === null || str === undefined) return '';
             return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        /* Arabic relative time */
+        function timeAgo(dateStr) {
+            if (!dateStr) return '';
+            const then = new Date(dateStr).getTime();
+            const now = Date.now();
+            let diff = Math.max(0, Math.floor((now - then) / 1000));
+            const units = [
+                [31536000, 'سنة', 'سنوات'],
+                [2592000, 'شهر', 'أشهر'],
+                [604800, 'أسبوع', 'أسابيع'],
+                [86400, 'يوم', 'أيام'],
+                [3600, 'ساعة', 'ساعات'],
+                [60, 'دقيقة', 'دقائق']
+            ];
+            for (const [secs, one, many] of units) {
+                const val = Math.floor(diff / secs);
+                if (val >= 1) {
+                    const label = val === 1 ? one : (val === 2 ? (one === 'ساعة' ? 'ساعتين' : one + 'ين') : (val <= 10 ? many : one));
+                    return `منذ ${val === 1 ? '' : val + ' '}${label}`.replace('منذ  ', 'منذ ');
+                }
+            }
+            return 'منذ لحظات';
         }
 
         let currentReaderStatus = null;
@@ -439,6 +717,7 @@
         function openAuthModal(mode) {
             switchAuthTab(mode || 'login');
             document.getElementById('authModalOverlay').classList.add('show');
+            closeSidebarNav();
         }
 
         function closeAuthModal() {
@@ -466,10 +745,15 @@
 
         async function refreshAuthUI() {
             const authArea = document.getElementById('authArea');
+            const sidebarAuthBox = document.getElementById('sidebarAuthBox');
             const session = await checkAuth();
             if (!session) {
                 currentReaderStatus = null;
                 authArea.innerHTML = `<span class="auth-link" onclick="openAuthModal('login')">دخول / تسجيل</span>`;
+                sidebarAuthBox.innerHTML = `
+                    <button class="sidebar-btn primary" onclick="openAuthModal('login')">تسجيل الدخول</button>
+                    <button class="sidebar-btn" onclick="openAuthModal('signup')">إنشاء حساب جديد</button>
+                `;
                 return;
             }
             const statusResult = await getMyReaderStatus();
@@ -484,9 +768,23 @@
                         <span class="badge-xp">${profile.xp} XP</span>
                     </div>
                 `;
+                sidebarAuthBox.innerHTML = `
+                    <div class="sidebar-user-row">
+                        <span class="icon">${currentLevel ? currentLevel.icon : '📖'}</span>
+                        <div class="info">
+                            <div class="name">${escapeHtml(displayName)}</div>
+                            <div class="xp">${profile.xp} XP</div>
+                        </div>
+                    </div>
+                    <button class="sidebar-btn" onclick="handleUserBadgeClick()">تسجيل الخروج</button>
+                `;
             } else {
                 currentReaderStatus = null;
                 authArea.innerHTML = `<span class="auth-link" onclick="openAuthModal('login')">دخول / تسجيل</span>`;
+                sidebarAuthBox.innerHTML = `
+                    <button class="sidebar-btn primary" onclick="openAuthModal('login')">تسجيل الدخول</button>
+                    <button class="sidebar-btn" onclick="openAuthModal('signup')">إنشاء حساب جديد</button>
+                `;
             }
         }
 
@@ -524,6 +822,8 @@
         });
 
         let publicNovelsCache = [];
+        let novelsChaptersMap = {}; // novelId -> chapters array (desc by chapter_number)
+        let releasesView = 'list';
 
         async function loadPublishedStories() {
             try {
@@ -531,7 +831,34 @@
                 const container = document.getElementById('storiesContainer');
                 if (!result.success || !result.data || result.data.length === 0) return;
                 publicNovelsCache = result.data;
-                const cardsHtml = result.data.map(novel => `
+
+                // Fetch chapters for each novel in parallel (small dataset expected)
+                await Promise.all(publicNovelsCache.map(async novel => {
+                    try {
+                        const chResult = await getChapters(novel.id, true);
+                        if (chResult.success && chResult.data) {
+                            novelsChaptersMap[novel.id] = [...chResult.data].sort((a, b) => b.chapter_number - a.chapter_number);
+                        } else {
+                            novelsChaptersMap[novel.id] = [];
+                        }
+                    } catch (e) {
+                        novelsChaptersMap[novel.id] = [];
+                    }
+                }));
+
+                const cardsHtml = publicNovelsCache.map(novel => {
+                    const chapters = (novelsChaptersMap[novel.id] || []).slice(0, 3);
+                    const chaptersHtml = chapters.length ? `
+                        <ul class="story-chapters">
+                            ${chapters.map(ch => `
+                                <li>
+                                    <a href="reader.html?id=${ch.id}" onclick="event.stopPropagation()">الفصل ${ch.chapter_number}${ch.title ? ' - ' + escapeHtml(ch.title) : ''}</a>
+                                    <span class="chap-time">${timeAgo(ch.created_at)}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    ` : '';
+                    return `
                     <div class="story-card" onclick="location.href='novel.html?id=${novel.id}'">
                         <div class="story-cover" style="${novel.cover_url ? `background-image:url('${novel.cover_url}')` : ''}">
                             ${novel.cover_url ? '' : '📖'}
@@ -541,14 +868,101 @@
                             <div class="story-title">${escapeHtml(novel.title_ar)}</div>
                             <div class="story-author">✍️ ${escapeHtml(novel.author)}</div>
                             <p class="story-desc">${escapeHtml(novel.description || '')}</p>
+                            ${chaptersHtml}
                         </div>
                     </div>
-                `).join('');
+                `;}).join('');
                 container.innerHTML = `<div class="stories-grid">${cardsHtml}</div>`;
-                renderTrendingMarquee(result.data);
+
+                renderTrendingMarquee(publicNovelsCache);
+                renderRankedList(publicNovelsCache);
+                renderNewReleases(publicNovelsCache);
             } catch (err) {
                 console.error('Failed to load stories:', err);
             }
+        }
+
+        /* ===================== Ranked "most read" list ===================== */
+        function renderRankedList(novels) {
+            const section = document.getElementById('ranked-section');
+            const list = document.getElementById('rankedList');
+            const withViews = novels.filter(n => (n.views || 0) > 0);
+            if (withViews.length === 0) { section.style.display = 'none'; return; }
+            const sorted = [...withViews].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 6);
+            list.innerHTML = sorted.map((novel, i) => `
+                <div class="ranked-item" onclick="location.href='novel.html?id=${novel.id}'">
+                    <div class="ranked-num">${i + 1}</div>
+                    <div class="ranked-thumb" style="${novel.cover_url ? `background-image:url('${novel.cover_url}')` : ''}"></div>
+                    <div class="ranked-info">
+                        <div class="ranked-title">${escapeHtml(novel.title_ar)}</div>
+                        <div class="ranked-sub">✍️ ${escapeHtml(novel.author)}</div>
+                    </div>
+                    <div class="ranked-count">${novel.views} مشاهدة</div>
+                </div>
+            `).join('');
+            section.style.display = 'block';
+        }
+
+        /* ===================== New Releases (list/grid) ===================== */
+        function renderNewReleases(novels) {
+            const section = document.getElementById('new-releases');
+            const withChapters = novels
+                .map(n => ({ novel: n, chapters: novelsChaptersMap[n.id] || [] }))
+                .filter(x => x.chapters.length > 0);
+            if (withChapters.length === 0) { section.style.display = 'none'; return; }
+
+            withChapters.sort((a, b) => new Date(b.chapters[0].created_at) - new Date(a.chapters[0].created_at));
+
+            window._releasesData = withChapters;
+            section.style.display = 'block';
+            renderReleasesView();
+        }
+
+        function renderReleasesView() {
+            const container = document.getElementById('releasesContainer');
+            const data = window._releasesData || [];
+            if (releasesView === 'list') {
+                container.innerHTML = `<div class="releases-list">${data.map(({ novel, chapters }) => `
+                    <div class="release-row">
+                        <div class="release-cover" style="${novel.cover_url ? `background-image:url('${novel.cover_url}')` : ''}" onclick="location.href='novel.html?id=${novel.id}'"></div>
+                        <div class="release-body">
+                            <div class="release-title" onclick="location.href='novel.html?id=${novel.id}'">${escapeHtml(novel.title_ar)}</div>
+                            <div class="release-chapters">
+                                ${chapters.slice(0, 3).map(ch => `
+                                    <a href="reader.html?id=${ch.id}">الفصل ${ch.chapter_number}<span class="chap-time">${timeAgo(ch.created_at)}</span></a>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}</div>`;
+            } else {
+                container.innerHTML = `<div class="stories-grid">${data.map(({ novel, chapters }) => `
+                    <div class="story-card" onclick="location.href='novel.html?id=${novel.id}'">
+                        <div class="story-cover" style="${novel.cover_url ? `background-image:url('${novel.cover_url}')` : ''}">
+                            ${novel.cover_url ? '' : '📖'}
+                        </div>
+                        <div class="story-info">
+                            <div class="story-title">${escapeHtml(novel.title_ar)}</div>
+                            <div class="story-author">✍️ ${escapeHtml(novel.author)}</div>
+                            <ul class="story-chapters">
+                                ${chapters.slice(0, 3).map(ch => `
+                                    <li>
+                                        <a href="reader.html?id=${ch.id}" onclick="event.stopPropagation()">الفصل ${ch.chapter_number}</a>
+                                        <span class="chap-time">${timeAgo(ch.created_at)}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `).join('')}</div>`;
+            }
+        }
+
+        function setReleasesView(view) {
+            releasesView = view;
+            document.getElementById('viewListBtn').classList.toggle('active', view === 'list');
+            document.getElementById('viewGridBtn').classList.toggle('active', view === 'grid');
+            renderReleasesView();
         }
 
         let trendingIndex = 0;
@@ -681,6 +1095,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
+            renderThemeGridFixed();
             loadPublishedStories();
             await refreshAuthUI();
             await loadLevelsSection();
