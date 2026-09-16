@@ -792,6 +792,7 @@
                 <li><a href="#dashboard" class="nav-link active" data-page="dashboard"><i class="fas fa-chart-line"></i> لوحة التحكم</a></li>
                 <li><a href="#novels" class="nav-link" data-page="novels"><i class="fas fa-book"></i> الروايات</a></li>
                 <li><a href="#chapters" class="nav-link" data-page="chapters"><i class="fas fa-file-alt"></i> الفصول</a></li>
+                <li><a href="#translation-requests" class="nav-link" data-page="translation-requests"><i class="fas fa-language"></i> طلبات الترجمة</a></li>
                 <li><a href="#users" class="nav-link" data-page="users"><i class="fas fa-users"></i> المستخدمون</a></li>
                 <li><a href="#categories" class="nav-link" data-page="categories"><i class="fas fa-list"></i> التصنيفات</a></li>
                 <li><a href="#settings" class="nav-link" data-page="settings"><i class="fas fa-cog"></i> الإعدادات</a></li>
@@ -887,6 +888,35 @@
                 </div>
             </div>
 
+            <!-- Translation Requests Page -->
+            <div id="translation-requests-page" class="page" style="display: none;">
+                <div class="recent-section">
+                    <div class="section-title">
+                        <i class="fas fa-coins"></i> منح نقاط يدوياً
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1rem;">مفيد قبل تفعيل PayPal بشكل كامل، أو كتعويض/هدية لقارئ معيّن.</p>
+                    <form id="grantCreditsForm" style="display:flex; gap:0.8rem; flex-wrap:wrap; align-items:flex-end;">
+                        <div class="form-group" style="flex:2; min-width:200px; margin-bottom:0;">
+                            <label>بريد القارئ</label>
+                            <input type="text" id="grantCreditsEmail" placeholder="user@example.com" required>
+                        </div>
+                        <div class="form-group" style="flex:1; min-width:100px; margin-bottom:0;">
+                            <label>عدد النقاط</label>
+                            <input type="number" id="grantCreditsAmount" min="1" required>
+                        </div>
+                        <button type="submit" class="btn-primary" id="grantCreditsBtn" style="margin-bottom:1.2rem;">منح النقاط</button>
+                    </form>
+                </div>
+                <div class="recent-section">
+                    <div class="section-title">
+                        <i class="fas fa-language"></i> طلبات الترجمة الواردة
+                    </div>
+                    <div id="translationRequestsList">
+                        <p style="text-align:center; color: var(--text-secondary);">جاري التحميل...</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Users Page -->
             <div id="users-page" class="page" style="display: none;">
                 <div class="recent-section">
@@ -941,6 +971,43 @@
                             <label>رابط انستغرام</label>
                             <input type="text" id="setting_instagram_url" placeholder="https://instagram.com/...">
                         </div>
+
+                        <div class="form-group" style="background: var(--bg-dark); border: 1px dashed var(--border-color); border-radius: 8px; padding: 0.9rem;">
+                            <label style="color: var(--primary-gold); margin-bottom: 0.8rem;">🌐 طلبات الترجمة والنقاط</label>
+                            <div class="form-group">
+                                <label>سعر ترجمة رواية كاملة (نقطة)</label>
+                                <input type="number" id="setting_translation_price_full_novel" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>سعر ترجمة الفصل الواحد (نقطة)</label>
+                                <input type="number" id="setting_translation_price_per_chapter" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>سعر استعجال الترجمة (نقطة)</label>
+                                <input type="number" id="setting_translation_price_priority_rush" min="0">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>باقات النقاط (JSON) — id / points / price_usd</label>
+                                <textarea id="setting_points_packages" style="min-height:90px; font-family: monospace; direction:ltr; text-align:left;"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="background: var(--bg-dark); border: 1px dashed var(--border-color); border-radius: 8px; padding: 0.9rem;">
+                            <label style="color: var(--primary-gold); margin-bottom: 0.8rem;">💳 إعدادات PayPal</label>
+                            <div class="form-group">
+                                <label>PayPal Client ID (علني، آمن وضعه هنا)</label>
+                                <input type="text" id="setting_paypal_client_id" placeholder="Client ID من developer.paypal.com" style="direction:ltr; text-align:left;">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>وضع التشغيل</label>
+                                <select id="setting_paypal_mode" style="width:100%; padding:0.7rem; border:1px solid var(--border-color); border-radius:6px; background: var(--bg-card); color: var(--text-primary); font-family: 'Lora', serif;">
+                                    <option value="sandbox">تجريبي (Sandbox)</option>
+                                    <option value="live">حقيقي (Live)</option>
+                                </select>
+                            </div>
+                            <p style="font-size:0.75rem; color: var(--text-muted); margin-top:0.6rem;">ملاحظة: PAYPAL_CLIENT_SECRET لا يُضاف هنا؛ يُضاف فقط من Supabase Dashboard → Edge Functions → Secrets حفاظاً على الأمان. وضع "Live" هنا لا يُفعّل الدفع الحقيقي إلا بعد ضبط PAYPAL_MODE=live بنفس مكان الأسرار.</p>
+                        </div>
+
                         <div class="modal-actions" style="max-width: 300px;">
                             <button type="submit" class="btn-primary" id="settingsSaveBtn">حفظ الإعدادات</button>
                         </div>
@@ -1131,7 +1198,7 @@
     <script>
         // Page Navigation
         const pages = [
-            'dashboard', 'novels', 'chapters', 'users', 
+            'dashboard', 'novels', 'chapters', 'translation-requests', 'users', 
             'categories', 'settings', 'activity'
         ];
 
@@ -1158,6 +1225,7 @@
                 dashboard: 'لوحة التحكم',
                 novels: 'إدارة الروايات',
                 chapters: 'إدارة الفصول',
+                'translation-requests': 'طلبات الترجمة',
                 users: 'إدارة المستخدمين',
                 categories: 'التصنيفات',
                 settings: 'الإعدادات',
@@ -1171,6 +1239,8 @@
                 loadDashboard();
             } else if (page === 'novels') {
                 loadNovels();
+            } else if (page === 'translation-requests') {
+                loadTranslationRequests();
             } else if (page === 'users') {
                 loadUsers();
             } else if (page === 'categories') {
@@ -2067,6 +2137,117 @@
             loadDashboard();
         }
 
+        /* ==================== Translation Requests ==================== */
+        const requestStatusLabels = {
+            pending_review: 'قيد المراجعة',
+            approved: 'تمت الموافقة',
+            in_progress: 'جاري التنفيذ',
+            completed: 'مكتمل',
+            rejected: 'مرفوض'
+        };
+
+        const requestTypeLabels = {
+            full_novel: 'رواية كاملة',
+            chapters: 'عدد فصول',
+            priority_rush: 'استعجال ترجمة'
+        };
+
+        async function loadTranslationRequests() {
+            const container = document.getElementById('translationRequestsList');
+            container.innerHTML = '<p style="text-align:center; color: var(--text-secondary);">جاري التحميل...</p>';
+
+            const result = await getAllTranslationRequests();
+            if (!result.success) {
+                container.innerHTML = `<p style="color:#ff8787;">تعذر تحميل الطلبات: ${escapeHtml(result.error)}</p>`;
+                return;
+            }
+
+            const requests = result.data || [];
+            if (requests.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🌐</div><p>لا توجد طلبات ترجمة بعد</p></div>';
+                return;
+            }
+
+            container.innerHTML = `<ul class="item-list">${requests.map(r => {
+                const reader = r.profiles ? (r.profiles.username || r.profiles.email) : 'قارئ';
+                return `
+                    <li style="flex-direction:column; align-items:stretch;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; width:100%;">
+                            <div class="item-info">
+                                <div class="item-title">
+                                    ${escapeHtml(requestTypeLabels[r.request_type] || r.request_type)}${r.novel_title ? ' — ' + escapeHtml(r.novel_title) : ''}
+                                    <span class="badge ${r.status === 'completed' ? 'badge-published' : 'badge-draft'}">${requestStatusLabels[r.status] || r.status}</span>
+                                </div>
+                                <div class="item-date">
+                                    القارئ: ${escapeHtml(reader)} · ${r.price_points} نقطة
+                                    ${r.chapters_count ? ` · عدد الفصول: ${r.chapters_count}` : ''}
+                                    · ${new Date(r.created_at).toLocaleDateString('ar-SA')}
+                                </div>
+                                ${r.source_url ? `<div class="item-date">رابط المصدر: <a href="${escapeHtml(r.source_url)}" target="_blank" style="color:var(--primary-gold);">${escapeHtml(r.source_url)}</a></div>` : ''}
+                                ${r.notes ? `<div class="item-date">ملاحظات القارئ: ${escapeHtml(r.notes)}</div>` : ''}
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.8rem; align-items:center;">
+                            <select id="statusSelect_${r.id}" style="padding:0.5rem; border:1px solid var(--border-color); border-radius:6px; background: var(--bg-dark); color: var(--text-primary); font-family:'Lora', serif; font-size:0.85rem;">
+                                ${Object.entries(requestStatusLabels).map(([val, label]) => `<option value="${val}" ${r.status === val ? 'selected' : ''}>${label}</option>`).join('')}
+                            </select>
+                            <input type="text" id="adminNote_${r.id}" placeholder="ملاحظة للقارئ (اختياري)" value="${escapeHtml(r.admin_notes || '')}"
+                                style="flex:1; min-width:180px; padding:0.5rem; border:1px solid var(--border-color); border-radius:6px; background: var(--bg-dark); color: var(--text-primary); font-family:'Lora', serif; font-size:0.85rem;">
+                            <button class="btn-secondary" onclick="saveTranslationRequestUpdate('${r.id}')" style="padding:0.5rem 1rem; font-size:0.85rem;">حفظ</button>
+                        </div>
+                    </li>
+                `;
+            }).join('')}</ul>`;
+        }
+
+        async function saveTranslationRequestUpdate(requestId) {
+            const status = document.getElementById(`statusSelect_${requestId}`).value;
+            const adminNotes = document.getElementById(`adminNote_${requestId}`).value.trim();
+
+            const result = await updateTranslationRequest(requestId, { status, admin_notes: adminNotes });
+            if (result.success) {
+                showAlert('تم تحديث حالة الطلب');
+                loadTranslationRequests();
+            } else {
+                showAlert('خطأ: ' + result.error, 'error');
+            }
+        }
+
+        document.getElementById('grantCreditsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('grantCreditsBtn');
+            const email = document.getElementById('grantCreditsEmail').value.trim();
+            const amount = parseInt(document.getElementById('grantCreditsAmount').value, 10);
+
+            if (!email || !amount) return;
+
+            btn.disabled = true;
+            btn.textContent = 'جاري المنح...';
+
+            try {
+                const { data: profile, error } = await supabaseClient
+                    .from('profiles')
+                    .select('id')
+                    .eq('email', email)
+                    .single();
+
+                if (error || !profile) {
+                    throw new Error('لم يتم العثور على قارئ بهذا البريد');
+                }
+
+                const result = await adminGrantCredits(profile.id, amount, 'admin_manual_grant');
+                if (!result.success) throw new Error(result.error);
+
+                showAlert(`تم منح ${amount} نقطة للقارئ بنجاح`);
+                document.getElementById('grantCreditsForm').reset();
+            } catch (err) {
+                showAlert('خطأ: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'منح النقاط';
+            }
+        });
+
         /* ==================== Users ==================== */
         async function loadUsers() {
             const { data, error } = await supabaseClient
@@ -2079,7 +2260,7 @@
                     <li>
                         <div class="item-info">
                             <div class="item-title">${escapeHtml(user.email)}</div>
-                            <div class="item-date">المستوى: ${user.level} | الصلاحية: ${user.role}</div>
+                            <div class="item-date">المستوى: ${user.level} | الصلاحية: ${user.role} | النقاط: ${user.credits || 0}</div>
                         </div>
                     </li>
                 `).join('');
@@ -2183,6 +2364,13 @@
             document.getElementById('setting_twitter_url').value = s.twitter_url || '';
             document.getElementById('setting_facebook_url').value = s.facebook_url || '';
             document.getElementById('setting_instagram_url').value = s.instagram_url || '';
+
+            document.getElementById('setting_translation_price_full_novel').value = s.translation_price_full_novel || '500';
+            document.getElementById('setting_translation_price_per_chapter').value = s.translation_price_per_chapter || '15';
+            document.getElementById('setting_translation_price_priority_rush').value = s.translation_price_priority_rush || '80';
+            document.getElementById('setting_points_packages').value = s.points_packages || '[{"id":"small","points":100,"price_usd":5},{"id":"medium","points":300,"price_usd":12},{"id":"large","points":700,"price_usd":25}]';
+            document.getElementById('setting_paypal_client_id').value = s.paypal_client_id || '';
+            document.getElementById('setting_paypal_mode').value = s.paypal_mode || 'sandbox';
         }
 
         document.getElementById('settingsForm').addEventListener('submit', async (e) => {
@@ -2191,6 +2379,16 @@
             btn.disabled = true;
             btn.textContent = 'جاري الحفظ...';
 
+            const packagesRaw = document.getElementById('setting_points_packages').value.trim();
+            try {
+                JSON.parse(packagesRaw);
+            } catch (err) {
+                showAlert('صيغة باقات النقاط (JSON) غير صحيحة، تحقق منها', 'error');
+                btn.disabled = false;
+                btn.textContent = 'حفظ الإعدادات';
+                return;
+            }
+
             const payload = {
                 site_name: document.getElementById('setting_site_name').value.trim(),
                 site_tagline: document.getElementById('setting_site_tagline').value.trim(),
@@ -2198,7 +2396,13 @@
                 contact_email: document.getElementById('setting_contact_email').value.trim(),
                 twitter_url: document.getElementById('setting_twitter_url').value.trim(),
                 facebook_url: document.getElementById('setting_facebook_url').value.trim(),
-                instagram_url: document.getElementById('setting_instagram_url').value.trim()
+                instagram_url: document.getElementById('setting_instagram_url').value.trim(),
+                translation_price_full_novel: document.getElementById('setting_translation_price_full_novel').value.trim(),
+                translation_price_per_chapter: document.getElementById('setting_translation_price_per_chapter').value.trim(),
+                translation_price_priority_rush: document.getElementById('setting_translation_price_priority_rush').value.trim(),
+                points_packages: packagesRaw,
+                paypal_client_id: document.getElementById('setting_paypal_client_id').value.trim(),
+                paypal_mode: document.getElementById('setting_paypal_mode').value
             };
 
             const result = await saveSettings(payload);
