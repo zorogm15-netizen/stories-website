@@ -852,7 +852,7 @@
                         <ul class="story-chapters">
                             ${chapters.map(ch => `
                                 <li>
-                                    <a href="reader.html?id=${ch.id}" onclick="event.stopPropagation()">الفصل ${ch.chapter_number}${ch.title ? ' - ' + escapeHtml(ch.title) : ''}</a>
+                                    <a href="reader.html?novel=${novel.id}&chapter=${ch.id}" onclick="event.stopPropagation()">الفصل ${ch.chapter_number}${ch.title ? ' - ' + escapeHtml(ch.title) : ''}</a>
                                     <span class="chap-time">${timeAgo(ch.created_at)}</span>
                                 </li>
                             `).join('')}
@@ -929,7 +929,7 @@
                             <div class="release-title" onclick="location.href='novel.html?id=${novel.id}'">${escapeHtml(novel.title_ar)}</div>
                             <div class="release-chapters">
                                 ${chapters.slice(0, 3).map(ch => `
-                                    <a href="reader.html?id=${ch.id}">الفصل ${ch.chapter_number}<span class="chap-time">${timeAgo(ch.created_at)}</span></a>
+                                    <a href="reader.html?novel=${novel.id}&chapter=${ch.id}">الفصل ${ch.chapter_number}<span class="chap-time">${timeAgo(ch.created_at)}</span></a>
                                 `).join('')}
                             </div>
                         </div>
@@ -947,7 +947,7 @@
                             <ul class="story-chapters">
                                 ${chapters.slice(0, 3).map(ch => `
                                     <li>
-                                        <a href="reader.html?id=${ch.id}" onclick="event.stopPropagation()">الفصل ${ch.chapter_number}</a>
+                                        <a href="reader.html?novel=${novel.id}&chapter=${ch.id}" onclick="event.stopPropagation()">الفصل ${ch.chapter_number}</a>
                                         <span class="chap-time">${timeAgo(ch.created_at)}</span>
                                     </li>
                                 `).join('')}
