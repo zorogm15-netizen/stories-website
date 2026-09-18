@@ -388,6 +388,26 @@
         }
 
         body, html { overflow-x: hidden; width: 100%; }
+
+        /* ===== Search Modal ===== */
+        .search-modal-box { max-width: 560px; }
+        .search-input-wrap { position: relative; margin-bottom: 1.2rem; }
+        .search-input-wrap input {
+            width: 100%; padding: 0.8rem 1rem; border-radius: 8px; border: 1px solid var(--border-color);
+            background: var(--bg-dark); color: var(--text-primary); font-size: 1rem; font-family: inherit;
+        }
+        .search-input-wrap input:focus { outline: none; border-color: var(--primary-gold); }
+        .search-results { display: flex; flex-direction: column; gap: 0.6rem; max-height: 55vh; overflow-y: auto; }
+        .search-result-item {
+            display: flex; gap: 0.8rem; align-items: center; background: var(--bg-dark); border: 1px solid var(--border-color);
+            border-radius: 8px; padding: 0.6rem 0.8rem; cursor: pointer; transition: all 0.2s ease; text-align: right;
+        }
+        .search-result-item:hover { border-color: var(--primary-gold); }
+        .search-result-cover { width: 42px; height: 58px; border-radius: 5px; background-size: cover; background-position: center; background-color: var(--bg-hover); flex-shrink: 0; }
+        .search-result-info { flex: 1; min-width: 0; }
+        .search-result-title { font-size: 0.95rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .search-result-author { font-size: 0.78rem; color: var(--text-muted); }
+        .search-hint { color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1rem 0; }
     </style>
 </head>
 <body>
@@ -406,6 +426,7 @@
                 </a>
             </div>
             <div class="auth-area" id="authArea">
+                <i class="fas fa-search search-icon" onclick="openSearchModal()" title="بحث عن رواية" role="button" aria-label="بحث"></i>
                 <span class="auth-link" onclick="openAuthModal('login')">دخول</span>
             </div>
         </div>
@@ -545,6 +566,20 @@
                 <button type="submit" class="auth-submit" id="authSubmitBtn">تسجيل الدخول</button>
             </form>
             <div class="auth-message" id="authMessage"></div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="riwaq-modal-overlay" id="searchModalOverlay">
+        <div class="riwaq-modal-box search-modal-box">
+            <span class="riwaq-modal-close" onclick="closeSearchModal()">&times;</span>
+            <h2>🔍 ابحث عن رواية</h2>
+            <div class="search-input-wrap">
+                <input type="text" id="searchInput" placeholder="اكتب اسم الرواية أو المؤلف..." autocomplete="off">
+            </div>
+            <div class="search-results" id="searchResults">
+                <p class="search-hint">ابدأ بالكتابة لعرض النتائج</p>
+            </div>
         </div>
     </div>
 
@@ -747,6 +782,59 @@
             document.getElementById('authMessage').className = 'auth-message';
         }
 
+        /* ===================== Search Modal ===================== */
+        let searchDebounceTimer = null;
+
+        function openSearchModal() {
+            document.getElementById('searchModalOverlay').classList.add('show');
+            closeSidebarNav();
+            const input = document.getElementById('searchInput');
+            input.value = '';
+            document.getElementById('searchResults').innerHTML = '<p class="search-hint">ابدأ بالكتابة لعرض النتائج</p>';
+            setTimeout(() => input.focus(), 50);
+        }
+
+        function closeSearchModal() {
+            document.getElementById('searchModalOverlay').classList.remove('show');
+        }
+
+        function renderSearchResults(novels) {
+            const container = document.getElementById('searchResults');
+            if (!novels || novels.length === 0) {
+                container.innerHTML = '<p class="search-hint">لا توجد نتائج مطابقة</p>';
+                return;
+            }
+            container.innerHTML = novels.map(novel => `
+                <div class="search-result-item" onclick="location.href='novel.html?id=${novel.id}'">
+                    <div class="search-result-cover" style="${novel.cover_url ? `background-image:url('${novel.cover_url}')` : ''}"></div>
+                    <div class="search-result-info">
+                        <div class="search-result-title">${escapeHtml(novel.title_ar)}</div>
+                        <div class="search-result-author">✍️ ${escapeHtml(novel.author)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.trim();
+            clearTimeout(searchDebounceTimer);
+
+            if (!query) {
+                document.getElementById('searchResults').innerHTML = '<p class="search-hint">ابدأ بالكتابة لعرض النتائج</p>';
+                return;
+            }
+
+            searchDebounceTimer = setTimeout(async () => {
+                document.getElementById('searchResults').innerHTML = '<p class="search-hint">جاري البحث...</p>';
+                const result = await searchNovels(query);
+                if (result.success) {
+                    renderSearchResults(result.data);
+                } else {
+                    document.getElementById('searchResults').innerHTML = '<p class="search-hint">تعذر البحث حالياً</p>';
+                }
+            }, 350);
+        });
+
         async function handleUserBadgeClick() {
             if (!confirm('هل تريد تسجيل الخروج؟')) return;
             await signOut();
@@ -758,10 +846,11 @@
         async function refreshAuthUI() {
             const authArea = document.getElementById('authArea');
             const sidebarAuthBox = document.getElementById('sidebarAuthBox');
+            const searchIconHtml = `<i class="fas fa-search search-icon" onclick="openSearchModal()" title="بحث عن رواية" role="button" aria-label="بحث"></i>`;
             const session = await checkAuth();
             if (!session) {
                 currentReaderStatus = null;
-                authArea.innerHTML = `<span class="auth-link" onclick="openAuthModal('login')">دخول / تسجيل</span>`;
+                authArea.innerHTML = `${searchIconHtml}<span class="auth-link" onclick="openAuthModal('login')">دخول / تسجيل</span>`;
                 sidebarAuthBox.innerHTML = `
                     <button class="sidebar-btn primary" onclick="openAuthModal('login')">تسجيل الدخول</button>
                     <button class="sidebar-btn" onclick="openAuthModal('signup')">إنشاء حساب جديد</button>
@@ -774,6 +863,7 @@
                 const { profile, currentLevel } = currentReaderStatus;
                 const displayName = profile.username || (profile.email ? profile.email.split('@')[0] : 'قارئ');
                 authArea.innerHTML = `
+                    ${searchIconHtml}
                     <div class="user-badge" onclick="handleUserBadgeClick()" title="تسجيل الخروج">
                         <span class="badge-icon">${currentLevel ? currentLevel.icon : '📖'}</span>
                         <span class="badge-name">${escapeHtml(displayName)}</span>
@@ -792,7 +882,7 @@
                 `;
             } else {
                 currentReaderStatus = null;
-                authArea.innerHTML = `<span class="auth-link" onclick="openAuthModal('login')">دخول / تسجيل</span>`;
+                authArea.innerHTML = `${searchIconHtml}<span class="auth-link" onclick="openAuthModal('login')">دخول / تسجيل</span>`;
                 sidebarAuthBox.innerHTML = `
                     <button class="sidebar-btn primary" onclick="openAuthModal('login')">تسجيل الدخول</button>
                     <button class="sidebar-btn" onclick="openAuthModal('signup')">إنشاء حساب جديد</button>
@@ -1041,6 +1131,8 @@
         window.addEventListener('click', function (event) {
             const authOverlay = document.getElementById('authModalOverlay');
             if (event.target === authOverlay) closeAuthModal();
+            const searchOverlay = document.getElementById('searchModalOverlay');
+            if (event.target === searchOverlay) closeSearchModal();
         });
 
         async function loadLevelsSection() {
