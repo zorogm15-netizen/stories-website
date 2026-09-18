@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>متابعاتي | رِواق</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script>
+(function () {
+    try {
+        var saved = localStorage.getItem('riwaq-theme');
+        if (saved) document.documentElement.setAttribute('data-theme', saved);
+    } catch (e) {}
+})();
+</script>
+<style>
+:root, :root[data-theme="night-space"]{
+    --bg-dark:#0f1419; --bg-card:#1a1f2e; --bg-hover:#242d3d;
+    --primary-gold:#d4af37; --primary-gold-light:#e6c547;
+    --text-primary:#f5f1e8; --text-secondary:#b8b4a8; --text-muted:#7a7a7a;
+    --border-color:#2a3344; --accent-purple:#6b5b95; --accent-blue:#1e3c72;
+}
+:root[data-theme="pure-light"]{
+    --bg-dark:#faf8f4; --bg-card:#ffffff; --bg-hover:#f1ede4;
+    --primary-gold:#b8892f; --primary-gold-light:#cf9e3f;
+    --text-primary:#241f18; --text-secondary:#5b5648; --text-muted:#8c8676;
+    --border-color:#e4ddcd; --accent-purple:#8672b0; --accent-blue:#4c6fa8;
+}
+:root[data-theme="velvet-black"]{
+    --bg-dark:#000000; --bg-card:#121212; --bg-hover:#1c1c1c;
+    --primary-gold:#d4af37; --primary-gold-light:#e6c547;
+    --text-primary:#f0f0f0; --text-secondary:#a8a8a8; --text-muted:#6e6e6e;
+    --border-color:#262626; --accent-purple:#5a4a80; --accent-blue:#16263f;
+}
+:root[data-theme="warm-paper"]{
+    --bg-dark:#f1e6ce; --bg-card:#f8f0dc; --bg-hover:#ecdec0;
+    --primary-gold:#9c6b2e; --primary-gold-light:#b5813e;
+    --text-primary:#3a2d1c; --text-secondary:#6b5a3f; --text-muted:#93816e;
+    --border-color:#ddcca4; --accent-purple:#8a6c9e; --accent-blue:#5c7a9e;
+}
+:root[data-theme="moon-blossom"]{
+    --bg-dark:#221726; --bg-card:#2e1c35; --bg-hover:#3a2542;
+    --primary-gold:#e0a3c4; --primary-gold-light:#edb8d3;
+    --text-primary:#f7ecf3; --text-secondary:#cba7c0; --text-muted:#8f7690;
+    --border-color:#40293f; --accent-purple:#a370c2; --accent-blue:#7c5ea8;
+}
+:root[data-theme="stillness"]{
+    --bg-dark:#201810; --bg-card:#2b2116; --bg-hover:#362a1c;
+    --primary-gold:#c99a4b; --primary-gold-light:#d8ac60;
+    --text-primary:#ece2d2; --text-secondary:#b6a689; --text-muted:#7d715c;
+    --border-color:#3a2e1f; --accent-purple:#6b5540; --accent-blue:#4f4530;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Lora',serif;background:var(--bg-dark);color:var(--text-primary);line-height:1.8;transition:background-color .3s ease,color .3s ease;}
+.topbar{background:rgba(15,20,25,0.97);background:color-mix(in srgb, var(--bg-dark) 92%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border-color);padding:0.9rem 1.2rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
+.back-btn{color:var(--primary-gold);cursor:pointer;font-size:0.95rem;white-space:nowrap;background:none;border:none;font-family:inherit;}
+.back-btn:hover{text-decoration:underline;}
+.topbar h1{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--primary-gold);}
+
+.container{max-width:1100px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+.page-title{text-align:center;margin-bottom:2rem;}
+.page-title h2{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--primary-gold);margin-bottom:0.5rem;}
+.page-title p{color:var(--text-secondary);font-size:0.95rem;}
+
+.stories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.5rem;}
+.story-card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .3s ease;display:flex;flex-direction:column;position:relative;}
+.story-card:hover{border-color:var(--primary-gold);transform:translateY(-5px);box-shadow:0 12px 30px rgba(212,175,55,0.15);}
+.story-cover{height:180px;background:linear-gradient(135deg,var(--accent-purple),var(--accent-blue));display:flex;align-items:center;justify-content:center;font-size:3rem;background-size:cover;background-position:center;}
+.unfollow-btn{position:absolute;top:0.6rem;left:0.6rem;width:34px;height:34px;border-radius:50%;background:rgba(15,20,25,0.65);border:none;color:#ff6b6b;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.95rem;z-index:2;transition:all .2s ease;}
+.unfollow-btn:hover{background:rgba(15,20,25,0.9);transform:scale(1.08);}
+.story-info{padding:1.2rem;flex:1;display:flex;flex-direction:column;}
+.story-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text-primary);margin-bottom:0.4rem;}
+.story-author{font-size:0.85rem;color:var(--text-muted);margin-bottom:0.4rem;}
+.story-status{font-size:0.75rem;color:var(--primary-gold);}
+
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;border:2px dashed var(--border-color);border-radius:10px;padding:2.5rem;text-align:center;}
+.empty-state-icon{font-size:3.2rem;margin-bottom:1rem;opacity:0.6;}
+.empty-state-title{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:0.6rem;}
+.empty-state-message{color:var(--text-secondary);font-size:0.95rem;margin-bottom:1.2rem;}
+.empty-state a{color:var(--primary-gold);text-decoration:none;font-weight:600;}
+.empty-state a:hover{text-decoration:underline;}
+.loading{text-align:center;color:var(--text-secondary);padding:4rem;}
+</style>
+</head>
+<body>
+<div class="topbar">
+    <button class="back-btn" onclick="location.href='index.html'">→ الرئيسية</button>
+    <h1>❤️ متابعاتي</h1>
+</div>
+
+<div class="container">
+    <div class="page-title">
+        <h2>الروايات التي تتابعها</h2>
+        <p>كل رواية أضفتها لمتابعاتك تظهر هنا</p>
+    </div>
+    <div id="bookmarksContainer"><div class="loading">جاري التحميل...</div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-client.js?v=6"></script>
+<script>
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+async function unfollow(novelId, event) {
+    event.stopPropagation();
+    if (!confirm('هل تريد إلغاء متابعة هذه الرواية؟')) return;
+    const result = await removeBookmark(novelId);
+    if (result.success) {
+        loadBookmarks();
+    } else {
+        alert(result.error || 'تعذر إلغاء المتابعة');
+    }
+}
+
+async function loadBookmarks() {
+    const container = document.getElementById('bookmarksContainer');
+    const session = await checkAuth();
+
+    if (!session) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">🔒</div>
+                <h3 class="empty-state-title">سجّل الدخول أولاً</h3>
+                <p class="empty-state-message">تحتاج لتسجيل الدخول لعرض الروايات التي تتابعها.</p>
+                <a href="index.html">العودة إلى الرئيسية لتسجيل الدخول</a>
+            </div>
+        `;
+        return;
+    }
+
+    const result = await getMyBookmarkedNovels();
+    if (!result.success) {
+        container.innerHTML = `<div class="empty-state"><p class="empty-state-message">تعذر تحميل المتابعات. حاول لاحقاً.</p></div>`;
+        return;
+    }
+
+    const novels = result.data;
+    if (novels.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">💔</div>
+                <h3 class="empty-state-title">لا تتابع أي رواية بعد</h3>
+                <p class="empty-state-message">تصفح المكتبة واضغط "تابع هذه الرواية" في صفحة أي رواية تعجبك.</p>
+                <a href="index.html#stories">تصفح المكتبة</a>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = `<div class="stories-grid">${novels.map(novel => {
+        const isComplete = novel.status === 'complete' || novel.is_completed === true;
+        return `
+            <div class="story-card" onclick="location.href='novel.html?id=${novel.id}'">
+                <button class="unfollow-btn" onclick="unfollow(${novel.id}, event)" title="إلغاء المتابعة">
+                    <i class="fas fa-heart-crack"></i>
+                </button>
+                <div class="story-cover" style="${novel.cover_url ? `background-image:url('${novel.cover_url}')` : ''}">
+                    ${novel.cover_url ? '' : '📖'}
+                </div>
+                <div class="story-info">
+                    <div class="story-title">${escapeHtml(novel.title_ar)}</div>
+                    <div class="story-author">✍️ ${escapeHtml(novel.author)}</div>
+                    <div class="story-status">${isComplete ? '✅ مكتملة' : '🔄 مستمرة'}</div>
+                </div>
+            </div>
+        `;
+    }).join('')}</div>`;
+}
+
+document.addEventListener('DOMContentLoaded', loadBookmarks);
+</script>
+</body>
+</html>
