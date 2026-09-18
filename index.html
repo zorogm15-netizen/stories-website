@@ -454,6 +454,7 @@
                 <a href="#stories" onclick="closeSidebarNav()">مكتبة الروايات</a>
                 <a href="#new-releases" onclick="closeSidebarNav()">إصدارات جديدة</a>
                 <a href="#levels" onclick="closeSidebarNav()">مستويات القراء</a>
+                <a href="bookmarks.html">❤️ متابعاتي</a>
                 <a href="translate-request.html">🌐 اطلب ترجمة رواية</a>
                 <a href="#about" onclick="closeSidebarNav()">عن الموقع</a>
                 <a href="#contact" onclick="closeSidebarNav()">تواصل معنا</a>
@@ -656,7 +657,18 @@
             });
         }
 
-        // inline swatch gradients (matches the CSS custom properties per theme)
+        function renderThemeGrid() {
+            const grid = document.getElementById('themeGrid');
+            const current = getSavedTheme();
+            grid.innerHTML = RIWAQ_THEMES.map(t => `
+                <div class="theme-swatch-btn${t.id === current ? ' active' : ''}" data-theme="${t.id}" onclick="applyTheme('${t.id}', true)">
+                    <div class="theme-swatch-preview" style="background:var(--theme-swatch-${t.id}, none);"></div>
+                    <span>${t.name}</span>
+                </div>
+            `).join('');
+        }
+
+        // inline swatch gradients (can't reference var(--theme-swatch) per-theme without switching root, so hardcode)
         const THEME_PREVIEW_GRADIENTS = {
             'night-space': 'linear-gradient(135deg,#0f1419,#6b5b95)',
             'pure-light': 'linear-gradient(135deg,#ffffff,#d8cfae)',
