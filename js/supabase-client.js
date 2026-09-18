@@ -655,6 +655,89 @@ async function getMyReaderStatus() {
     }
 }
 
+/* ==================== Bookmarks (Follow a novel) ==================== */
+
+// Get the logged-in reader's bookmarked novel IDs as a Set (empty Set if logged out).
+// Cheap way for a page to check "is this novel bookmarked?" for many novels at once.
+async function getMyBookmarkedNovelIds() {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return { success: true, data: new Set() };
+
+        const { data, error } = await supabaseClient
+            .from('bookmarks')
+            .select('novel_id')
+            .eq('user_id', user.id);
+
+        if (error) throw error;
+        return { success: true, data: new Set((data || []).map(b => b.novel_id)) };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Get the logged-in reader's full bookmarked novels (joined with novel data),
+// newest bookmark first. Used by the "متابعاتي" page.
+async function getMyBookmarkedNovels() {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return { success: true, data: [] };
+
+        const { data, error } = await supabaseClient
+            .from('bookmarks')
+            .select('created_at, novels ( * )')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        const novels = (data || [])
+            .filter(row => row.novels)
+            .map(row => ({ ...row.novels, bookmarked_at: row.created_at }));
+
+        return { success: true, data: novels };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Add a novel to the logged-in reader's bookmarks (follow).
+async function addBookmark(novelId) {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return { success: false, error: 'يجب تسجيل الدخول للمتابعة' };
+
+        const { error } = await supabaseClient
+            .from('bookmarks')
+            .insert([{ user_id: user.id, novel_id: novelId }]);
+
+        // Unique violation just means it's already bookmarked — treat as success.
+        if (error && error.code !== '23505') throw error;
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Remove a novel from the logged-in reader's bookmarks (unfollow).
+async function removeBookmark(novelId) {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return { success: false, error: 'يجب تسجيل الدخول' };
+
+        const { error } = await supabaseClient
+            .from('bookmarks')
+            .delete()
+            .eq('user_id', user.id)
+            .eq('novel_id', novelId);
+
+        if (error) throw error;
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
 /* ==================== Translation Requests & Points ==================== */
 
 // Get pricing + points-package settings needed by the "request a translation" page
