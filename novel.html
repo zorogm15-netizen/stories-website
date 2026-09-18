@@ -4,9 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>رِواق | تفاصيل الرواية</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,500,600;1,400&display=swap" rel="stylesheet">
+<script>
+(function () {
+    try {
+        var saved = localStorage.getItem('riwaq-theme');
+        if (saved) document.documentElement.setAttribute('data-theme', saved);
+    } catch (e) {}
+})();
+</script>
 <style>
-:root{
+:root, :root[data-theme="night-space"]{
     --bg-dark:#0f1419;
     --bg-card:#1a1f2e;
     --bg-hover:#242d3d;
@@ -20,13 +29,70 @@
     --accent-blue:#1e3c72;
     --status-ongoing:#2f9e5f;
     --status-complete:#4a6fd4;
+    --theme-swatch: linear-gradient(135deg, #0f1419, #6b5b95);
+}
+:root[data-theme="pure-light"]{
+    --bg-dark:#faf8f4; --bg-card:#ffffff; --bg-hover:#f1ede4;
+    --primary-gold:#b8892f; --primary-gold-light:#cf9e3f;
+    --text-primary:#241f18; --text-secondary:#5b5648; --text-muted:#8c8676;
+    --border-color:#e4ddcd; --accent-purple:#8672b0; --accent-blue:#4c6fa8;
+    --status-ongoing:#2f9e5f; --status-complete:#4a6fd4;
+}
+:root[data-theme="velvet-black"]{
+    --bg-dark:#000000; --bg-card:#121212; --bg-hover:#1c1c1c;
+    --primary-gold:#d4af37; --primary-gold-light:#e6c547;
+    --text-primary:#f0f0f0; --text-secondary:#a8a8a8; --text-muted:#6e6e6e;
+    --border-color:#262626; --accent-purple:#5a4a80; --accent-blue:#16263f;
+    --status-ongoing:#2f9e5f; --status-complete:#4a6fd4;
+}
+:root[data-theme="warm-paper"]{
+    --bg-dark:#f1e6ce; --bg-card:#f8f0dc; --bg-hover:#ecdec0;
+    --primary-gold:#9c6b2e; --primary-gold-light:#b5813e;
+    --text-primary:#3a2d1c; --text-secondary:#6b5a3f; --text-muted:#93816e;
+    --border-color:#ddcca4; --accent-purple:#8a6c9e; --accent-blue:#5c7a9e;
+    --status-ongoing:#2f7a4f; --status-complete:#3f5a9e;
+}
+:root[data-theme="moon-blossom"]{
+    --bg-dark:#221726; --bg-card:#2e1c35; --bg-hover:#3a2542;
+    --primary-gold:#e0a3c4; --primary-gold-light:#edb8d3;
+    --text-primary:#f7ecf3; --text-secondary:#cba7c0; --text-muted:#8f7690;
+    --border-color:#40293f; --accent-purple:#a370c2; --accent-blue:#7c5ea8;
+    --status-ongoing:#3f9e6f; --status-complete:#7c5ea8;
+}
+:root[data-theme="stillness"]{
+    --bg-dark:#201810; --bg-card:#2b2116; --bg-hover:#362a1c;
+    --primary-gold:#c99a4b; --primary-gold-light:#d8ac60;
+    --text-primary:#ece2d2; --text-secondary:#b6a689; --text-muted:#7d715c;
+    --border-color:#3a2e1f; --accent-purple:#6b5540; --accent-blue:#4f4530;
+    --status-ongoing:#5a8c4f; --status-complete:#8c6a3f;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Lora',serif;background:var(--bg-dark);color:var(--text-primary);line-height:1.8;}
-.topbar{background:rgba(15,20,25,0.97);border-bottom:1px solid var(--border-color);padding:0.9rem 1.2rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
+body{font-family:'Lora',serif;background:var(--bg-dark);color:var(--text-primary);line-height:1.8;transition:background-color 0.3s ease, color 0.3s ease;}
+.topbar{background:rgba(15,20,25,0.97);background:color-mix(in srgb, var(--bg-dark) 92%, transparent);border-bottom:1px solid var(--border-color);padding:0.9rem 1.2rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px);}
 .back-btn{color:var(--primary-gold);cursor:pointer;font-size:0.95rem;white-space:nowrap;}
 .back-btn:hover{text-decoration:underline;}
-.topbar h1{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--primary-gold);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.topbar h1{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--primary-gold);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+.menu-btn{display:flex;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:0.3rem;flex-shrink:0;}
+.menu-btn span{width:20px;height:2px;background:var(--primary-gold);}
+
+/* ===== Sidebar Drawer (shared with index.html) ===== */
+.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1998;opacity:0;visibility:hidden;transition:opacity .3s ease;}
+.sidebar-overlay.active{opacity:1;visibility:visible;}
+.sidebar-drawer{position:fixed;top:0;right:0;width:320px;max-width:88vw;height:100%;background:var(--bg-card);border-left:1px solid var(--border-color);z-index:1999;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);overflow-y:auto;display:flex;flex-direction:column;}
+.sidebar-drawer.active{transform:translateX(0);}
+.sidebar-head{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.4rem;border-bottom:1px solid var(--border-color);}
+.sidebar-close{font-size:1.6rem;color:var(--text-secondary);cursor:pointer;line-height:1;background:none;border:none;}
+.sidebar-close:hover{color:var(--primary-gold);}
+.sidebar-block{padding:1.2rem 1.4rem;border-bottom:1px solid var(--border-color);}
+.sidebar-block h4{font-size:0.78rem;color:var(--text-muted);letter-spacing:1px;margin-bottom:0.8rem;text-transform:uppercase;}
+.sidebar-links{display:flex;flex-direction:column;gap:0.2rem;}
+.sidebar-links a{color:var(--text-secondary);text-decoration:none;padding:0.55rem 0.2rem;font-size:0.92rem;transition:all .2s ease;border-radius:4px;}
+.sidebar-links a:hover{color:var(--primary-gold);background:var(--bg-hover);padding-right:0.6rem;}
+.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.7rem;}
+.theme-swatch-btn{border:2px solid var(--border-color);border-radius:10px;padding:0.5rem;cursor:pointer;background:var(--bg-hover);text-align:center;transition:all .25s ease;}
+.theme-swatch-btn.active{border-color:var(--primary-gold);box-shadow:0 0 0 2px rgba(212,175,55,0.25);}
+.theme-swatch-preview{width:100%;height:34px;border-radius:6px;margin-bottom:0.4rem;}
+.theme-swatch-btn span{font-size:0.68rem;color:var(--text-secondary);display:block;line-height:1.3;}
 
 .container{max-width:800px;margin:0 auto;padding:0 0 4rem;}
 
@@ -53,6 +119,11 @@ body{font-family:'Lora',serif;background:var(--bg-dark);color:var(--text-primary
 .quick-btn:active{opacity:0.8;}
 .quick-btn.primary{background:var(--primary-gold);color:#1a1305;}
 .quick-btn.secondary{background:var(--bg-hover);color:var(--text-primary);border:1px solid var(--border-color);}
+.follow-btn{width:100%;padding:0.65rem 0.5rem;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;border:1px solid var(--border-color);background:var(--bg-hover);color:var(--text-primary);display:flex;align-items:center;justify-content:center;gap:0.5rem;transition:all .2s ease;}
+.follow-btn:hover{border-color:var(--primary-gold);color:var(--primary-gold);}
+.follow-btn.following{background:rgba(212,175,55,0.12);border-color:var(--primary-gold);color:var(--primary-gold);}
+.follow-btn.following i{font-weight:900;}
+.follow-btn:disabled{opacity:0.6;cursor:default;}
 
 .section{padding:1.6rem 1.2rem 0;}
 .section-title{font-family:'Playfair Display',serif;color:var(--primary-gold);font-size:1.15rem;margin-bottom:0.9rem;display:flex;align-items:center;gap:0.4rem;}
@@ -87,16 +158,83 @@ body{font-family:'Lora',serif;background:var(--bg-dark);color:var(--text-primary
 </head>
 <body>
 <div class="topbar">
+    <button class="menu-btn" onclick="toggleSidebar()" aria-label="القائمة"><span></span><span></span><span></span></button>
     <span class="back-btn" onclick="location.href='index.html#stories'">→ رجوع</span>
     <h1 id="topbarTitle">رِواق</h1>
 </div>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<aside class="sidebar-drawer" id="sidebarDrawer">
+    <div class="sidebar-head">
+        <a href="index.html" style="display:flex;align-items:center;gap:0.6rem;text-decoration:none;color:var(--primary-gold);font-family:'Playfair Display',serif;font-size:1.2rem;">📖 رِواق</a>
+        <button class="sidebar-close" onclick="toggleSidebar()">&times;</button>
+    </div>
+    <div class="sidebar-block">
+        <h4>المظهر</h4>
+        <div class="theme-grid" id="themeGrid"></div>
+    </div>
+    <div class="sidebar-block" style="border-bottom:none;">
+        <h4>روابط سريعة</h4>
+        <div class="sidebar-links">
+            <a href="index.html#home">الرئيسية</a>
+            <a href="index.html#stories">مكتبة الروايات</a>
+            <a href="index.html#new-releases">إصدارات جديدة</a>
+            <a href="index.html#levels">مستويات القراء</a>
+            <a href="bookmarks.html">❤️ متابعاتي</a>
+            <a href="translate-request.html">🌐 اطلب ترجمة رواية</a>
+        </div>
+    </div>
+</aside>
+
 <div class="container" id="pageBody">
     <div class="loading">جاري التحميل...</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase-client.js?v=5"></script>
+<script src="js/supabase-client.js?v=6"></script>
 <script>
+/* ===== Sidebar + Theme (shared pattern with index.html) ===== */
+function toggleSidebar() {
+    document.getElementById('sidebarDrawer').classList.toggle('active');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+
+const RIWAQ_THEMES = [
+    { id: 'night-space', name: 'ليل فضاء' },
+    { id: 'pure-light', name: 'نور صافي' },
+    { id: 'velvet-black', name: 'أسود مخملي' },
+    { id: 'warm-paper', name: 'ورق دافئ' },
+    { id: 'moon-blossom', name: 'زهرة القمر' },
+    { id: 'stillness', name: 'سكون' }
+];
+const THEME_PREVIEW_GRADIENTS = {
+    'night-space': 'linear-gradient(135deg,#0f1419,#6b5b95)',
+    'pure-light': 'linear-gradient(135deg,#ffffff,#d8cfae)',
+    'velvet-black': 'linear-gradient(135deg,#000000,#2a2a2a)',
+    'warm-paper': 'linear-gradient(135deg,#f1e6ce,#c9a866)',
+    'moon-blossom': 'linear-gradient(135deg,#f4c9dd,#8a5ba0)',
+    'stillness': 'linear-gradient(135deg,#201810,#6b4a2a)'
+};
+function getSavedTheme() {
+    try { return localStorage.getItem('riwaq-theme') || 'night-space'; } catch (e) { return 'night-space'; }
+}
+function applyTheme(themeId, persist) {
+    document.documentElement.setAttribute('data-theme', themeId);
+    if (persist) { try { localStorage.setItem('riwaq-theme', themeId); } catch (e) {} }
+    document.querySelectorAll('.theme-swatch-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.theme === themeId));
+}
+function renderThemeGrid() {
+    const grid = document.getElementById('themeGrid');
+    const current = getSavedTheme();
+    grid.innerHTML = RIWAQ_THEMES.map(t => `
+        <div class="theme-swatch-btn${t.id === current ? ' active' : ''}" data-theme="${t.id}" onclick="applyTheme('${t.id}', true)">
+            <div class="theme-swatch-preview" style="background:${THEME_PREVIEW_GRADIENTS[t.id]};"></div>
+            <span>${t.name}</span>
+        </div>
+    `).join('');
+}
+renderThemeGrid();
+
 function escapeHtml(str){
     if(str===null||str===undefined) return '';
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -234,6 +372,9 @@ async function loadNovelPage(){
                     <span class="tag">${escapeHtml(novel.category_name || 'رواية')}</span>
                 </div>
                 ${quickActionsHtml}
+                <button class="follow-btn" id="followBtn" onclick="toggleFollow()">
+                    <i class="far fa-heart"></i> <span id="followBtnLabel">تابع هذه الرواية</span>
+                </button>
             </div>
         </div>
 
@@ -255,6 +396,53 @@ async function loadNovelPage(){
     `;
 
     renderChapterList();
+    initFollowButton();
+}
+
+/* ==================== Follow / Bookmark ==================== */
+let isFollowing = false;
+
+function setFollowBtnUI(following) {
+    isFollowing = following;
+    const btn = document.getElementById('followBtn');
+    const label = document.getElementById('followBtnLabel');
+    if (!btn || !label) return;
+    btn.classList.toggle('following', following);
+    btn.querySelector('i').className = following ? 'fas fa-heart' : 'far fa-heart';
+    label.textContent = following ? 'أنت تتابع هذه الرواية' : 'تابع هذه الرواية';
+}
+
+async function initFollowButton() {
+    const session = await checkAuth();
+    if (!session) {
+        setFollowBtnUI(false);
+        return;
+    }
+    const result = await getMyBookmarkedNovelIds();
+    if (result.success) {
+        setFollowBtnUI(result.data.has(Number(currentNovelId)) || result.data.has(currentNovelId));
+    }
+}
+
+async function toggleFollow() {
+    const session = await checkAuth();
+    if (!session) {
+        alert('سجّل الدخول أولاً لمتابعة هذه الرواية');
+        return;
+    }
+    const btn = document.getElementById('followBtn');
+    btn.disabled = true;
+
+    const result = isFollowing
+        ? await removeBookmark(currentNovelId)
+        : await addBookmark(currentNovelId);
+
+    btn.disabled = false;
+    if (result.success) {
+        setFollowBtnUI(!isFollowing);
+    } else {
+        alert(result.error || 'حدث خطأ، حاول مرة أخرى');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', loadNovelPage);
