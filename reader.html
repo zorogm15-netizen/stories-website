@@ -6,8 +6,16 @@
     <title>القراءة | رِواق</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Tajawal:wght@400;500;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('riwaq-theme');
+                if (saved) document.documentElement.setAttribute('data-theme', saved);
+            } catch (e) {}
+        })();
+    </script>
     <style>
-        :root {
+        :root, :root[data-theme="night-space"] {
             --bg-dark: #0f1419;
             --bg-card: #1a1f2e;
             --bg-hover: #242d3d;
@@ -19,6 +27,36 @@
             --border-color: #2a3344;
             --reader-font-size: 18px;
             --reader-font-family: 'Lora', serif;
+        }
+        :root[data-theme="pure-light"] {
+            --bg-dark: #faf8f4; --bg-card: #ffffff; --bg-hover: #f1ede4;
+            --primary-gold: #b8892f; --primary-gold-light: #cf9e3f;
+            --text-primary: #241f18; --text-secondary: #5b5648; --text-muted: #8c8676;
+            --border-color: #e4ddcd;
+        }
+        :root[data-theme="velvet-black"] {
+            --bg-dark: #000000; --bg-card: #121212; --bg-hover: #1c1c1c;
+            --primary-gold: #d4af37; --primary-gold-light: #e6c547;
+            --text-primary: #f0f0f0; --text-secondary: #a8a8a8; --text-muted: #6e6e6e;
+            --border-color: #262626;
+        }
+        :root[data-theme="warm-paper"] {
+            --bg-dark: #f1e6ce; --bg-card: #f8f0dc; --bg-hover: #ecdec0;
+            --primary-gold: #9c6b2e; --primary-gold-light: #b5813e;
+            --text-primary: #3a2d1c; --text-secondary: #6b5a3f; --text-muted: #93816e;
+            --border-color: #ddcca4;
+        }
+        :root[data-theme="moon-blossom"] {
+            --bg-dark: #221726; --bg-card: #2e1c35; --bg-hover: #3a2542;
+            --primary-gold: #e0a3c4; --primary-gold-light: #edb8d3;
+            --text-primary: #f7ecf3; --text-secondary: #cba7c0; --text-muted: #8f7690;
+            --border-color: #40293f;
+        }
+        :root[data-theme="stillness"] {
+            --bg-dark: #201810; --bg-card: #2b2116; --bg-hover: #362a1c;
+            --primary-gold: #c99a4b; --primary-gold-light: #d8ac60;
+            --text-primary: #ece2d2; --text-secondary: #b6a689; --text-muted: #7d715c;
+            --border-color: #3a2e1f;
         }
 
         * {
@@ -36,11 +74,13 @@
             background-color: var(--bg-dark);
             color: var(--text-primary);
             min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* ==================== Top Bar ==================== */
         .reader-topbar {
             background: rgba(15, 20, 25, 0.97);
+            background: color-mix(in srgb, var(--bg-dark) 92%, transparent);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
             padding: 0.9rem 1.2rem;
@@ -137,6 +177,27 @@
         .settings-toggle.active {
             color: var(--primary-gold);
             border-color: var(--primary-gold);
+        }
+
+        .autoscroll-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0 0.7rem;
+            height: 38px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+
+        .autoscroll-toggle.active {
+            color: var(--primary-gold);
+            border-color: var(--primary-gold);
+            background: rgba(212, 175, 55, 0.08);
         }
 
         /* ==================== Settings Panel ==================== */
@@ -348,6 +409,16 @@
             padding: 2.5rem 1.5rem 4rem;
         }
 
+        .chapter-block {
+            margin-bottom: 1rem;
+        }
+
+        .chapter-block + .chapter-block {
+            margin-top: 3rem;
+            padding-top: 3rem;
+            border-top: 2px dashed var(--border-color);
+        }
+
         .reader-header {
             text-align: center;
             margin-bottom: 2.5rem;
@@ -389,14 +460,60 @@
             display: block;
         }
 
+        .loading-next {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .loading-next .spinner {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border-color);
+            border-top-color: var(--primary-gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .end-of-novel {
+            text-align: center;
+            padding: 3rem 1rem 1rem;
+            color: var(--text-secondary);
+        }
+
+        .end-of-novel i {
+            font-size: 1.8rem;
+            color: var(--primary-gold);
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .end-of-novel a {
+            color: var(--primary-gold);
+            text-decoration: none;
+        }
+
+        .end-of-novel a:hover {
+            text-decoration: underline;
+        }
+
         /* ==================== Chapter Navigation ==================== */
         .chapter-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 1rem;
-            margin-top: 3rem;
-            padding-top: 2rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
             border-top: 1px solid var(--border-color);
         }
 
@@ -431,7 +548,7 @@
 
         /* ==================== Comments ==================== */
         .comments-section {
-            margin-top: 3rem;
+            margin-top: 2.5rem;
             border-top: 1px solid var(--border-color);
             padding-top: 1.5rem;
         }
@@ -689,6 +806,10 @@
                 display: none;
             }
 
+            .autoscroll-toggle span {
+                display: none;
+            }
+
             .user-badge span:not(.badge-icon) {
                 display: none;
             }
@@ -706,6 +827,9 @@
         </div>
         <div class="topbar-actions">
             <div id="authArea"><span class="auth-link" onclick="openAuthModal('login')">دخول</span></div>
+            <button class="autoscroll-toggle active" id="autoscrollToggle" onclick="toggleAutoScroll()" title="التمرير اللانهائي: تحميل الفصل التالي تلقائياً">
+                <i class="fas fa-infinity"></i> <span>تلقائي</span>
+            </button>
             <button class="settings-toggle" id="settingsToggle" onclick="toggleSettingsPanel()" aria-label="إعدادات القراءة">
                 <i class="fas fa-text-height"></i>
             </button>
@@ -729,6 +853,13 @@
                 <button class="font-family-btn" data-font="'Amiri', serif" onclick="setFontFamily(this)">تقليدي</button>
             </div>
         </div>
+        <div class="settings-row">
+            <span class="settings-label">التمرير اللانهائي</span>
+            <div class="font-family-options">
+                <button class="font-family-btn" id="autoscrollOnBtn" onclick="setAutoScroll(true)">تحميل تلقائي</button>
+                <button class="font-family-btn" id="autoscrollOffBtn" onclick="setAutoScroll(false)">يدوي (زر التالي)</button>
+            </div>
+        </div>
         <div class="word-filter-section">
             <div class="word-filter-title">استبدال كلمات حسب رغبتك (يظهر لك فقط، ولا يغيّر النص الأصلي)</div>
             <form class="word-filter-form" id="wordFilterForm">
@@ -741,9 +872,10 @@
     </div>
 
     <div class="reader-container">
-        <div id="readerBody">
+        <div id="chaptersFeed">
             <div class="reader-loading">جاري التحميل...</div>
         </div>
+        <div id="scrollSentinel" style="height:1px;"></div>
     </div>
 
     <!-- Auth Modal -->
@@ -773,7 +905,7 @@
 
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase-client.js?v=5"></script>
+    <script src="js/supabase-client.js?v=6"></script>
 
     <script>
         function escapeHtml(str) {
@@ -787,11 +919,33 @@
 
         const params = new URLSearchParams(window.location.search);
         const novelId = params.get('novel');
-        const chapterId = params.get('chapter');
+        const initialChapterId = params.get('chapter');
 
-        let allChapters = [];
-        let currentChapter = null;
+        let allChapters = [];      // full ordered chapter list for this novel (asc by chapter_number)
         let currentNovel = null;
+        let loadedChapters = [];   // chapters currently rendered in the feed, in order
+        let isLoadingNext = false;
+        let reachedEnd = false;
+        let activeChapterId = null; // chapter currently considered "in view" (drives topbar/URL)
+
+        /* ==================== Auto-scroll (infinite scroll) toggle ==================== */
+        function getAutoScrollPref() {
+            const saved = localStorage.getItem('riwaq_autoscroll');
+            return saved === null ? true : saved === '1';
+        }
+        function applyAutoScrollUI(enabled) {
+            const toggle = document.getElementById('autoscrollToggle');
+            toggle.classList.toggle('active', enabled);
+            document.getElementById('autoscrollOnBtn').classList.toggle('active', enabled);
+            document.getElementById('autoscrollOffBtn').classList.toggle('active', !enabled);
+        }
+        function setAutoScroll(enabled) {
+            localStorage.setItem('riwaq_autoscroll', enabled ? '1' : '0');
+            applyAutoScrollUI(enabled);
+        }
+        function toggleAutoScroll() {
+            setAutoScroll(!getAutoScrollPref());
+        }
 
         /* ==================== Font Settings ==================== */
         function loadFontPrefs() {
@@ -805,9 +959,11 @@
             const family = savedFamily || "'Lora', serif";
             document.documentElement.style.setProperty('--reader-font-family', family);
 
-            document.querySelectorAll('.font-family-btn').forEach(btn => {
+            document.querySelectorAll('.font-family-btn[data-font]').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.font === family);
             });
+
+            applyAutoScrollUI(getAutoScrollPref());
         }
 
         function changeFontSize(delta) {
@@ -823,7 +979,7 @@
             const family = btn.dataset.font;
             document.documentElement.style.setProperty('--reader-font-family', family);
             localStorage.setItem('riwaq_font_family', family);
-            document.querySelectorAll('.font-family-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.font-family-btn[data-font]').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }
 
@@ -913,7 +1069,7 @@
             }
             saveWordFilters(filters);
             renderWordFiltersUI();
-            rerenderChapterContent();
+            rerenderAllChapterContents();
         }
 
         function removeWordFilter(index) {
@@ -921,16 +1077,15 @@
             filters.splice(index, 1);
             saveWordFilters(filters);
             renderWordFiltersUI();
-            rerenderChapterContent();
+            rerenderAllChapterContents();
         }
 
-        // Re-applies filters to the already-loaded chapter without a full reload.
-        function rerenderChapterContent() {
-            if (!currentChapter) return;
-            const contentEl = document.querySelector('.reader-content');
-            if (contentEl) {
-                contentEl.innerHTML = escapeHtml(applyWordFilters(currentChapter.content));
-            }
+        // Re-applies filters to every already-loaded chapter without a full reload.
+        function rerenderAllChapterContents() {
+            loadedChapters.forEach(ch => {
+                const contentEl = document.getElementById(`content-${ch.id}`);
+                if (contentEl) contentEl.innerHTML = escapeHtml(applyWordFilters(ch.content));
+            });
         }
 
         document.getElementById('wordFilterForm').addEventListener('submit', function (e) {
@@ -979,7 +1134,6 @@
             if (!confirm('هل تريد تسجيل الخروج؟')) return;
             await signOut();
             await refreshAuthUI();
-            if (currentChapter) loadComments(chapterId);
         }
 
         async function refreshAuthUI() {
@@ -1030,7 +1184,7 @@
                     if (!result.success) throw new Error(result.error);
                     closeAuthModal();
                     await refreshAuthUI();
-                    if (currentChapter) loadComments(chapterId);
+                    loadedChapters.forEach(ch => loadComments(ch.id));
                 }
             } catch (err) {
                 msg.textContent = err.message || 'حدث خطأ ما';
@@ -1055,14 +1209,16 @@
             }
         }
 
+        // Manual jump (used by the "الفصل التالي/السابق" buttons at the end of a chapter
+        // when auto-scroll is switched off, or to jump backward).
         function goToChapter(id) {
             window.location.href = `reader.html?novel=${novelId}&chapter=${id}`;
         }
 
-        /* ==================== Comments ==================== */
+        /* ==================== Comments (namespaced per chapter) ==================== */
         async function loadComments(chapterId) {
-            const listEl = document.getElementById('commentsList');
-            const formArea = document.getElementById('commentFormArea');
+            const listEl = document.getElementById(`commentsList-${chapterId}`);
+            const formArea = document.getElementById(`commentFormArea-${chapterId}`);
             if (!listEl) return;
 
             const result = await getComments(chapterId);
@@ -1086,8 +1242,8 @@
             if (session) {
                 formArea.innerHTML = `
                     <div class="comment-form">
-                        <textarea id="newCommentText" placeholder="شارك رأيك في هذا الفصل..."></textarea>
-                        <button id="submitCommentBtn" onclick="submitComment('${chapterId}')">إرسال التعليق (+10 XP)</button>
+                        <textarea id="newCommentText-${chapterId}" placeholder="شارك رأيك في هذا الفصل..."></textarea>
+                        <button id="submitCommentBtn-${chapterId}" onclick="submitComment('${chapterId}')">إرسال التعليق (+10 XP)</button>
                     </div>
                 `;
             } else {
@@ -1100,8 +1256,8 @@
         }
 
         async function submitComment(chapterId) {
-            const textarea = document.getElementById('newCommentText');
-            const btn = document.getElementById('submitCommentBtn');
+            const textarea = document.getElementById(`newCommentText-${chapterId}`);
+            const btn = document.getElementById(`submitCommentBtn-${chapterId}`);
             const content = textarea.value.trim();
             if (content.length < 2) return;
 
@@ -1127,10 +1283,169 @@
             await refreshAuthUI();
         }
 
-        /* ==================== Load Chapter ==================== */
+        /* ==================== Chapter block rendering ==================== */
+        function chapterBlockHtml(chapter, idxInAll) {
+            const prevChapter = idxInAll > 0 ? allChapters[idxInAll - 1] : null;
+            const nextChapter = idxInAll >= 0 && idxInAll < allChapters.length - 1 ? allChapters[idxInAll + 1] : null;
+
+            return `
+                <div class="chapter-block" id="block-${chapter.id}" data-chapter-id="${chapter.id}">
+                    <div class="reader-header" id="header-${chapter.id}">
+                        <div class="chapter-label">${currentNovel ? escapeHtml(currentNovel.title_ar) : ''}</div>
+                        <h1>الفصل ${chapter.chapter_number}: ${escapeHtml(chapter.title)}</h1>
+                    </div>
+                    <div class="reader-content" id="content-${chapter.id}">${escapeHtml(applyWordFilters(chapter.content))}</div>
+                    <div class="chapter-nav">
+                        <a class="chapter-nav-btn prev ${prevChapter ? '' : 'disabled'}" ${prevChapter ? `onclick="goToChapter('${prevChapter.id}')"` : ''}>
+                            <i class="fas fa-arrow-right"></i> <span>الفصل السابق</span>
+                        </a>
+                        ${!getAutoScrollPref() ? `
+                            <a class="chapter-nav-btn next ${nextChapter ? '' : 'disabled'}" ${nextChapter ? `onclick="goToChapter('${nextChapter.id}')"` : ''}>
+                                <span>الفصل التالي</span> <i class="fas fa-arrow-left"></i>
+                            </a>
+                        ` : ''}
+                    </div>
+                    <div class="comments-section" id="commentsSection-${chapter.id}">
+                        <h3>💬 التعليقات</h3>
+                        <div id="commentsList-${chapter.id}"><p style="color:var(--text-muted); font-size:0.9rem;">جاري تحميل التعليقات...</p></div>
+                        <div id="commentFormArea-${chapter.id}"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateTopbarFor(chapter) {
+            if (!chapter) return;
+            activeChapterId = chapter.id;
+            document.getElementById('novelNameLabel').textContent = currentNovel ? currentNovel.title_ar : '';
+            document.getElementById('chapterNameLabel').textContent = `الفصل ${chapter.chapter_number}: ${chapter.title}`;
+            document.title = `${chapter.title} | رِواق`;
+            const newUrl = `reader.html?novel=${novelId}&chapter=${chapter.id}`;
+            if (window.location.pathname.endsWith('reader.html')) {
+                history.replaceState(null, '', newUrl);
+            }
+        }
+
+        function appendChapterBlock(chapter) {
+            const idxInAll = allChapters.findIndex(c => String(c.id) === String(chapter.id));
+            const feed = document.getElementById('chaptersFeed');
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = chapterBlockHtml(chapter, idxInAll);
+            feed.appendChild(wrapper.firstElementChild);
+
+            loadedChapters.push(chapter);
+            loadComments(chapter.id);
+            observeChapterHeader(chapter.id);
+
+            trackChapterRead(chapter.id).then(async (res) => {
+                if (res && res.success && res.awarded) {
+                    showXpToast(5);
+                    await refreshAuthUI();
+                }
+            });
+        }
+
+        /* ==================== Infinite scroll ==================== */
+        let headerObserver = null;
+        let sentinelObserver = null;
+
+        function observeChapterHeader(chapterId) {
+            const header = document.getElementById(`header-${chapterId}`);
+            if (header && headerObserver) headerObserver.observe(header);
+        }
+
+        function setupHeaderObserver() {
+            headerObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const chapterId = entry.target.id.replace('header-', '');
+                        const chapter = loadedChapters.find(c => String(c.id) === String(chapterId));
+                        if (chapter && chapter.id !== activeChapterId) {
+                            updateTopbarFor(chapter);
+                        }
+                    }
+                });
+            }, { root: null, rootMargin: '-35% 0px -55% 0px', threshold: 0 });
+        }
+
+        function setupSentinelObserver() {
+            const sentinel = document.getElementById('scrollSentinel');
+            sentinelObserver = new IntersectionObserver(async (entries) => {
+                if (!entries[0].isIntersecting) return;
+                if (!getAutoScrollPref()) return;
+                await loadNextChapterIfAny();
+            }, { root: null, rootMargin: '800px 0px', threshold: 0 });
+            sentinelObserver.observe(sentinel);
+        }
+
+        async function loadNextChapterIfAny() {
+            if (isLoadingNext || reachedEnd) return;
+            const lastLoaded = loadedChapters[loadedChapters.length - 1];
+            if (!lastLoaded) return;
+            const idx = allChapters.findIndex(c => String(c.id) === String(lastLoaded.id));
+            const nextMeta = idx >= 0 && idx < allChapters.length - 1 ? allChapters[idx + 1] : null;
+
+            if (!nextMeta) {
+                if (!reachedEnd) {
+                    reachedEnd = true;
+                    renderEndOfNovel();
+                }
+                return;
+            }
+
+            isLoadingNext = true;
+            renderLoadingNext();
+
+            const result = await getChapter(nextMeta.id);
+
+            removeLoadingNext();
+            isLoadingNext = false;
+
+            if (result.success && result.data) {
+                appendChapterBlock(result.data);
+            } else {
+                renderLoadError();
+            }
+        }
+
+        function renderLoadingNext() {
+            const feed = document.getElementById('chaptersFeed');
+            const el = document.createElement('div');
+            el.className = 'loading-next';
+            el.id = 'loadingNextIndicator';
+            el.innerHTML = `<div class="spinner"></div><span>جاري تحميل الفصل التالي...</span>`;
+            feed.appendChild(el);
+        }
+
+        function removeLoadingNext() {
+            const el = document.getElementById('loadingNextIndicator');
+            if (el) el.remove();
+        }
+
+        function renderLoadError() {
+            const feed = document.getElementById('chaptersFeed');
+            const el = document.createElement('div');
+            el.className = 'loading-next';
+            el.innerHTML = `<span>تعذر تحميل الفصل التالي. <a href="#" onclick="loadNextChapterIfAny();return false;" style="color:var(--primary-gold);">إعادة المحاولة</a></span>`;
+            feed.appendChild(el);
+        }
+
+        function renderEndOfNovel() {
+            const feed = document.getElementById('chaptersFeed');
+            const el = document.createElement('div');
+            el.className = 'end-of-novel';
+            el.innerHTML = `
+                <i class="fas fa-flag-checkered"></i>
+                <div>وصلت إلى آخر فصل منشور حالياً.</div>
+                <div style="margin-top:0.5rem;"><a href="novel.html?id=${novelId}">العودة إلى صفحة الرواية</a></div>
+            `;
+            feed.appendChild(el);
+        }
+
+        /* ==================== Load Reader (initial) ==================== */
         async function loadReader() {
-            if (!novelId || !chapterId) {
-                document.getElementById('readerBody').innerHTML = `
+            if (!novelId || !initialChapterId) {
+                document.getElementById('chaptersFeed').innerHTML = `
                     <div class="reader-error">
                         <i class="fas fa-book-open"></i>
                         لم يتم تحديد فصل للقراءة.
@@ -1142,11 +1457,11 @@
             const [novelResult, chaptersResult, chapterResult] = await Promise.all([
                 getNovel(novelId),
                 getChapters(novelId, true),
-                getChapter(chapterId)
+                getChapter(initialChapterId)
             ]);
 
             if (!chapterResult.success) {
-                document.getElementById('readerBody').innerHTML = `
+                document.getElementById('chaptersFeed').innerHTML = `
                     <div class="reader-error">
                         <i class="fas fa-exclamation-circle"></i>
                         تعذر تحميل الفصل. قد يكون غير متاح حالياً.
@@ -1157,47 +1472,15 @@
 
             currentNovel = novelResult.success ? novelResult.data : null;
             allChapters = chaptersResult.success ? chaptersResult.data : [];
-            currentChapter = chapterResult.data;
 
-            document.getElementById('novelNameLabel').textContent = currentNovel ? currentNovel.title_ar : '';
-            document.getElementById('chapterNameLabel').textContent = `الفصل ${currentChapter.chapter_number}: ${currentChapter.title}`;
-            document.title = `${currentChapter.title} | رِواق`;
+            document.getElementById('chaptersFeed').innerHTML = '';
+            setupHeaderObserver();
+            setupSentinelObserver();
 
-            const idx = allChapters.findIndex(c => String(c.id) === String(chapterId));
-            const prevChapter = idx > 0 ? allChapters[idx - 1] : null;
-            const nextChapter = idx >= 0 && idx < allChapters.length - 1 ? allChapters[idx + 1] : null;
-
-            document.getElementById('readerBody').innerHTML = `
-                <div class="reader-header">
-                    <div class="chapter-label">${currentNovel ? escapeHtml(currentNovel.title_ar) : ''}</div>
-                    <h1>الفصل ${currentChapter.chapter_number}: ${escapeHtml(currentChapter.title)}</h1>
-                </div>
-                <div class="reader-content">${escapeHtml(applyWordFilters(currentChapter.content))}</div>
-                <div class="chapter-nav">
-                    <a class="chapter-nav-btn prev ${prevChapter ? '' : 'disabled'}" ${prevChapter ? `onclick="goToChapter('${prevChapter.id}')"` : ''}>
-                        <i class="fas fa-arrow-right"></i> <span>الفصل السابق</span>
-                    </a>
-                    <a class="chapter-nav-btn next ${nextChapter ? '' : 'disabled'}" ${nextChapter ? `onclick="goToChapter('${nextChapter.id}')"` : ''}>
-                        <span>الفصل التالي</span> <i class="fas fa-arrow-left"></i>
-                    </a>
-                </div>
-                <div class="comments-section" id="commentsSection">
-                    <h3>💬 التعليقات</h3>
-                    <div id="commentsList"><p style="color:var(--text-muted); font-size:0.9rem;">جاري تحميل التعليقات...</p></div>
-                    <div id="commentFormArea"></div>
-                </div>
-            `;
+            appendChapterBlock(chapterResult.data);
+            updateTopbarFor(chapterResult.data);
 
             window.scrollTo(0, 0);
-
-            trackChapterRead(chapterId).then(async (res) => {
-                if (res && res.success && res.awarded) {
-                    showXpToast(5);
-                    await refreshAuthUI();
-                }
-            });
-
-            loadComments(chapterId);
         }
 
         loadFontPrefs();
