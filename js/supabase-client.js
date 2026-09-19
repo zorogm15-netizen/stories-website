@@ -738,6 +738,81 @@ async function removeBookmark(novelId) {
     }
 }
 
+/* ==================== Notifications ==================== */
+
+// Get the logged-in reader's notifications (newest first), with novel/chapter info joined in.
+async function getMyNotifications(limit = 30) {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return { success: true, data: [] };
+
+        const { data, error } = await supabaseClient
+            .from('notifications')
+            .select('id, message, is_read, created_at, novel_id, chapter_id')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: false })
+            .limit(limit);
+
+        if (error) throw error;
+        return { success: true, data };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Count unread notifications for the logged-in reader (for a badge on a bell icon)
+async function getUnreadNotificationCount() {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return { success: true, data: 0 };
+
+        const { count, error } = await supabaseClient
+            .from('notifications')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .eq('is_read', false);
+
+        if (error) throw error;
+        return { success: true, data: count || 0 };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Mark a single notification as read
+async function markNotificationRead(notificationId) {
+    try {
+        const { error } = await supabaseClient
+            .from('notifications')
+            .update({ is_read: true })
+            .eq('id', notificationId);
+
+        if (error) throw error;
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Mark all of the logged-in reader's notifications as read (e.g. when opening the panel)
+async function markAllNotificationsRead() {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return { success: true };
+
+        const { error } = await supabaseClient
+            .from('notifications')
+            .update({ is_read: true })
+            .eq('user_id', user.id)
+            .eq('is_read', false);
+
+        if (error) throw error;
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
 /* ==================== Translation Requests & Points ==================== */
 
 // Get pricing + points-package settings needed by the "request a translation" page
