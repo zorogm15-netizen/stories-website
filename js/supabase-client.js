@@ -635,6 +635,18 @@ async function getLevels() {
     }
 }
 
+// Get the top readers by XP (username + xp only) for a public "Hall of Fame".
+// Uses a SECURITY DEFINER function so no private profile data is exposed.
+async function getTopReaders(limit = 5) {
+    try {
+        const { data, error } = await supabaseClient.rpc('get_top_readers', { p_limit: limit });
+        if (error) throw error;
+        return { success: true, data: data || [] };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
 /* ==================== Comments ==================== */
 
 // Get comments for a chapter (oldest first), joined with the commenter's username
