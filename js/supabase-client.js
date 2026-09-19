@@ -509,6 +509,77 @@ async function deleteCategory(categoryId) {
     }
 }
 
+/* ==================== Novel <-> Categories (many-to-many) ==================== */
+
+// Get all categories assigned to a single novel
+async function getCategoriesForNovel(novelId) {
+    try {
+        const { data, error } = await supabaseClient
+            .from('novel_categories')
+            .select('category_id, categories ( id, name )')
+            .eq('novel_id', novelId);
+
+        if (error) throw error;
+        const categories = (data || [])
+            .map(row => row.categories)
+            .filter(Boolean);
+        return { success: true, data: categories };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Get categories for many novels at once, as a map: { novelId: [category, ...] }.
+// Used by list pages (novels list, homepage) to avoid one query per novel.
+async function getCategoriesForNovels(novelIds) {
+    try {
+        const ids = [...new Set((novelIds || []).filter(id => id !== null && id !== undefined))];
+        if (ids.length === 0) return { success: true, data: {} };
+
+        const { data, error } = await supabaseClient
+            .from('novel_categories')
+            .select('novel_id, categories ( id, name )')
+            .in('novel_id', ids);
+
+        if (error) throw error;
+
+        const map = {};
+        (data || []).forEach(row => {
+            if (!row.categories) return;
+            if (!map[row.novel_id]) map[row.novel_id] = [];
+            map[row.novel_id].push(row.categories);
+        });
+        return { success: true, data: map };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Replace a novel's full set of categories with the given list of category IDs.
+// Pass an empty array to clear all categories from a novel.
+async function setNovelCategories(novelId, categoryIds) {
+    try {
+        const { error: deleteError } = await supabaseClient
+            .from('novel_categories')
+            .delete()
+            .eq('novel_id', novelId);
+        if (deleteError) throw deleteError;
+
+        const ids = [...new Set((categoryIds || []).filter(id => id !== null && id !== undefined && id !== ''))];
+        if (ids.length === 0) return { success: true };
+
+        const rows = ids.map(categoryId => ({ novel_id: novelId, category_id: categoryId }));
+        const { error: insertError } = await supabaseClient
+            .from('novel_categories')
+            .insert(rows);
+        if (insertError) throw insertError;
+
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
 /* ==================== Site Settings ==================== */
 
 // Get all settings as a key-value object
