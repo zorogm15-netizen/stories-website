@@ -587,13 +587,13 @@
         <div class="container">
             <div class="section-header">
                 <h2>🏆 مستويات القراء</h2>
-                <p>اكتشف رحلتك من المستوى الأول إلى المستوى الأسطوري — اقرأ وعلّق لتكسب XP</p>
+                <p>اكتشف رحلتك من المستوى الأول إلى المستوى الأسطوري — اقرأ وعلّق لتكسب XP وتفتح مزايا جديدة</p>
             </div>
             <div id="myLevelBanner"></div>
-            <div class="levels-grid" id="levelsGrid">
-                <div class="empty-state" style="min-height:160px;">
-                    <p class="empty-state-message">جاري تحميل المستويات...</p>
-                </div>
+            <div style="text-align:center; margin-top:1.5rem;">
+                <a href="levels.html" class="btn-secondary" style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.8rem 1.8rem; border:1px solid var(--primary-gold); color:var(--primary-gold); border-radius:8px; text-decoration:none; font-size:0.95rem; transition:all 0.25s ease;">
+                    شوف كل المستويات والمزايا <i class="fas fa-arrow-left"></i>
+                </a>
             </div>
         </div>
     </section>
@@ -655,7 +655,7 @@
     <div class="xp-toast" id="xpToast"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase-client.js?v=6"></script>
+    <script src="js/supabase-client.js?v=7"></script>
 
     <script>
         /* ===================== Sidebar Drawer ===================== */
@@ -835,6 +835,14 @@
             }, 350);
         });
 
+        function levelIconHtml(lvl, size) {
+            if (!lvl) return '📖';
+            if (lvl.icon_url) {
+                return `<img src="${lvl.icon_url}" alt="" width="${size}" height="${size}" style="border-radius:50%; vertical-align:middle;">`;
+            }
+            return lvl.icon || '📖';
+        }
+
         async function handleUserBadgeClick() {
             if (!confirm('هل تريد تسجيل الخروج؟')) return;
             await signOut();
@@ -865,14 +873,14 @@
                 authArea.innerHTML = `
                     ${searchIconHtml}
                     <div class="user-badge" onclick="handleUserBadgeClick()" title="تسجيل الخروج">
-                        <span class="badge-icon">${currentLevel ? currentLevel.icon : '📖'}</span>
+                        <span class="badge-icon">${levelIconHtml(currentLevel, 20)}</span>
                         <span class="badge-name">${escapeHtml(displayName)}</span>
                         <span class="badge-xp">${profile.xp} XP</span>
                     </div>
                 `;
                 sidebarAuthBox.innerHTML = `
                     <div class="sidebar-user-row">
-                        <span class="icon">${currentLevel ? currentLevel.icon : '📖'}</span>
+                        <span class="icon">${levelIconHtml(currentLevel, 28)}</span>
                         <div class="info">
                             <div class="name">${escapeHtml(displayName)}</div>
                             <div class="xp">${profile.xp} XP</div>
@@ -1135,31 +1143,10 @@
             if (event.target === searchOverlay) closeSearchModal();
         });
 
+        // Full level grid + perks now live on levels.html; here we only show
+        // a compact "current level" banner with a link to the full page.
         async function loadLevelsSection() {
-            const grid = document.getElementById('levelsGrid');
             const banner = document.getElementById('myLevelBanner');
-            const levelsResult = await getLevels();
-            if (!levelsResult.success || !levelsResult.data || levelsResult.data.length === 0) {
-                grid.innerHTML = `<div class="empty-state" style="min-height:160px;"><p class="empty-state-message">تعذر تحميل المستويات حالياً.</p></div>`;
-                return;
-            }
-            const levels = levelsResult.data;
-            const myLevelNumber = currentReaderStatus && currentReaderStatus.currentLevel ? currentReaderStatus.currentLevel.level_number : null;
-            grid.innerHTML = levels.map((lvl, idx) => {
-                const nextLvl = levels[idx + 1];
-                const rangeLabel = nextLvl ? `${lvl.min_xp} - ${nextLvl.min_xp - 1} XP` : `${lvl.min_xp}+ XP`;
-                const isCurrent = myLevelNumber === lvl.level_number;
-                return `
-                    <div class="level-card${isCurrent ? ' current-level' : ''}">
-                        ${isCurrent ? '<span class="current-tag">أنت هنا</span>' : ''}
-                        <div class="level-rank">${String(lvl.level_number).padStart(2, '0')}</div>
-                        <div class="level-icon">${lvl.icon}</div>
-                        <div class="level-name">${escapeHtml(lvl.name)}</div>
-                        <div class="level-description">${escapeHtml(lvl.description)}</div>
-                        <div class="level-xp">${rangeLabel}</div>
-                    </div>
-                `;
-            }).join('');
             if (currentReaderStatus && currentReaderStatus.currentLevel) {
                 const { profile, currentLevel, nextLevel } = currentReaderStatus;
                 if (nextLevel) {
@@ -1169,7 +1156,7 @@
                     banner.innerHTML = `
                         <div class="my-level-banner">
                             <div class="my-level-top">
-                                <span class="name">${currentLevel.icon} أنت الآن: ${escapeHtml(currentLevel.name)}</span>
+                                <span class="name">${levelIconHtml(currentLevel, 26)} أنت الآن: ${escapeHtml(currentLevel.name)}</span>
                                 <span class="xp-count">${profile.xp} XP</span>
                             </div>
                             <div class="progress-track"><div class="progress-fill" style="width:${pct}%;"></div></div>
@@ -1180,7 +1167,7 @@
                     banner.innerHTML = `
                         <div class="my-level-banner">
                             <div class="my-level-top">
-                                <span class="name">${currentLevel.icon} وصلت إلى أعلى مستوى: ${escapeHtml(currentLevel.name)}</span>
+                                <span class="name">${levelIconHtml(currentLevel, 26)} وصلت إلى أعلى مستوى: ${escapeHtml(currentLevel.name)}</span>
                                 <span class="xp-count">${profile.xp} XP</span>
                             </div>
                         </div>
