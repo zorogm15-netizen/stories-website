@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مستويات القراء | رِواق</title>
+    <meta name="theme-color" content="#0f1419">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('riwaq-theme');
+                if (saved) document.documentElement.setAttribute('data-theme', saved);
+            } catch (e) {}
+        })();
+    </script>
+    <style>
+        :root, :root[data-theme="night-space"] {
+            --bg-dark: #0f1419; --bg-card: #1a1f2e; --bg-hover: #242d3d;
+            --primary-gold: #d4af37; --primary-gold-light: #e6c547;
+            --text-primary: #f5f1e8; --text-secondary: #b8b4a8; --text-muted: #7a7a7a;
+            --border-color: #2a3344;
+        }
+        :root[data-theme="pure-light"] {
+            --bg-dark: #faf8f4; --bg-card: #ffffff; --bg-hover: #f1ede4;
+            --primary-gold: #b8892f; --primary-gold-light: #cf9e3f;
+            --text-primary: #241f18; --text-secondary: #5b5648; --text-muted: #8c8676;
+            --border-color: #e4ddcd;
+        }
+        :root[data-theme="velvet-black"] {
+            --bg-dark: #000000; --bg-card: #121212; --bg-hover: #1c1c1c;
+            --primary-gold: #d4af37; --primary-gold-light: #e6c547;
+            --text-primary: #f0f0f0; --text-secondary: #a8a8a8; --text-muted: #6e6e6e;
+            --border-color: #262626;
+        }
+        :root[data-theme="warm-paper"] {
+            --bg-dark: #f1e6ce; --bg-card: #f8f0dc; --bg-hover: #ecdec0;
+            --primary-gold: #9c6b2e; --primary-gold-light: #b5813e;
+            --text-primary: #3a2d1c; --text-secondary: #6b5a3f; --text-muted: #93816e;
+            --border-color: #ddcca4;
+        }
+        :root[data-theme="moon-blossom"] {
+            --bg-dark: #221726; --bg-card: #2e1c35; --bg-hover: #3a2542;
+            --primary-gold: #e0a3c4; --primary-gold-light: #edb8d3;
+            --text-primary: #f7ecf3; --text-secondary: #cba7c0; --text-muted: #8f7690;
+            --border-color: #40293f;
+        }
+        :root[data-theme="stillness"] {
+            --bg-dark: #201810; --bg-card: #2b2116; --bg-hover: #362a1c;
+            --primary-gold: #c99a4b; --primary-gold-light: #d8ac60;
+            --text-primary: #ece2d2; --text-secondary: #b6a689; --text-muted: #7d715c;
+            --border-color: #3a2e1f;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Lora', serif; background-color: var(--bg-dark); color: var(--text-primary); line-height: 1.8; }
+
+        header {
+            background: color-mix(in srgb, var(--bg-dark) 92%, transparent);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.9rem 0;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .header-container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+        .logo { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; color: var(--text-primary); }
+        .logo-icon { font-size: 1.6rem; color: var(--primary-gold); }
+        .logo-text h1 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--primary-gold); }
+        .back-link { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
+        .back-link:hover { color: var(--primary-gold); }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+        .page-header { text-align: center; margin-bottom: 2rem; }
+        .page-header h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 4vw, 2.4rem); color: var(--primary-gold); margin-bottom: 0.6rem; }
+        .page-header p { color: var(--text-secondary); }
+
+        .my-level-banner {
+            background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(107,91,149,0.08));
+            border: 1px solid var(--border-color); border-radius: 10px; padding: 1.2rem 1.5rem;
+            margin-bottom: 2.5rem; display: flex; flex-direction: column; gap: 0.6rem;
+        }
+        .my-level-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+        .my-level-top .name { font-family: 'Playfair Display', serif; color: var(--primary-gold); font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem; }
+        .my-level-top .name img { width: 28px; height: 28px; border-radius: 50%; }
+        .my-level-top .xp-count { font-size: 0.85rem; color: var(--text-secondary); }
+        .progress-track { width: 100%; height: 8px; border-radius: 5px; background: var(--bg-hover); overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary-gold), var(--primary-gold-light)); border-radius: 5px; transition: width 0.6s ease; }
+        .progress-next { font-size: 0.75rem; color: var(--text-muted); text-align: left; }
+        .auth-link { color: var(--primary-gold); cursor: pointer; }
+
+        .levels-list { display: flex; flex-direction: column; gap: 1.1rem; }
+        .level-row {
+            display: flex; gap: 1.2rem; align-items: flex-start;
+            background: var(--bg-card); border: 1.5px solid var(--border-color); border-radius: 12px;
+            padding: 1.3rem 1.4rem; position: relative; overflow: hidden;
+        }
+        .level-row.current { border-color: var(--primary-gold); box-shadow: 0 0 0 2px rgba(212,175,55,0.2); }
+        .level-icon-wrap { flex-shrink: 0; width: 72px; height: 72px; border-radius: 50%; overflow: hidden; background: var(--bg-hover); display: flex; align-items: center; justify-content: center; }
+        .level-icon-wrap img { width: 100%; height: 100%; object-fit: contain; }
+        .level-icon-wrap .emoji-fallback { font-size: 2rem; }
+        .level-body { flex: 1; min-width: 0; }
+        .level-title-row { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.3rem; }
+        .level-title-row .num { font-family: 'Playfair Display', serif; color: var(--text-muted); font-size: 0.95rem; }
+        .level-title-row h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--text-primary); }
+        .current-tag { background: var(--primary-gold); color: var(--bg-dark); font-size: 0.68rem; font-weight: 700; padding: 0.15rem 0.55rem; border-radius: 10px; }
+        .level-xp-range { font-size: 0.78rem; color: var(--primary-gold); margin-bottom: 0.5rem; }
+        .level-description { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.7rem; }
+        .level-perks { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
+        .level-perks li { font-size: 0.83rem; color: var(--text-secondary); display: flex; align-items: flex-start; gap: 0.5rem; }
+        .level-perks li::before { content: '✦'; color: var(--primary-gold); flex-shrink: 0; }
+
+        .hof-section { margin-top: 3.5rem; }
+        .hof-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--primary-gold); text-align: center; margin-bottom: 1.5rem; }
+        .hof-list { display: flex; flex-direction: column; gap: 0.7rem; max-width: 600px; margin: 0 auto; }
+        .hof-item { display: flex; align-items: center; gap: 1rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.7rem 1.1rem; }
+        .hof-rank { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 1.2rem; color: var(--primary-gold); width: 26px; text-align: center; flex-shrink: 0; }
+        .hof-name { flex: 1; font-size: 0.95rem; }
+        .hof-xp { font-size: 0.85rem; color: var(--primary-gold); font-weight: 600; }
+        .hof-empty { text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 1.5rem; }
+
+        @media (max-width: 560px) {
+            .level-row { flex-direction: column; align-items: center; text-align: center; }
+            .level-icon-wrap { width: 84px; height: 84px; }
+            .level-title-row { justify-content: center; }
+            .level-perks { align-items: center; }
+            .level-perks li { text-align: right; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">📖</div>
+                <div class="logo-text"><h1>رِواق</h1></div>
+            </a>
+            <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> الرئيسية</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>🏆 مستويات القراء</h2>
+            <p>اكتشف رحلتك من المستوى الأول إلى المستوى الأسطوري — اقرأ وعلّق لتكسب XP وتفتح مزايا جديدة</p>
+        </div>
+
+        <div id="myLevelBanner"></div>
+
+        <div class="levels-list" id="levelsList">
+            <p style="text-align:center; color: var(--text-muted);">جاري التحميل...</p>
+        </div>
+
+        <div class="hof-section">
+            <h3 class="hof-title">👑 لوحة الشرف</h3>
+            <div class="hof-list" id="hofList">
+                <p class="hof-empty">جاري التحميل...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js?v=7"></script>
+    <script>
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function levelIconHtml(lvl, size) {
+            if (lvl.icon_url) {
+                return `<img src="${lvl.icon_url}" alt="${escapeHtml(lvl.name)}" width="${size}" height="${size}">`;
+            }
+            return `<span class="emoji-fallback">${lvl.icon || '📖'}</span>`;
+        }
+
+        async function renderLevelsPage() {
+            const levelsResult = await getLevels();
+            const listEl = document.getElementById('levelsList');
+            const bannerEl = document.getElementById('myLevelBanner');
+
+            if (!levelsResult.success || !levelsResult.data || levelsResult.data.length === 0) {
+                listEl.innerHTML = '<p style="text-align:center; color: var(--text-muted);">تعذر تحميل المستويات حالياً.</p>';
+                return;
+            }
+            const levels = levelsResult.data;
+
+            const session = await checkAuth();
+            let currentLevelNumber = null;
+            let statusData = null;
+
+            if (session) {
+                const statusResult = await getMyReaderStatus();
+                if (statusResult.success && statusResult.data) {
+                    statusData = statusResult.data;
+                    currentLevelNumber = statusData.currentLevel ? statusData.currentLevel.level_number : null;
+                }
+            }
+
+            if (statusData && statusData.currentLevel) {
+                const { profile, currentLevel, nextLevel } = statusData;
+                if (nextLevel) {
+                    const span = nextLevel.min_xp - currentLevel.min_xp;
+                    const progressed = Math.max(0, profile.xp - currentLevel.min_xp);
+                    const pct = Math.min(100, Math.round((progressed / span) * 100));
+                    bannerEl.innerHTML = `
+                        <div class="my-level-banner">
+                            <div class="my-level-top">
+                                <span class="name">${levelIconHtml(currentLevel, 28)} أنت الآن: ${escapeHtml(currentLevel.name)}</span>
+                                <span class="xp-count">${profile.xp} XP</span>
+                            </div>
+                            <div class="progress-track"><div class="progress-fill" style="width:${pct}%;"></div></div>
+                            <div class="progress-next">يتبقى ${nextLevel.min_xp - profile.xp} XP للوصول إلى "${escapeHtml(nextLevel.name)}"</div>
+                        </div>`;
+                } else {
+                    bannerEl.innerHTML = `
+                        <div class="my-level-banner">
+                            <div class="my-level-top">
+                                <span class="name">${levelIconHtml(currentLevel, 28)} وصلت إلى أعلى مستوى: ${escapeHtml(currentLevel.name)}</span>
+                                <span class="xp-count">${profile.xp} XP</span>
+                            </div>
+                        </div>`;
+                }
+            } else {
+                bannerEl.innerHTML = `
+                    <div class="my-level-banner">
+                        <div class="my-level-top">
+                            <span class="name">سجّل الدخول من الرئيسية لتتبع مستواك ونقاطك</span>
+                        </div>
+                    </div>`;
+            }
+
+            listEl.innerHTML = levels.map((lvl, idx) => {
+                const nextLvl = levels[idx + 1];
+                const rangeLabel = nextLvl ? `${lvl.min_xp} – ${nextLvl.min_xp - 1} XP` : `${lvl.min_xp}+ XP`;
+                const isCurrent = currentLevelNumber === lvl.level_number;
+                let perks = [];
+                try { perks = Array.isArray(lvl.perks) ? lvl.perks : JSON.parse(lvl.perks || '[]'); } catch (e) { perks = []; }
+                return `
+                    <div class="level-row${isCurrent ? ' current' : ''}">
+                        <div class="level-icon-wrap">${levelIconHtml(lvl, 72)}</div>
+                        <div class="level-body">
+                            <div class="level-title-row">
+                                <span class="num">#${lvl.level_number}</span>
+                                <h3>${escapeHtml(lvl.name)}</h3>
+                                ${isCurrent ? '<span class="current-tag">أنت هنا</span>' : ''}
+                            </div>
+                            <div class="level-xp-range">${rangeLabel}</div>
+                            <div class="level-description">${escapeHtml(lvl.description || '')}</div>
+                            ${perks.length ? `<ul class="level-perks">${perks.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>` : ''}
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        async function renderHallOfFame() {
+            const hofEl = document.getElementById('hofList');
+            const result = await getTopReaders(5);
+            if (!result.success || !result.data || result.data.length === 0) {
+                hofEl.innerHTML = '<p class="hof-empty">لا يوجد قراء بعد — كن أول من يتصدر لوحة الشرف!</p>';
+                return;
+            }
+            hofEl.innerHTML = result.data.map((r, i) => `
+                <div class="hof-item">
+                    <span class="hof-rank">${i + 1}</span>
+                    <span class="hof-name">${escapeHtml(r.username)}</span>
+                    <span class="hof-xp">${r.xp} XP</span>
+                </div>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderLevelsPage();
+            renderHallOfFame();
+        });
+    </script>
+</body>
+</html>
